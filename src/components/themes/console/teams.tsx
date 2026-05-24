@@ -189,7 +189,7 @@ export function ConsoleTeams() {
   return (
     <div style={kStyles.shell}>
       <KScanlines />
-      <div style={{ position: "relative", padding: isMobile ? "18px 16px 24px" : isTablet ? "22px 22px" : "24px 28px" }}>
+      <div style={{ position: "relative", padding: isMobile ? "18px 16px calc(48px + env(safe-area-inset-bottom))" : isTablet ? "22px 22px calc(48px + env(safe-area-inset-bottom))" : "24px 28px 56px" }}>
         <div
           style={{
             display: "flex",

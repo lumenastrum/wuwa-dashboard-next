@@ -16,7 +16,7 @@ export function AtelierCycles() {
 
   return (
     <div style={aStyles.shell}>
-      <div style={{ padding: isMobile ? "20px 16px 26px" : isTablet ? "28px 28px" : "32px 48px" }}>
+      <div style={{ padding: isMobile ? "20px 16px calc(48px + env(safe-area-inset-bottom))" : isTablet ? "28px 28px calc(48px + env(safe-area-inset-bottom))" : "32px 48px 56px" }}>
         <div style={{ marginBottom: 26 }}>
           <div
             style={{

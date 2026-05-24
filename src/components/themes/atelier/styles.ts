@@ -27,7 +27,7 @@ const mono: CSSProperties = {
 };
 
 const shell: CSSProperties = {
-  minHeight: "100vh",
+  minHeight: "100dvh",
   background: A_PAL.bgGrad,
   color: A_PAL.text,
   fontFamily: "var(--font-geist), system-ui, sans-serif",

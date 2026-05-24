@@ -29,7 +29,7 @@ const display: CSSProperties = {
 };
 
 const shell: CSSProperties = {
-  minHeight: "100vh",
+  minHeight: "100dvh",
   background: K_PAL.bgGrad,
   color: K_PAL.text,
   fontFamily: "var(--font-space-grotesk), system-ui, sans-serif",

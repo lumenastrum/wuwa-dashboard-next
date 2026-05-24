@@ -21,7 +21,7 @@ export function ObsidianTeams() {
 
   return (
     <div style={oStyles.shell}>
-      <div style={{ padding: isMobile ? "18px 16px 24px" : isTablet ? "24px 24px" : "28px 32px" }}>
+      <div style={{ padding: isMobile ? "18px 16px calc(48px + env(safe-area-inset-bottom))" : isTablet ? "24px 24px calc(48px + env(safe-area-inset-bottom))" : "28px 32px 56px" }}>
         <div style={{ marginBottom: 24 }}>
           <div
             style={{
