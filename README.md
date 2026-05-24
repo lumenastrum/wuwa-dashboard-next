@@ -1,36 +1,237 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WuWa Dashboard
 
-## Getting Started
+Andres's Wuthering Waves roster, audits, benchmarks, and endstate cycles — three swappable themes, live-saved to Supabase.
 
-First, run the development server:
+## What this is
 
-```bash
+A personal gacha-tracker dashboard with three visual themes sharing the same data:
+
+- **Obsidian** — dark, jewel-tone, elegant. Cormorant Garamond display + Geist body, gold accent.
+- **Atelier** — light editorial, ink-on-paper. Instrument Serif italic display, navy ink accent.
+- **Console** — holographic HUD. Space Grotesk + JetBrains Mono everywhere, cyan + amber + magenta. **Edit mode lives here.**
+
+Four pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`), **Cycles** (`/cycles`).
+
+## Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| UI | React 19 + Tailwind 4 + inline-styled theme primitives |
+| Data | Supabase Postgres (`dashboard_profiles` table, JSONB blob) |
+| State | DataProvider context with debounced auto-save (650ms) |
+| Edit | EditableField primitive, Console-theme only |
+| Mutation CLI | `tsx scripts/update.ts` via `npm run update` |
+| Deploy | (pending — see "Deployment" below) |
+
+## Quick start
+
+```powershell
+# Install
+npm install
+
+# Dev server (Turbopack)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tested on **Node 24**, npm 11. Should work on any LTS Node ≥ 20.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Updating data — two ways
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Browser, in Console theme
 
-## Learn More
+1. Switch to the **Console** theme via the top-bar segmented control.
+2. Click the `▣ LOCK` button (top right of the top bar). It becomes `◐ EDIT` (amber).
+3. Every editable value on the page is now an input or select. Edit any of them.
+4. Click outside the input (or hit Enter) to commit. The sync indicator goes `◐ SAVE` for ~650ms, then back to `● LIVE` once Supabase confirms.
+5. Click `◐ EDIT` again to lock back into read mode.
 
-To learn more about Next.js, take a look at the following resources:
+**Currently inline-editable on the Resonator page:** stats (current, optimal, _status), audit notes, build type, priority status, sequence (dropdown), weapon name + rank + level, echo set.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Teams + Cycles editing in-browser is **not wired yet** — use the CLI for those (it's faster anyway).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. CLI — `npm run update`
 
-## Deploy on Vercel
+Run from the project root. Works the same on Windows (PowerShell) and macOS (terminal). Couch-Clio can run these directly; Claude Code can run them via Bash. Quote values with spaces.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```powershell
+# Stat audit
+npm run update -- stat Aemeath ATK "1,927"
+npm run update -- statopt Carlotta CR "70-80%"
+npm run update -- statstatus Augusta CR yellow
+npm run update -- notes Aemeath "Near perfect"
+npm run update -- build Aemeath "CRIT DPS"
+npm run update -- prio Carlotta yellow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Resonator metadata
+npm run update -- seq Aemeath S4
+npm run update -- level Aemeath 90
+npm run update -- weapon Aemeath "Everbright Polestar"
+npm run update -- rank Aemeath R1
+npm run update -- echo Aemeath "Trailblazing Star 5/5"
+
+# Benchmark times (after each Overdrive run)
+npm run update -- bench 1 best 0:31
+npm run update -- bench 1 average 0:33.5
+npm run update -- bench 1 notes "New PB 2026-05-30"
+npm run update -- deaths 1 0
+
+# Cycle results (auto-recomputes totalPoints + teamsOver5k on score change)
+npm run update -- cycle 2 team 7 score 13500
+npm run update -- cycle 2 team 7 rating CROWNED
+npm run update -- cycle 2 team 7 buff "Solar Burst"
+npm run update -- cycle 2 team 7 notes "Aemeath carry, no deaths"
+npm run update -- cycle 2 team 7 members "Aemeath,Lynae,Mornye"
+
+# Action items + key findings
+npm run update -- action 0 status green
+npm run update -- action 0 detail "DONE — finished farming session"
+npm run update -- finding 0 "new finding text"
+
+# Inspection
+npm run update -- list
+npm run update -- help
+```
+
+The CLI prints a diff line for every change and confirms `✓ saved to Supabase` on success. On error, exits 1 with a clear message.
+
+## Data layer
+
+### Where data lives
+
+- **Source of truth at runtime:** Supabase row in `dashboard_profiles` where `profile = 'andres-wuwa'`. Single JSONB column holds the whole data blob.
+- **Seed file (read once if Supabase is empty):** `public/data.json`. After first load with no row, the app fetches this, populates Supabase, then never touches it again.
+- **Types:** `src/lib/types.ts`. Mirrors the JSON shape exactly.
+
+### Load flow (`src/lib/data-context.tsx`)
+
+```
+mount
+  ├── try Supabase: SELECT data FROM dashboard_profiles WHERE profile = 'andres-wuwa'
+  ├── if row exists → use it
+  ├── if not        → fetch /data.json → upsert it as the new row
+  └── set raw, syncStatus='live'
+```
+
+### Save flow
+
+Every `update(draft => …)` call:
+1. Deep-clones current `raw` via `structuredClone`
+2. Applies the mutator
+3. Stores as new `raw` state
+4. Schedules a 650ms debounced upsert to Supabase
+5. Indicator goes `● LIVE` → `◐ SAVE` → `● LIVE`
+
+If Supabase is unreachable, indicator stays `○ LOCAL`. Edits still apply in-memory; nothing's lost until tab close. (No localStorage fallback yet — could add if remote-edits-with-spotty-wifi becomes a use case.)
+
+### Supabase config
+
+The anon key is in `src/lib/supabase.ts` and `scripts/update.ts` — committed deliberately because Supabase anon keys are designed to ship client-side. Security comes from RLS policies on the table, not from key secrecy. The `dashboard_profiles` table has its old `CHECK (profile IN ('andres','wife'))` constraint dropped (2026-05-24) so any namespaced profile key works.
+
+If you ever need to re-create the table from scratch:
+
+```sql
+CREATE TABLE dashboard_profiles (
+  profile     TEXT PRIMARY KEY,
+  data        JSONB NOT NULL,
+  updated_at  TIMESTAMPTZ DEFAULT now()
+);
+```
+
+## Project structure
+
+```
+wuwa-dashboard-next/
+├─ public/
+│  ├─ data.json                Initial seed (live source is Supabase)
+│  ├─ portraits/               Square portraits (256×256-ish, casing matters)
+│  ├─ tall-portraits/          Tall full-body sprites (WebP)
+│  └─ weapons/                 Signature weapon images (Weapon_*.webp)
+├─ src/
+│  ├─ app/
+│  │  ├─ layout.tsx            ThemeProvider → DataProvider → EditProvider → TopBar + children
+│  │  ├─ page.tsx              / → Roster (dispatches per theme)
+│  │  ├─ r/[name]/page.tsx     /r/[name] → Resonator
+│  │  ├─ teams/page.tsx        /teams
+│  │  ├─ cycles/page.tsx       /cycles
+│  │  └─ globals.css           Tailwind v4 + per-theme html[data-theme] tokens
+│  ├─ components/
+│  │  ├─ top-bar.tsx           Dispatcher → picks theme-specific top bar
+│  │  ├─ weapon-img.tsx        <WeaponImg> with onError graceful hide
+│  │  ├─ editable-field.tsx    <EditableField> primitive (text/select/textarea)
+│  │  └─ themes/
+│  │     ├─ obsidian/          { styles, primitives, top-bar, roster, resonator, teams, cycles }
+│  │     ├─ atelier/           { + ARosterStrip vertical left-rail on resonator }
+│  │     └─ console/           { KPanel HUD chrome, KScanlines grid overlay, edit affordances }
+│  ├─ lib/
+│  │  ├─ types.ts              DashboardData, Resonator, AuditEntry, etc.
+│  │  ├─ supabase.ts           URL, anon key, table, profile key, debounce delay
+│  │  ├─ data-context.tsx      DataProvider + useData() hook + selectors
+│  │  ├─ theme-context.tsx     ThemeProvider + useTheme() + IMPLEMENTED_THEMES
+│  │  ├─ edit-context.tsx      EditProvider + useEditMode()
+│  │  ├─ elements.ts           Element + status palettes
+│  │  ├─ portraits.ts          Portrait + element-icon path resolvers + override map
+│  │  ├─ weapons.ts            weaponImage(name) → /weapons/Weapon_*.webp
+│  │  └─ duration.ts           durationToSec helper
+│  └─ data/                    (Empty — data.json moved to public/)
+├─ scripts/
+│  ├─ update.ts                CLI mutator (run via `npm run update -- …`)
+│  └─ refactor-data-imports.py One-shot codemod, kept for reference
+└─ package.json
+```
+
+## Adding new weapon images
+
+The wiki convention is `Weapon_{Name_With_Underscores}.webp`. Example: `Weapon_Everbright_Polestar.webp`. Drop the file in `public/weapons/` and it appears on the resonator page the next time you reload.
+
+**Apostrophe gotcha:** the wiki URL-encodes `'` as `%27` in filenames. So a wiki download might land as `Weapon_Defier%27s_Thorn.webp`. Rename it to use a literal apostrophe (`Weapon_Defier's_Thorn.webp`) — that's what the default helper expects.
+
+If a filename diverges from the convention (different extension, weird casing), add an entry to the `WEAPON_OVERRIDES` map in `src/lib/weapons.ts`.
+
+## Themes
+
+| Theme | When to use | Edit affordances |
+|-------|-------------|------------------|
+| Obsidian | Read-focused, dark, default for most surfaces | None — pure display |
+| Atelier  | Editorial / printable / sharing screenshots | None — pure display |
+| Console  | When you're tuning, logging clears, updating after a session | Full inline edit + LOCK toggle |
+
+Adding a fourth theme: copy `src/components/themes/obsidian/`, replace the palette and primitives, register it in `src/lib/theme-context.tsx` (`THEME_LIST`, `IMPLEMENTED_THEMES`, `ThemeId` type), and dispatch in `src/components/top-bar.tsx` + each route under `src/app/`.
+
+## Deployment
+
+**Currently dev-only.** Target deploy is GitHub Pages from `lumenastrum/wuwa-dashboard-next`. To get there:
+
+1. Add `output: 'export'` to `next.config.ts`.
+2. Add `generateStaticParams()` to `src/app/r/[name]/page.tsx` returning all 20 resonator names so each gets a pre-rendered HTML.
+3. Set up `.github/workflows/pages.yml` to build + publish to the `gh-pages` branch on push to `main`.
+4. Configure Pages source = `gh-pages` branch in repo settings.
+
+Once deployed, the live site reads from the same Supabase row — so the dashboard is *truly* live across devices, no rebuild needed for data changes.
+
+## Troubleshooting
+
+**Sync indicator stuck on `◐ SAVE`** — Network or RLS issue. Check browser console for the Supabase error code. Common ones:
+- `23514` → CHECK constraint violation on `profile` column. The constraint should be dropped; if it came back, re-run `ALTER TABLE dashboard_profiles DROP CONSTRAINT dashboard_profiles_profile_check;` in Supabase SQL Editor.
+- `401/403` → RLS denying anon writes. Check that the table has either no RLS or a policy allowing anon to upsert on `profile = 'andres-wuwa'`.
+
+**Indicator stays `○ LOCAL` immediately on load** — Supabase client failed to init (bad URL/key). Check `src/lib/supabase.ts` constants.
+
+**Tall portrait looks squished on a resonator** — Tailwind v4 preflight's `max-width: 100%` fighting an explicit `height: 105%`. The fix is already applied (`maxWidth: "none", width: "auto"` inline on every tall-portrait `<img>`) — if it comes back, add those props.
+
+**Weapon image not showing** — Filename mismatch with the convention. Open browser dev tools, check the 404 URL, then either rename the file or add an override to `src/lib/weapons.ts`.
+
+**CLI says "No row for profile andres-wuwa"** — Supabase doesn't have the seed row yet. Open `localhost:3000` once to trigger the seed, then re-run the CLI command.
+
+## For AI agents (Clio, Couch-Clio, anyone else)
+
+If you're a Claude landing in this repo:
+
+- This is **Next.js 16** — many APIs differ from training data (notably `params` is a `Promise` now, accessed via `use(params)` in client components). Always read `node_modules/next/dist/docs/` before changing routing or async data conventions.
+- **Don't reinstate the static `lib/data.ts`** — it was replaced with `lib/data-context.tsx` deliberately. Module-level constants from `data.json` can't see Supabase live updates.
+- **Edit mode is Console-only by design.** Don't add `<EditableField>` to Obsidian or Atelier pages.
+- **Inline styles are preserved 1:1 from the prototype** in `.design-handoff/design_handoff_wuwa_roster/`. Don't refactor them to Tailwind classes without asking — the prototype is the source of truth for visual fidelity.
+- **Couch-Clio runs commands natively.** When writing instructions ("then run X"), assume she or Claude Code will execute, not narrate.
+
+See `CLAUDE.md` for shorter context.

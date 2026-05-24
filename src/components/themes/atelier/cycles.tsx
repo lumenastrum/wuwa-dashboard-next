@@ -1,0 +1,258 @@
+"use client";
+
+import { useState } from "react";
+import { useData } from "@/lib/data-context";
+import { A_PAL, aStyles } from "./styles";
+import { ACard } from "./primitives";
+
+export function AtelierCycles() {
+  const { raw, roster, rosterByName } = useData();
+
+  const cycles = raw.endstateMatrix.cycles;
+  const [sel, setSel] = useState(cycles.length - 1);
+  const c = cycles[sel];
+
+  return (
+    <div style={aStyles.shell}>
+      <div style={{ padding: "32px 48px" }}>
+        <div style={{ marginBottom: 26 }}>
+          <div
+            style={{
+              ...aStyles.mono,
+              fontSize: 10,
+              color: A_PAL.textMute,
+              letterSpacing: 2,
+              marginBottom: 4,
+            }}
+          >
+            ENDSTATE · MATRIX
+          </div>
+          <div style={{ ...aStyles.display, fontSize: 72, lineHeight: 0.95 }}>
+            Eight teams.{" "}
+            <em style={{ fontStyle: "italic", color: A_PAL.textDim }}>One run each.</em>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 12, marginBottom: 26 }}>
+          {cycles.map((cc, i) => (
+            <div
+              key={cc.id}
+              onClick={() => setSel(i)}
+              style={{
+                padding: "18px 22px",
+                borderRadius: 16,
+                cursor: "pointer",
+                flex: 1,
+                background: i === sel ? A_PAL.surfaceStrong : A_PAL.surface,
+                border: `1px solid ${i === sel ? A_PAL.ink : A_PAL.border}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      ...aStyles.mono,
+                      fontSize: 10,
+                      color: A_PAL.textMute,
+                      letterSpacing: 2,
+                    }}
+                  >
+                    CYCLE {String(cc.id).padStart(2, "0")} · {cc.date}
+                  </div>
+                  <div
+                    style={{
+                      ...aStyles.display,
+                      fontSize: 28,
+                      fontStyle: "italic",
+                      marginTop: 2,
+                    }}
+                  >
+                    {cc.label}
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ ...aStyles.display, fontSize: 40, lineHeight: 1 }}>
+                    {cc.totalPoints.toLocaleString()}
+                  </div>
+                  <div
+                    style={{
+                      ...aStyles.mono,
+                      fontSize: 10,
+                      color: A_PAL.textMute,
+                    }}
+                  >
+                    {cc.teamsOver5k}/8 · {cc.dayOne ? "DAY ONE" : "—"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 36 }}>
+          <div>
+            {c.teams.map((t, i) => {
+              const w = (t.score / 15000) * 100;
+              const crowned = t.rating === "CROWNED" || t.rating === "SSS";
+              return (
+                <div
+                  key={i}
+                  style={{
+                    marginBottom: 22,
+                    paddingBottom: 18,
+                    borderBottom: `1px solid ${A_PAL.border}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: 16,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <div style={{ ...aStyles.display, fontSize: 30, color: A_PAL.textDim }}>
+                      0{t.order}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div
+                        style={{
+                          ...aStyles.display,
+                          fontSize: 24,
+                          fontStyle: crowned ? "italic" : "normal",
+                        }}
+                      >
+                        {t.members.join(" · ")}
+                      </div>
+                      <div
+                        style={{
+                          ...aStyles.mono,
+                          fontSize: 10,
+                          color: A_PAL.textMute,
+                          letterSpacing: 1.5,
+                          marginTop: 2,
+                        }}
+                      >
+                        {t.buff.toUpperCase()}
+                        {t.rating && ` · ${t.rating}`}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ ...aStyles.display, fontSize: 32 }}>
+                        {t.score.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      height: 3,
+                      background: "rgba(60,70,100,0.08)",
+                      borderRadius: 999,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${w}%`,
+                        height: "100%",
+                        background: crowned ? A_PAL.ink : t.over5k ? "#5fe1b3" : A_PAL.textMute,
+                      }}
+                    />
+                  </div>
+                  {t.notes && (
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: A_PAL.textDim,
+                        marginTop: 8,
+                        fontStyle: "italic",
+                      }}
+                    >
+                      {t.notes}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
+              position: "sticky",
+              top: 80,
+              alignSelf: "flex-start",
+            }}
+          >
+            <ACard>
+              <div style={{ ...aStyles.display, fontSize: 26, marginBottom: 14 }}>
+                Lessons learned
+              </div>
+              {c.lessons.map((l, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    padding: "10px 0",
+                    borderBottom: i < c.lessons.length - 1 ? `1px solid ${A_PAL.border}` : "none",
+                  }}
+                >
+                  <div
+                    style={{
+                      ...aStyles.display,
+                      fontSize: 18,
+                      fontStyle: "italic",
+                      color: A_PAL.accent,
+                      width: 16,
+                    }}
+                  >
+                    —
+                  </div>
+                  <div style={{ fontSize: 13, color: A_PAL.text, lineHeight: 1.45 }}>{l}</div>
+                </div>
+              ))}
+            </ACard>
+            <ACard>
+              <div style={{ ...aStyles.display, fontSize: 26, marginBottom: 14 }}>
+                Key findings
+              </div>
+              {raw.keyFindings.slice(0, 4).map((f, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    padding: "10px 0",
+                    borderBottom: i < 3 ? `1px solid ${A_PAL.border}` : "none",
+                  }}
+                >
+                  <div
+                    style={{
+                      ...aStyles.mono,
+                      fontSize: 10,
+                      color: A_PAL.textMute,
+                      width: 26,
+                      paddingTop: 3,
+                    }}
+                  >
+                    F.{String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div style={{ fontSize: 12, color: A_PAL.textDim, lineHeight: 1.5 }}>{f}</div>
+                </div>
+              ))}
+            </ACard>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

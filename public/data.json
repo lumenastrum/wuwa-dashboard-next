@@ -1,0 +1,1714 @@
+{
+  "meta": {
+    "title": "Andres's WuWa Dashboard",
+    "updated": "2026-05-23",
+    "totalResonators": 20,
+    "maxLevel": 90
+  },
+  "resonators": [
+    {
+      "name": "Aemeath",
+      "element": "Fusion",
+      "weaponType": "Sword",
+      "role": "Main DPS",
+      "sequence": "S3",
+      "weapon": "Everbright Polestar",
+      "weaponRank": "R1",
+      "echoSet": "Trailblazing Star 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Carlotta",
+      "element": "Glacio",
+      "weaponType": "Pistols",
+      "role": "Main DPS",
+      "sequence": "S3",
+      "weapon": "The Last Dance",
+      "weaponRank": "R1",
+      "echoSet": "Frosty Resolve 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Cartethyia",
+      "element": "Aero",
+      "weaponType": "Sword",
+      "role": "Main DPS",
+      "sequence": "S3",
+      "weapon": "Defier's Thorn",
+      "weaponRank": "R1",
+      "echoSet": "Windward Pilgrimage 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Phrolova",
+      "element": "Havoc",
+      "weaponType": "Pistols",
+      "role": "Main DPS",
+      "sequence": "S2",
+      "weapon": "Lethean Elegy",
+      "weaponRank": "R1",
+      "echoSet": "Dream of the Lost 3 + Havoc Eclipse 2",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Augusta",
+      "element": "Electro",
+      "weaponType": "Broadblade",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "Thunderflare Dominion",
+      "weaponRank": "R1",
+      "echoSet": "Crown of Valor 3 + Void Thunder 2",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Jinhsi",
+      "element": "Spectro",
+      "weaponType": "Sword",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "Ages of Harvest",
+      "weaponRank": "R1",
+      "echoSet": "Celestial Light 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Changli",
+      "element": "Fusion",
+      "weaponType": "Sword",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "Blazing Brilliance",
+      "weaponRank": "R1",
+      "echoSet": "Molten Rift 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Zani",
+      "element": "Spectro",
+      "weaponType": "Gauntlets",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "Blazing Justice",
+      "weaponRank": "R1",
+      "echoSet": "Eternal Radiance 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Iuno",
+      "element": "Aero",
+      "weaponType": "Rectifier",
+      "role": "Sub-DPS",
+      "sequence": "S1",
+      "weapon": "Moongazer's Sigil",
+      "weaponRank": "R1",
+      "echoSet": "Crown of Valor 3 + Windward Pilgrimage 2",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Lynae",
+      "element": "Spectro",
+      "weaponType": "Pistols",
+      "role": "Sub-DPS",
+      "sequence": "S2",
+      "weapon": "Spectrum Blaster",
+      "weaponRank": "R1",
+      "echoSet": "Pact of Neonlight Leap 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Cantarella",
+      "element": "Havoc",
+      "weaponType": "Rectifier",
+      "role": "Sub-DPS",
+      "sequence": "S3",
+      "weapon": "Whispers of Sirens",
+      "weaponRank": "R1",
+      "echoSet": "Midnight Veil 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Phoebe",
+      "element": "Spectro",
+      "weaponType": "Pistols",
+      "role": "Sub-DPS",
+      "sequence": "S1",
+      "weapon": "Luminous Hymn",
+      "weaponRank": "R1",
+      "echoSet": "Eternal Radiance 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Ciaccona",
+      "element": "Aero",
+      "weaponType": "Rectifier",
+      "role": "Sub-DPS",
+      "sequence": "S0",
+      "weapon": "Woodland Aria",
+      "weaponRank": "R1",
+      "echoSet": "Gusts of Welkin 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Lupa",
+      "element": "Fusion",
+      "weaponType": "Broadblade",
+      "role": "Sub-DPS",
+      "sequence": "S0",
+      "weapon": "Wildfire Mark",
+      "weaponRank": "R1",
+      "echoSet": "Flaming Clawprint 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Denia",
+      "element": "Fusion",
+      "weaponType": "Rectifier",
+      "role": "Sub-DPS",
+      "sequence": "S2",
+      "weapon": "Forged Dwarf Star",
+      "weaponRank": "R1",
+      "echoSet": "Chromatic Foam 5/5",
+      "level": 90,
+      "notes": "Aemeath's missing piece"
+    },
+    {
+      "name": "Zhezhi",
+      "element": "Glacio",
+      "weaponType": "Rectifier",
+      "role": "Sub-DPS",
+      "sequence": "S0",
+      "weapon": "Rime-Draped Sprouts",
+      "weaponRank": "R1",
+      "echoSet": "Moonlit Clouds 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Mornye",
+      "element": "Fusion",
+      "weaponType": "Broadblade",
+      "role": "Support",
+      "sequence": "S0",
+      "weapon": "Discord",
+      "weaponRank": "R1",
+      "echoSet": "Halo of Starry Radiance 5/5",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Chisa",
+      "element": "Havoc",
+      "weaponType": "Sword",
+      "role": "Support",
+      "sequence": "S0",
+      "weapon": "Kumokiri",
+      "weaponRank": "R1",
+      "echoSet": "Thread of Severed Fate 3 + Havoc Eclipse 2",
+      "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Roccia",
+      "element": "Havoc",
+      "weaponType": "Gauntlets",
+      "role": "Support",
+      "sequence": "S0",
+      "weapon": "Tragicomedy",
+      "weaponRank": "R1",
+      "echoSet": "Midnight Veil 5/5",
+      "level": 90,
+      "notes": "Weapon Lv86"
+    },
+    {
+      "name": "Shorekeeper",
+      "element": "Spectro",
+      "weaponType": "Rectifier",
+      "role": "Support",
+      "sequence": "S2",
+      "weapon": "Stellar Symphony",
+      "weaponRank": "R1",
+      "echoSet": "Rejuvenating Glow 5/5",
+      "level": 90,
+      "notes": ""
+    }
+  ],
+  "audit": [
+    {
+      "name": "Aemeath",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "1,927",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "yellow"
+        },
+        {
+          "label": "CR",
+          "current": "75.4%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "276.2%",
+          "min": 230,
+          "max": 250,
+          "optimal": "230-250%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "124.4%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "Near perfect",
+      "priorityStatus": "green",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Carlotta",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,208",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "55.9%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "red"
+        },
+        {
+          "label": "CD",
+          "current": "324.8%",
+          "min": 230,
+          "max": 250,
+          "optimal": "230-250%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "110.8%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR low; SK buffs fix",
+      "priorityStatus": "yellow",
+      "_calcPriority": "red"
+    },
+    {
+      "name": "Cartethyia",
+      "buildType": "HP Scaler",
+      "stats": [
+        {
+          "label": "HP",
+          "current": "50,688",
+          "min": 45000,
+          "max": 50000,
+          "optimal": "45,000-50,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "77.9%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "271.4%",
+          "min": 220,
+          "max": 250,
+          "optimal": "220-250%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "119.2%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "ALL GREEN - Cleanest build",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Phrolova",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,108",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "66.1%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "yellow"
+        },
+        {
+          "label": "CD",
+          "current": "277.4%",
+          "min": 260,
+          "optimal": "260%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "100%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR 66 + DotL = ~70%+ in combat",
+      "priorityStatus": "yellow",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Augusta",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,243",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "83.4%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "227.2%",
+          "min": 230,
+          "max": 250,
+          "optimal": "230-250%",
+          "unit": "%",
+          "_status": "yellow"
+        },
+        {
+          "label": "ER",
+          "current": "117%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "RED - CR 17% under target",
+      "priorityStatus": "red",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Jinhsi",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,028",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "79%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "272.6%",
+          "min": 260,
+          "optimal": "260%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "108.4%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "GREEN - Near perfect; ER slightly low",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Changli",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,190",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "70.3%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "252.6%",
+          "min": 230,
+          "max": 250,
+          "optimal": "230-250%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "116%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "ALL GREEN - Most balanced build",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Zani",
+      "buildType": "CRIT DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,136",
+          "min": 2000,
+          "max": 2300,
+          "optimal": "2,000-2,300",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "71.9%",
+          "min": 70,
+          "max": 80,
+          "optimal": "70-80%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "253.6%",
+          "min": 230,
+          "max": 250,
+          "optimal": "230-250%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "117.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR 60.5 + ER set buff = ~70%+ in combat",
+      "priorityStatus": "yellow",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Iuno",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,083",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "92.3%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "228.6%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "110.8%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR overcapped (36% from weapon)",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Lynae",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,129",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "73.7%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "222.6%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "116.8%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "ALL GREEN",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Cantarella",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "1,977",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "yellow"
+        },
+        {
+          "label": "CR",
+          "current": "71.9%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "284.4%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "121.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "YELLOW - CR crisis, 72% CD weapon",
+      "priorityStatus": "yellow",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Phoebe",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,022",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "72.3%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "248.2%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "126.8%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "YELLOW - CR massively overcapped",
+      "priorityStatus": "yellow",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Ciaccona",
+      "buildType": "Sub-DPS/Enabler",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "1,911",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "yellow"
+        },
+        {
+          "label": "CR",
+          "current": "91.2%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "221.6%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "127.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR overcapped (36% wep)",
+      "priorityStatus": "green",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Lupa",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "1,991",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "yellow"
+        },
+        {
+          "label": "CR",
+          "current": "75.5%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "258.6%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "131.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "48.6% CD weapon",
+      "priorityStatus": "green",
+      "_calcPriority": "yellow"
+    },
+    {
+      "name": "Denia",
+      "buildType": "Sub-DPS",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,026",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "76.7%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "259.8%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "129.2%",
+          "min": 125,
+          "optimal": "125%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "ALL GREEN. S2 upgrade (5/23). Aemeath's Fusion Burst engine.",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Zhezhi",
+      "buildType": "Battery/Buffer",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "1,938",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "yellow"
+        },
+        {
+          "label": "CR",
+          "current": "41.9%",
+          "min": 60,
+          "max": 75,
+          "optimal": "60-75%",
+          "unit": "%",
+          "_status": "red"
+        },
+        {
+          "label": "CD",
+          "current": "328.4%",
+          "min": 200,
+          "max": 230,
+          "optimal": "200-230%",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "133.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "72% CD weapon tax; role covers it",
+      "priorityStatus": "yellow",
+      "_calcPriority": "red"
+    },
+    {
+      "name": "Mornye",
+      "buildType": "Support",
+      "stats": [
+        {
+          "label": "DEF",
+          "current": "2,608",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "274.2%",
+          "min": 200,
+          "optimal": "200%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "HP",
+          "current": "24,110",
+          "min": 20000,
+          "optimal": "20,000+",
+          "_status": "green"
+        },
+        {
+          "label": "ATK",
+          "current": "-",
+          "min": 0,
+          "optimal": "N/A",
+          "_status": "neutral"
+        }
+      ],
+      "notes": "SUPPORT BUILD - 4? weapon",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Chisa",
+      "buildType": "DPS Support",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,265",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "79.1%",
+          "min": 60,
+          "optimal": "60%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "232.2%",
+          "min": 200,
+          "optimal": "200%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "117.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "Support w/ carry stats; 24% team amp",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Roccia",
+      "buildType": "Support (CR/ATK)",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "2,047",
+          "min": 2000,
+          "optimal": "2,000+",
+          "_status": "green"
+        },
+        {
+          "label": "CR",
+          "current": "72.1%",
+          "min": 70,
+          "optimal": "70%+ (200 cap)",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "CD",
+          "current": "187.2%",
+          "min": 150,
+          "optimal": "150%+",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "127.6%",
+          "min": 100,
+          "optimal": "100%+",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "CR = team buff mechanic (capped)",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    },
+    {
+      "name": "Shorekeeper",
+      "buildType": "Support (ER/Buff)",
+      "stats": [
+        {
+          "label": "HP",
+          "current": "31,046",
+          "min": 28000,
+          "optimal": "28,000+",
+          "_status": "green"
+        },
+        {
+          "label": "ER",
+          "current": "278.6%",
+          "min": 250,
+          "optimal": "250%+ (cap)",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "Team CR",
+          "current": "12.5%",
+          "min": 12.5,
+          "optimal": "12.5% (maxed)",
+          "unit": "%",
+          "_status": "green"
+        },
+        {
+          "label": "Team CD",
+          "current": "25%",
+          "min": 25,
+          "optimal": "25% (maxed)",
+          "unit": "%",
+          "_status": "green"
+        }
+      ],
+      "notes": "BOTH BUFF CAPS MAXED",
+      "priorityStatus": "green",
+      "_calcPriority": "green"
+    }
+  ],
+  "benchmarks": [
+    {
+      "rank": 1,
+      "team": [
+        "Aemeath",
+        "Lynae",
+        "Mornye"
+      ],
+      "element": "Fusion+Spectro",
+      "best": "0:33",
+      "worst": "0:39",
+      "average": "0:37.3",
+      "spread": "6s",
+      "deaths": 0,
+      "notes": "QUEEN. Fusion Alpha. New PB 0:33 (5/23). Lynae S2 Amplification stacking."
+    },
+    {
+      "rank": 2,
+      "team": [
+        "Aemeath",
+        "Denia",
+        "Chisa"
+      ],
+      "element": "Fusion+Havoc",
+      "best": "0:33",
+      "worst": "0:33",
+      "average": "0:33.0",
+      "spread": "0s",
+      "deaths": 0,
+      "notes": "Fusion Burst. Tied #1 after rotation fix (5/23). Denia S2 + Chisa stack cap. WW queen (4340)."
+    },
+    {
+      "rank": 3,
+      "team": [
+        "Cartethyia",
+        "Ciaccona",
+        "Chisa"
+      ],
+      "element": "Aero+Havoc",
+      "best": "0:42",
+      "worst": "0:45",
+      "average": "0:43.0",
+      "spread": "3s",
+      "deaths": 0,
+      "notes": "Sub-45 UPHILL. Sweet potato supremacy."
+    },
+    {
+      "rank": 4,
+      "team": [
+        "Aemeath",
+        "Denia",
+        "Lupa"
+      ],
+      "element": "Fusion",
+      "best": "0:53",
+      "worst": "0:53",
+      "average": "0:53.0",
+      "spread": "0s",
+      "deaths": 0,
+      "notes": "TRIPLE PINK DANGER. Zero healer. Pure violence. Slot order: Lupa-Denia-Aemeath."
+    },
+    {
+      "rank": 5,
+      "team": [
+        "Carlotta",
+        "Lynae",
+        "Shorekeeper"
+      ],
+      "element": "Glacio+Spectro",
+      "best": "1:00",
+      "worst": "1:04",
+      "average": "1:02.3",
+      "spread": "4s",
+      "deaths": 0,
+      "notes": "Desu wa + Yabai. Zhezhi vendetta."
+    },
+    {
+      "rank": 6,
+      "team": [
+        "Carlotta",
+        "Zhezhi",
+        "Shorekeeper"
+      ],
+      "element": "Glacio",
+      "best": "1:08",
+      "worst": "1:14",
+      "average": "1:11.0",
+      "spread": "6s",
+      "deaths": 0,
+      "notes": "S3 Carlotta. 1032% ATK outro."
+    },
+    {
+      "rank": 7,
+      "team": [
+        "Changli",
+        "Lupa",
+        "Aemeath"
+      ],
+      "element": "Fusion",
+      "best": "1:14",
+      "worst": "1:18",
+      "average": "1:16.0",
+      "spread": "4s",
+      "deaths": 0,
+      "notes": "Aemeath carry. Pack Hunt full."
+    },
+    {
+      "rank": 8,
+      "team": [
+        "Zani",
+        "Phoebe",
+        "Shorekeeper"
+      ],
+      "element": "Spectro",
+      "best": "1:15",
+      "worst": "1:29",
+      "average": "1:21.7",
+      "spread": "14s",
+      "deaths": 0,
+      "notes": "Spectro Queen. CR coin flips."
+    },
+    {
+      "rank": 9,
+      "team": [
+        "Augusta",
+        "Iuno",
+        "Shorekeeper"
+      ],
+      "element": "Electro",
+      "best": "1:22",
+      "worst": "1:25",
+      "average": "1:23.3",
+      "spread": "3s",
+      "deaths": 0,
+      "notes": "Most consistent premium team."
+    },
+    {
+      "rank": 10,
+      "team": [
+        "Jinhsi",
+        "Cantarella",
+        "Shorekeeper"
+      ],
+      "element": "Spectro+Havoc",
+      "best": "1:31",
+      "worst": "1:35",
+      "average": "1:33.7",
+      "spread": "4s",
+      "deaths": 0,
+      "notes": "Cantarella > Zhezhi for Jinhsi."
+    },
+    {
+      "rank": 11,
+      "team": [
+        "Jinhsi",
+        "Zhezhi",
+        "Shorekeeper"
+      ],
+      "element": "Spectro+Glacio",
+      "best": "1:32",
+      "worst": "1:50",
+      "average": "1:39.3",
+      "spread": "18s",
+      "deaths": 0,
+      "notes": "BiS lost. Burst timing mismatch."
+    },
+    {
+      "rank": 12,
+      "team": [
+        "Phoebe",
+        "Nyx",
+        "Chisa"
+      ],
+      "element": "Spectro+Havoc",
+      "best": "1:46",
+      "worst": "1:48",
+      "average": "1:47.0",
+      "spread": "2s",
+      "deaths": 0,
+      "notes": "POTATO ACOLYTE. 2s spread queen."
+    },
+    {
+      "rank": 13,
+      "team": [
+        "Changli",
+        "Lupa",
+        "Mornye"
+      ],
+      "element": "Fusion",
+      "best": "2:04",
+      "worst": "2:16",
+      "average": "2:08.0",
+      "spread": "12s",
+      "deaths": 0,
+      "notes": "Mornye = Encore swap. Same DPS."
+    },
+    {
+      "rank": 14,
+      "team": [
+        "Changli",
+        "Encore",
+        "Lupa"
+      ],
+      "element": "Fusion",
+      "best": "2:02",
+      "worst": "2:14",
+      "average": "2:08.7",
+      "spread": "12s",
+      "deaths": 3,
+      "notes": "OG Mono-Fusion. Died for science."
+    },
+    {
+      "rank": 15,
+      "team": [
+        "Phrolova",
+        "Cantarella",
+        "Roccia"
+      ],
+      "element": "Havoc",
+      "best": "2:17",
+      "worst": "2:27",
+      "average": "2:21.7",
+      "spread": "10s",
+      "deaths": 0,
+      "notes": "Full Havoc uphill. Resistance tax."
+    }
+  ],
+  "benchmarkMeta": {
+    "location": "Overdrive Zone - Crownless Lv.100",
+    "timer": "10:00",
+    "runs": "Best of 3",
+    "date": "May 23, 2026",
+    "resistances": "Glacio/Spectro DOWN (-10%) | Havoc/Aero UP (+10%) | Fusion/Electro Neutral"
+  },
+  "teams": [
+    {
+      "name": "Fusion Alpha",
+      "members": [
+        "Aemeath S3",
+        "Lynae S2",
+        "Mornye S0"
+      ]
+    },
+    {
+      "name": "Fusion Burst",
+      "members": [
+        "Aemeath S3",
+        "Denia S2",
+        "Chisa S0"
+      ]
+    },
+    {
+      "name": "Triple Pink Danger",
+      "members": [
+        "Lupa S0",
+        "Denia S2",
+        "Aemeath S3"
+      ]
+    },
+    {
+      "name": "Fusion Beta",
+      "members": [
+        "Changli S0",
+        "Lupa S0",
+        "Encore"
+      ]
+    },
+    {
+      "name": "Glacio/Spectro",
+      "members": [
+        "Carlotta S3",
+        "Zhezhi S0",
+        "Shorekeeper S2"
+      ]
+    },
+    {
+      "name": "Aero",
+      "members": [
+        "Cartethyia S3",
+        "Ciaccona S0",
+        "Chisa S0"
+      ]
+    },
+    {
+      "name": "Havoc Triangle",
+      "members": [
+        "Phrolova S2",
+        "Cantarella S3",
+        "Roccia S0"
+      ]
+    },
+    {
+      "name": "Spectro (Jinhsi)",
+      "members": [
+        "Jinhsi S0",
+        "Zhezhi S0",
+        "Shorekeeper S2"
+      ]
+    },
+    {
+      "name": "Spectro (Zani)",
+      "members": [
+        "Zani S0",
+        "Phoebe S1",
+        "Shorekeeper S2"
+      ]
+    },
+    {
+      "name": "Electro",
+      "members": [
+        "Augusta S0",
+        "Iuno S1",
+        "Shorekeeper S2"
+      ]
+    }
+  ],
+  "actionItems": [
+    {
+      "task": "Augusta CR Substats",
+      "detail": "DONE \u2014 CR 53.3% \u2192 83.4% (3/29 farming session)",
+      "status": "green"
+    },
+    {
+      "task": "Augusta CD recovery",
+      "detail": "CD dropped 264.2% \u2192 227.2% during CR fix \u2014 target 230%+",
+      "status": "yellow"
+    },
+    {
+      "task": "Cantarella ATK tuning",
+      "detail": "ATK 1,977 \u2014 23 short of 2,000 floor. Minor.",
+      "status": "green"
+    },
+    {
+      "task": "Roccia weapon Lv86\u219290",
+      "detail": "Free stats upgrade",
+      "status": "yellow"
+    },
+    {
+      "task": "Mornye sig weapon",
+      "detail": "Whenever available",
+      "status": "yellow"
+    },
+    {
+      "task": "Jinhsi ER substats",
+      "detail": "Minor (108.4% \u2192 115%+)",
+      "status": "green"
+    },
+    {
+      "task": "Denia ER substats",
+      "detail": "DONE \u2014 120.0% \u2192 129.2% (5/23 farming session)",
+      "status": "green"
+    },
+    {
+      "task": "Denia ATK tuning",
+      "detail": "DONE \u2014 ATK 1,971 \u2192 2,026 (5/23 farming session)",
+      "status": "green"
+    },
+    {
+      "task": "Denia Skill levels",
+      "detail": "Resonance Skill 7\u219210, Normal Attack 6\u219210 when mats allow",
+      "status": "yellow"
+    }
+  ],
+  "keyFindings": [
+    "Sub-DPS with real personal damage > dedicated buff bots. Zhezhi went 0-2 against replacements.",
+    "Tightest spread: Phoebe/Nyx/Chisa \u2014 2 seconds. Most reliable: Augusta/Iuno/Shorekeeper \u2014 3 seconds.",
+    "Resistance tax: Havoc team (uphill) 2:21.7 avg. Cartethyia (also uphill) 0:43.0 avg \u2014 raw power overcomes.",
+    "Aemeath support diff: with Changli/Lupa 1:16.0 avg vs with Lynae/Mornye 0:37.3 avg \u2014 39 seconds faster.",
+    "3/29 Echo farming session: 7 resonators improved. Augusta CR fixed (red \u2192 green). Cantarella/Phoebe redistributed. Aemeath CD +17.4%. Zero red priorities remain.",
+    "5/23 Denia vs Lynae: Lynae S2 Amplification buffs (multiplicative) beat Denia's Fusion DMG Bonus (additive into saturated pool) for single-target. Heavenfall Edict: 1.04M (Lynae) vs 615k (Denia).",
+    "5/23 Multiplier bucket theory: Denia stacks same bucket as Aemeath S3's Fusion DMG. Lynae S2 multiplies across buckets (All-DMG Amplification). Different math architecture = different per-hit ceilings.",
+    "5/23 Content-specific queens: Fusion Burst team scored 4340 vs Legacy 2980 in Whimpering Wastes with Fusion Burst stage buff. Lynae bosses, Denia endgame scoring. Both earn their slot.",
+    "5/23 Rotation optimization: Aemeath combo path (Intro\u2192Echo\u2192Ult1\u2192Mech B4\u2192Seraphic\u2192Aemeath B4\u2192Seraphic\u2192Charged II\u2192Finale) + buff window alignment improved Denia team from 1:14 to 0:33.",
+    "5/23 Triple Pink Danger (Lupa\u2192Denia\u2192Aemeath): 0:53 no-healer speedrun. Optimal slot order based on outro buff type analysis (Lupa Deepen=multiplicative, Denia Bonus=additive, Aemeath=finisher).",
+    "5/23 Whimpering Wastes SS 7220 new record. Denia team scored 4340 on second half after S2 upgrade + rotation fix. 72% improvement from first attempt."
+  ],
+  "endstateMatrix": {
+    "cycles": [
+      {
+        "id": 1,
+        "date": "2026-03-28",
+        "label": "The First Sweep",
+        "totalPoints": 59424,
+        "target": 58000,
+        "teamsOver5k": 6,
+        "teamTarget": 6,
+        "dayOne": true,
+        "teams": [
+          {
+            "order": 1,
+            "members": [
+              "Changli",
+              "Lupa",
+              "Mornye"
+            ],
+            "buff": "General Enhancement",
+            "score": 4060,
+            "rating": "",
+            "over5k": false,
+            "notes": "Softener"
+          },
+          {
+            "order": 2,
+            "members": [
+              "Phrolova",
+              "Cantarella",
+              "Roccia"
+            ],
+            "buff": "Echo Skill Enhancement",
+            "score": 5487,
+            "rating": "",
+            "over5k": true,
+            "notes": "First 5k clear \u2014 CR fix paying dividends"
+          },
+          {
+            "order": 3,
+            "members": [
+              "Augusta",
+              "Iuno",
+              "Shorekeeper"
+            ],
+            "buff": "General Enhancement",
+            "score": 6677,
+            "rating": "S",
+            "over5k": true,
+            "notes": "THREE bosses in one run. Eternal Sun redemption"
+          },
+          {
+            "order": 4,
+            "members": [
+              "Carlotta",
+              "Zhezhi",
+              "Shorekeeper"
+            ],
+            "buff": "General Enhancement",
+            "score": 7336,
+            "rating": "S",
+            "over5k": true,
+            "notes": "The desu wa dance. Highest single-team at time"
+          },
+          {
+            "order": 5,
+            "members": [
+              "Zani",
+              "Phoebe",
+              "Nyx"
+            ],
+            "buff": "Spectro Frazzle",
+            "score": 5363,
+            "rating": "",
+            "over5k": true,
+            "notes": "SK depleted \u2014 Rover improvised. Potato + Protagonist"
+          },
+          {
+            "order": 6,
+            "members": [
+              "Aemeath",
+              "Lynae",
+              "Mornye"
+            ],
+            "buff": "Tune Strain",
+            "score": 14844,
+            "rating": "SSS",
+            "over5k": true,
+            "notes": "QUEEN. \"Roger! Sending Clio\u2014 I mean, Aemeath\""
+          },
+          {
+            "order": 7,
+            "members": [
+              "Cartethyia",
+              "Ciaccona",
+              "Chisa"
+            ],
+            "buff": "Negative DMG Enhancement",
+            "score": 12236,
+            "rating": "SSS",
+            "over5k": true,
+            "notes": "CROWNED. Sweet potato supremacy"
+          },
+          {
+            "order": 8,
+            "members": [
+              "Jinhsi",
+              "Sanhua",
+              "Verina"
+            ],
+            "buff": "Luminal Synthesis",
+            "score": 3421,
+            "rating": "",
+            "over5k": false,
+            "notes": "THE CLOSER. Two 4-stars across the finish line"
+          }
+        ],
+        "lessons": [
+          "Lead with weakest teams, save queens for hardest stages",
+          "SK vigor management is critical \u2014 improvise with Rover when depleted",
+          "Augusta: red priority to 6,677 in one farming session",
+          "Jinhsi closer energy: budget team, clutch results"
+        ]
+      },
+      {
+        "id": 2,
+        "date": "2026-05-23",
+        "label": "The Closer Returns",
+        "totalPoints": 60165,
+        "target": 58000,
+        "teamsOver5k": 6,
+        "teamTarget": 6,
+        "dayOne": true,
+        "teams": [
+          {
+            "order": 1,
+            "members": [
+              "Changli",
+              "Lupa",
+              "Mornye"
+            ],
+            "buff": "General Damage Up",
+            "score": 4037,
+            "rating": "",
+            "over5k": false,
+            "notes": "Softener \u2014 consistent floor"
+          },
+          {
+            "order": 2,
+            "members": [
+              "Zani",
+              "Phoebe",
+              "Shorekeeper"
+            ],
+            "buff": "General Damage Up",
+            "score": 5507,
+            "rating": "",
+            "over5k": true,
+            "notes": "Reshuffled earlier for easier stage"
+          },
+          {
+            "order": 3,
+            "members": [
+              "Augusta",
+              "Iuno",
+              "Verina"
+            ],
+            "buff": "General Damage Up",
+            "score": 5389,
+            "rating": "",
+            "over5k": true,
+            "notes": "Lost SK to reshuffle \u2014 Verina stepped in"
+          },
+          {
+            "order": 4,
+            "members": [
+              "Carlotta",
+              "Lynae",
+              "Shorekeeper"
+            ],
+            "buff": "Tune Strain",
+            "score": 8008,
+            "rating": "SS",
+            "over5k": true,
+            "notes": "Lynae replaces Zhezhi \u2014 multiplicative math proved out"
+          },
+          {
+            "order": 5,
+            "members": [
+              "Phrolova",
+              "Cantarella",
+              "Roccia"
+            ],
+            "buff": "Echo Skill Up",
+            "score": 7876,
+            "rating": "SS",
+            "over5k": true,
+            "notes": "Cantarella's CR fix still printing two months later"
+          },
+          {
+            "order": 6,
+            "members": [
+              "Cartethyia",
+              "Ciaccona",
+              "Chisa"
+            ],
+            "buff": "Negative Damage Up",
+            "score": 13149,
+            "rating": "SSS",
+            "over5k": true,
+            "notes": "Broke her own record. THREE R2 bosses"
+          },
+          {
+            "order": 7,
+            "members": [
+              "Aemeath",
+              "Denia",
+              "Mornye"
+            ],
+            "buff": "Negative Damage Up",
+            "score": 12553,
+            "rating": "CROWNED",
+            "over5k": true,
+            "notes": "Chisa locked \u2014 Mornye sub \u2014 still crowned"
+          },
+          {
+            "order": 8,
+            "members": [
+              "Jinhsi",
+              "Zhezhi",
+              "Verina"
+            ],
+            "buff": "General Damage Up",
+            "score": 3646,
+            "rating": "",
+            "over5k": false,
+            "notes": "THE CLOSER RETURNS. 2/2 cycles \u2014 canon"
+          }
+        ],
+        "lessons": [
+          "Chisa and Roccia are NOT support class \u2014 single use only!",
+          "Verina IS support class \u2014 2 uses, saved us twice",
+          "Denia ripple: frees Lynae \u2192 upgrades Carlotta (7,336 \u2192 8,008)",
+          "Plan Chisa allocation FIRST next cycle",
+          "Jinhsi closer arc: 2/2 cycles \u2014 it's canon now",
+          "Reshuffle mid-run saved the 6-team threshold"
+        ]
+      }
+    ]
+  }
+}
