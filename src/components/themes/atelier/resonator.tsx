@@ -8,6 +8,7 @@ import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
+import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { AuditStat } from "@/lib/types";
 import { A_PAL, aStyles } from "./styles";
@@ -92,7 +93,6 @@ export function AtelierResonator({ name }: { name: string }) {
   const el = ELEMENTS[r.element];
   const teams = teamsFeaturingOf(raw, r.name);
   const sw = signatureWeaponOf(raw, r.weapon);
-  const swStats = [sw?.baseAtk && `ATK ${sw.baseAtk}`, sw?.mainStat && `${sw.mainStat}${sw.mainStatValue ? ` ${sw.mainStatValue}` : ""}`].filter(Boolean).join("  ·  ");
   const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
@@ -375,46 +375,54 @@ export function AtelierResonator({ name }: { name: string }) {
                   </div>
                   <div
                     style={{
-                      padding: "10px 14px",
+                      padding: "13px 16px",
                       borderRadius: 10,
                       background: A_PAL.surfaceStrong,
                       border: `1px solid ${A_PAL.border}`,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
                     }}
                   >
-                    <div
-                      style={{
-                        ...aStyles.mono,
-                        fontSize: 10,
-                        color: A_PAL.textMute,
-                        letterSpacing: 1,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 12,
-                      }}
-                    >
-                      <span>SIGNATURE PASSIVE{sw?.passiveName ? ` · ${sw.passiveName}` : ""}</span>
-                      {swStats && <span style={{ color: A_PAL.textDim }}>{swStats}</span>}
-                    </div>
-                    {swHasDetail ? (
-                      <>
-                        {sw?.passive && (
-                          <div style={{ fontSize: 14, color: A_PAL.ink, marginTop: 5, lineHeight: 1.55 }}>
-                            {sw.passive}
+                    {(sw?.baseAtk || sw?.mainStat) && (
+                      <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+                        {sw?.baseAtk && (
+                          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <span style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1.5 }}>BASE ATK</span>
+                            <span style={{ ...aStyles.mono, fontSize: 17, color: A_PAL.accent, fontWeight: 600 }}>{sw.baseAtk}</span>
                           </div>
                         )}
-                        {sw?.synergy && (
-                          <div style={{ marginTop: sw?.passive ? 10 : 5 }}>
-                            <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.accent, letterSpacing: 1 }}>
-                              WHY IT&apos;S CRACKED
-                            </div>
-                            <div style={{ fontSize: 14, color: A_PAL.textDim, marginTop: 3, lineHeight: 1.55, fontStyle: "italic" }}>
-                              {sw.synergy}
-                            </div>
+                        {sw?.mainStat && (
+                          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <span style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1.5 }}>{sw.mainStat.toUpperCase()}</span>
+                            <span style={{ ...aStyles.mono, fontSize: 17, color: A_PAL.accent, fontWeight: 600 }}>{sw.mainStatValue || "—"}</span>
                           </div>
                         )}
-                      </>
-                    ) : (
-                      <div style={{ fontSize: 13, color: A_PAL.textMute, marginTop: 5, fontStyle: "italic" }}>
+                      </div>
+                    )}
+                    {sw?.passive && (
+                      <div>
+                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 2 }}>PASSIVE</div>
+                        {sw.passiveName && (
+                          <div style={{ ...aStyles.display, fontSize: 22, color: A_PAL.ink, marginTop: 1, lineHeight: 1.05 }}>
+                            {sw.passiveName}
+                          </div>
+                        )}
+                        <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.6, color: A_PAL.textDim }}>
+                          {highlightStats(sw.passive, { color: A_PAL.accent, fontWeight: 700, fontFamily: "var(--font-jetbrains), ui-monospace, monospace" })}
+                        </div>
+                      </div>
+                    )}
+                    {sw?.synergy && (
+                      <div style={{ borderLeft: `2px solid ${A_PAL.accent}`, paddingLeft: 13 }}>
+                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.accent, letterSpacing: 2 }}>WHY IT&apos;S CRACKED</div>
+                        <div style={{ fontSize: 14, marginTop: 4, lineHeight: 1.6, color: A_PAL.ink, fontStyle: "italic" }}>
+                          {highlightStats(sw.synergy, { color: A_PAL.accent, fontWeight: 700, fontStyle: "normal", fontFamily: "var(--font-jetbrains), ui-monospace, monospace" })}
+                        </div>
+                      </div>
+                    )}
+                    {!swHasDetail && (
+                      <div style={{ fontSize: 13, color: A_PAL.textMute, fontStyle: "italic" }}>
                         Passive &amp; synergy not documented yet — add via Console edit mode or the CLI.
                       </div>
                     )}

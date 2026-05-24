@@ -9,6 +9,7 @@ import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { STATUS_HEX } from "@/lib/elements";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
+import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OStatBar } from "./primitives";
@@ -22,7 +23,6 @@ export function ObsidianResonator({ name }: { name: string }) {
   const teams = teamsFeaturingOf(raw, r.name);
   const cycleTeams = cycleAppearancesOf(raw, r.name);
   const sw = signatureWeaponOf(raw, r.weapon);
-  const swStats = [sw?.baseAtk && `ATK ${sw.baseAtk}`, sw?.mainStat && `${sw.mainStat}${sw.mainStatValue ? ` ${sw.mainStatValue}` : ""}`].filter(Boolean).join("  ·  ");
   const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
@@ -262,46 +262,54 @@ export function ObsidianResonator({ name }: { name: string }) {
                 </div>
                 <div
                   style={{
-                    padding: "12px 16px",
+                    padding: "15px 17px",
                     borderRadius: 10,
                     background: O_PAL.surface,
                     border: `1px solid ${O_PAL.border}`,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 15,
                   }}
                 >
-                  <div
-                    style={{
-                      ...oStyles.mono,
-                      fontSize: 10,
-                      color: O_PAL.textMute,
-                      letterSpacing: 1,
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 12,
-                    }}
-                  >
-                    <span>SIGNATURE PASSIVE{sw?.passiveName ? ` · ${sw.passiveName}` : ""}</span>
-                    {swStats && <span style={{ color: O_PAL.textDim }}>{swStats}</span>}
-                  </div>
-                  {swHasDetail ? (
-                    <>
-                      {sw?.passive && (
-                        <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.55, color: O_PAL.text }}>
-                          {sw.passive}
+                  {(sw?.baseAtk || sw?.mainStat) && (
+                    <div style={{ display: "flex", gap: 30, flexWrap: "wrap" }}>
+                      {sw?.baseAtk && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                          <span style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1.5 }}>BASE ATK</span>
+                          <span style={{ ...oStyles.mono, fontSize: 18, color: O_PAL.accent, fontWeight: 600 }}>{sw.baseAtk}</span>
                         </div>
                       )}
-                      {sw?.synergy && (
-                        <div style={{ marginTop: sw?.passive ? 12 : 6 }}>
-                          <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.accent, letterSpacing: 1 }}>
-                            WHY IT&apos;S CRACKED
-                          </div>
-                          <div style={{ fontSize: 14, marginTop: 4, lineHeight: 1.55, color: O_PAL.textDim, fontStyle: "italic" }}>
-                            {sw.synergy}
-                          </div>
+                      {sw?.mainStat && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                          <span style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1.5 }}>{sw.mainStat.toUpperCase()}</span>
+                          <span style={{ ...oStyles.mono, fontSize: 18, color: O_PAL.accent, fontWeight: 600 }}>{sw.mainStatValue || "—"}</span>
                         </div>
                       )}
-                    </>
-                  ) : (
-                    <div style={{ fontSize: 13, marginTop: 6, color: O_PAL.textMute, fontStyle: "italic" }}>
+                    </div>
+                  )}
+                  {sw?.passive && (
+                    <div>
+                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 2 }}>PASSIVE</div>
+                      {sw.passiveName && (
+                        <div style={{ ...oStyles.display, fontSize: 21, color: O_PAL.accent, marginTop: 1, lineHeight: 1.1 }}>
+                          {sw.passiveName}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 13.5, marginTop: 7, lineHeight: 1.62, color: O_PAL.textDim }}>
+                        {highlightStats(sw.passive, { color: O_PAL.accent, fontWeight: 600, fontFamily: "var(--font-jetbrains), ui-monospace, monospace" })}
+                      </div>
+                    </div>
+                  )}
+                  {sw?.synergy && (
+                    <div style={{ borderLeft: `2px solid ${O_PAL.accent}`, paddingLeft: 13 }}>
+                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.accent, letterSpacing: 2 }}>WHY IT&apos;S CRACKED</div>
+                      <div style={{ fontSize: 13.5, marginTop: 5, lineHeight: 1.62, color: O_PAL.text, fontStyle: "italic" }}>
+                        {highlightStats(sw.synergy, { color: O_PAL.accent, fontWeight: 600, fontStyle: "normal", fontFamily: "var(--font-jetbrains), ui-monospace, monospace" })}
+                      </div>
+                    </div>
+                  )}
+                  {!swHasDetail && (
+                    <div style={{ fontSize: 13, color: O_PAL.textMute, fontStyle: "italic" }}>
                       Passive &amp; synergy not documented yet — add via Console edit mode or the CLI.
                     </div>
                   )}
