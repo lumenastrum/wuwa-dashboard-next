@@ -8,6 +8,7 @@ import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { AuditStat } from "@/lib/types";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
@@ -85,6 +86,7 @@ function AStatBar({ stat }: { stat: AuditStat }) {
 
 export function AtelierResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
@@ -100,9 +102,9 @@ export function AtelierResonator({ name }: { name: string }) {
   return (
     <div style={aStyles.shell}>
       <div style={{ display: "flex" }}>
-        <ARosterStrip activeName={r.name} />
-        <div style={{ flex: 1, padding: "32px 48px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
+        {!isMobile && <ARosterStrip activeName={r.name} />}
+        <div style={{ flex: 1, padding: isMobile ? "20px 16px 26px" : isTablet ? "28px 28px" : "32px 48px", minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: isMobile ? "stretch" : "center", flexDirection: isMobile ? "column" : "row", gap: 14, marginBottom: 12 }}>
             <div
               style={{
                 ...aStyles.mono,
@@ -113,7 +115,7 @@ export function AtelierResonator({ name }: { name: string }) {
             >
               roster → RESONATOR № {String(idx + 1).padStart(2, "0")} / {roster.length}
             </div>
-            <div style={{ flex: 1 }} />
+            <div style={{ flex: isMobile ? "0 0 auto" : 1 }} />
             <Link
               href={`/r/${encodeURIComponent(prev.name)}`}
               style={{
@@ -144,7 +146,7 @@ export function AtelierResonator({ name }: { name: string }) {
             </Link>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "520px 1fr", gap: 56 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "520px 1fr", gap: isMobile ? 22 : isTablet ? 34 : 56 }}>
             <div>
               <div
                 style={{
@@ -153,17 +155,17 @@ export function AtelierResonator({ name }: { name: string }) {
                   overflow: "hidden",
                   background: `linear-gradient(180deg, ${el.glow}, rgba(255,255,255,0.6))`,
                   border: `1px solid ${A_PAL.border}`,
-                  height: 700,
+                  height: isMobile ? 430 : isTablet ? 560 : 700,
                   boxShadow: "0 30px 60px -20px rgba(60,70,100,0.25)",
                 }}
               >
                 <div
                   style={{
                     position: "absolute",
-                    top: 24,
-                    right: 24,
-                    width: 76,
-                    height: 76,
+                    top: isMobile ? 16 : 24,
+                    right: isMobile ? 16 : 24,
+                    width: isMobile ? 56 : 76,
+                    height: isMobile ? 56 : 76,
                     borderRadius: 999,
                     border: `1px solid ${A_PAL.borderStrong}`,
                     display: "flex",
@@ -173,17 +175,17 @@ export function AtelierResonator({ name }: { name: string }) {
                     backdropFilter: "blur(8px)",
                   }}
                 >
-                  <img src={elementIcon(r.element)} alt="" style={{ width: 36, height: 36 }} />
+                  <img src={elementIcon(r.element)} alt="" style={{ width: isMobile ? 28 : 36, height: isMobile ? 28 : 36 }} />
                 </div>
                 <img
                   src={tallPortrait(r.name)}
                   alt={r.name}
                   style={{
                     position: "absolute",
-                    bottom: -30,
+                    bottom: isMobile ? -14 : -30,
                     left: "50%",
                     transform: "translateX(-50%)",
-                    height: "105%",
+                    height: isMobile ? "102%" : "105%",
                     width: "auto",
                     maxWidth: "none",
                     filter: "drop-shadow(0 30px 50px rgba(60,70,100,0.25))",
@@ -195,7 +197,7 @@ export function AtelierResonator({ name }: { name: string }) {
                     bottom: 20,
                     left: 26,
                     ...aStyles.display,
-                    fontSize: 180,
+                    fontSize: isMobile ? 110 : 180,
                     lineHeight: 0.8,
                     color: "rgba(60,70,100,0.06)",
                     letterSpacing: "-0.05em",
@@ -237,11 +239,11 @@ export function AtelierResonator({ name }: { name: string }) {
             </div>
 
             <div style={{ paddingTop: 4 }}>
-              <div style={{ ...aStyles.display, fontSize: 92, lineHeight: 0.95 }}>{r.name}</div>
+              <div style={{ ...aStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 92, lineHeight: 0.95 }}>{r.name}</div>
               <div
                 style={{
                   ...aStyles.display,
-                  fontSize: 24,
+                  fontSize: isMobile ? 20 : 24,
                   fontStyle: "italic",
                   color: A_PAL.textDim,
                   marginTop: -4,
@@ -253,7 +255,8 @@ export function AtelierResonator({ name }: { name: string }) {
               <div
                 style={{
                   display: "flex",
-                  gap: 36,
+                  flexWrap: "wrap",
+                  gap: isMobile ? 18 : 36,
                   marginTop: 26,
                   paddingBottom: 20,
                   borderBottom: `1px solid ${A_PAL.border}`,
@@ -311,14 +314,15 @@ export function AtelierResonator({ name }: { name: string }) {
                       background: A_PAL.surfaceStrong,
                       border: `1px solid ${A_PAL.border}`,
                       display: "flex",
+                      flexDirection: isMobile ? "column" : "row",
                       gap: 16,
-                      alignItems: "center",
+                      alignItems: isMobile ? "stretch" : "center",
                     }}
                   >
                     <div
                       style={{
-                        width: 88,
-                        height: 88,
+                        width: isMobile ? 76 : 88,
+                        height: isMobile ? 76 : 88,
                         borderRadius: 10,
                         overflow: "hidden",
                         background: `linear-gradient(135deg, ${el.glow}, rgba(255,255,255,0.6))`,
@@ -329,7 +333,7 @@ export function AtelierResonator({ name }: { name: string }) {
                         flexShrink: 0,
                       }}
                     >
-                      <WeaponImg name={r.weapon} size={80} />
+                      <WeaponImg name={r.weapon} size={isMobile ? 68 : 80} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div
@@ -345,7 +349,7 @@ export function AtelierResonator({ name }: { name: string }) {
                       <div
                         style={{
                           ...aStyles.display,
-                          fontSize: 28,
+                          fontSize: isMobile ? 24 : 28,
                           color: A_PAL.ink,
                           marginTop: 4,
                           lineHeight: 1.05,
@@ -426,7 +430,8 @@ export function AtelierResonator({ name }: { name: string }) {
                       key={t.rank}
                       style={{
                         display: "flex",
-                        alignItems: "center",
+                        flexDirection: isMobile ? "column" : "row",
+                        alignItems: isMobile ? "stretch" : "center",
                         gap: 14,
                         padding: "12px 14px",
                         borderRadius: 10,
@@ -476,7 +481,7 @@ export function AtelierResonator({ name }: { name: string }) {
                           {t.notes}
                         </div>
                       </div>
-                      <div style={{ textAlign: "right" }}>
+                      <div style={{ textAlign: isMobile ? "left" : "right" }}>
                         <div style={{ ...aStyles.display, fontSize: 22 }}>{t.best}</div>
                         <div
                           style={{

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IMPLEMENTED_THEMES, THEME_LIST, useTheme } from "@/lib/theme-context";
 import { useData } from "@/lib/data-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { PageId } from "@/lib/types";
 import { A_PAL, aStyles } from "./styles";
 
@@ -35,15 +36,19 @@ export function AtelierTopBar() {
   const { theme, setTheme, lastResonator } = useTheme();
   const { syncStatus } = useData();
   const sync = SYNC_LABEL[syncStatus] ?? SYNC_LABEL.loading;
+  const { isMobile, isTablet } = useDashboardViewport();
+  const isCompact = isTablet;
 
   return (
     <div
       style={{
-        height: 60,
-        padding: "0 36px",
+        minHeight: isCompact ? 100 : 60,
+        padding: isCompact ? "10px 16px 12px" : "0 36px",
         display: "flex",
+        flexDirection: isCompact ? "column" : "row",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: isCompact ? 10 : 0,
         borderBottom: `1px solid ${A_PAL.border}`,
         background: "rgba(255,255,255,0.5)",
         backdropFilter: "blur(14px)",
@@ -52,11 +57,29 @@ export function AtelierTopBar() {
         zIndex: 50,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
-        <div style={{ ...aStyles.display, fontSize: 22, fontStyle: "italic" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isCompact ? "column" : "row",
+          alignItems: isCompact ? "stretch" : "center",
+          gap: isCompact ? 10 : 36,
+          width: isCompact ? "100%" : "auto",
+          minWidth: 0,
+        }}
+      >
+        <div style={{ ...aStyles.display, fontSize: isCompact ? 21 : 22, fontStyle: "italic" }}>
           atelier <span style={{ color: A_PAL.textMute }}>·</span> roster
         </div>
-        <div style={{ display: "flex", gap: 24, fontSize: 13 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: isCompact ? 20 : 24,
+            fontSize: 13,
+            overflowX: isCompact ? "auto" : "visible",
+            paddingBottom: isCompact ? 2 : 0,
+            scrollbarWidth: "none",
+          }}
+        >
           {NAV.map((n) => {
             const href = n.id === "resonator" ? `/r/${encodeURIComponent(lastResonator)}` : n.href;
             const isActive = active === n.id;
@@ -79,7 +102,18 @@ export function AtelierTopBar() {
           })}
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: isCompact ? "wrap" : "nowrap",
+          gap: isCompact ? 10 : 14,
+          width: isCompact ? "100%" : "auto",
+          overflowX: "visible",
+          paddingBottom: isCompact ? 2 : 0,
+          scrollbarWidth: "none",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -102,7 +136,7 @@ export function AtelierTopBar() {
                 style={{
                   padding: "5px 12px",
                   borderRadius: 999,
-                  fontSize: 11,
+                  fontSize: isMobile ? 10 : 11,
                   cursor: isImplemented ? "pointer" : "not-allowed",
                   background: isActive ? A_PAL.ink : "transparent",
                   color: isActive ? "#fff" : A_PAL.textDim,
@@ -127,6 +161,7 @@ export function AtelierTopBar() {
             display: "flex",
             alignItems: "center",
             gap: 5,
+            flexShrink: 0,
           }}
           title={`Supabase sync · ${syncStatus}`}
         >
@@ -139,6 +174,7 @@ export function AtelierTopBar() {
             height: 28,
             borderRadius: 999,
             background: "linear-gradient(135deg, #c4b5e8, #f0d674)",
+            flexShrink: 0,
           }}
         />
       </div>

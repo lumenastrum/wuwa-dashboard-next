@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useData } from "@/lib/data-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
 
 export function AtelierCycles() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const cycles = raw.endstateMatrix.cycles;
   const [sel, setSel] = useState(cycles.length - 1);
@@ -14,7 +16,7 @@ export function AtelierCycles() {
 
   return (
     <div style={aStyles.shell}>
-      <div style={{ padding: "32px 48px" }}>
+      <div style={{ padding: isMobile ? "20px 16px 26px" : isTablet ? "28px 28px" : "32px 48px" }}>
         <div style={{ marginBottom: 26 }}>
           <div
             style={{
@@ -27,13 +29,13 @@ export function AtelierCycles() {
           >
             ENDSTATE · MATRIX
           </div>
-          <div style={{ ...aStyles.display, fontSize: 72, lineHeight: 0.95 }}>
+          <div style={{ ...aStyles.display, fontSize: isMobile ? 46 : isTablet ? 60 : 72, lineHeight: 0.95 }}>
             Eight teams.{" "}
             <em style={{ fontStyle: "italic", color: A_PAL.textDim }}>One run each.</em>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 12, marginBottom: 26 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 26, overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0 }}>
           {cycles.map((cc, i) => (
             <div
               key={cc.id}
@@ -42,7 +44,7 @@ export function AtelierCycles() {
                 padding: "18px 22px",
                 borderRadius: 16,
                 cursor: "pointer",
-                flex: 1,
+                flex: isMobile ? "0 0 290px" : 1,
                 background: i === sel ? A_PAL.surfaceStrong : A_PAL.surface,
                 border: `1px solid ${i === sel ? A_PAL.ink : A_PAL.border}`,
               }}
@@ -50,8 +52,10 @@ export function AtelierCycles() {
               <div
                 style={{
                   display: "flex",
+                  flexDirection: isMobile ? "column" : "row",
                   justifyContent: "space-between",
-                  alignItems: "baseline",
+                  alignItems: isMobile ? "flex-start" : "baseline",
+                  gap: isMobile ? 10 : 0,
                 }}
               >
                 <div>
@@ -76,7 +80,7 @@ export function AtelierCycles() {
                     {cc.label}
                   </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: isMobile ? "left" : "right" }}>
                   <div style={{ ...aStyles.display, fontSize: 40, lineHeight: 1 }}>
                     {cc.totalPoints.toLocaleString()}
                   </div>
@@ -95,7 +99,7 @@ export function AtelierCycles() {
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 36 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.4fr 1fr", gap: isMobile ? 22 : 36 }}>
           <div>
             {c.teams.map((t, i) => {
               const w = (t.score / 15000) * 100;
@@ -112,7 +116,8 @@ export function AtelierCycles() {
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "baseline",
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "stretch" : "baseline",
                       gap: 16,
                       marginBottom: 8,
                     }}
@@ -187,7 +192,7 @@ export function AtelierCycles() {
               display: "flex",
               flexDirection: "column",
               gap: 18,
-              position: "sticky",
+              position: isTablet ? "static" : "sticky",
               top: 80,
               alignSelf: "flex-start",
             }}

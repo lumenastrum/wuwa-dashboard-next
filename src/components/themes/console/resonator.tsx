@@ -9,6 +9,7 @@ import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { Sequence, Status } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
@@ -18,6 +19,7 @@ const STATUSES: readonly Status[] = ["green", "yellow", "red", "neutral"];
 
 export function ConsoleResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName, update } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
@@ -68,12 +70,14 @@ export function ConsoleResonator({ name }: { name: string }) {
   return (
     <div style={kStyles.shell}>
       <KScanlines />
-      <div style={{ position: "relative", padding: "24px 28px" }}>
+      <div style={{ position: "relative", padding: isMobile ? "18px 16px 24px" : isTablet ? "22px 22px" : "24px 28px" }}>
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: isMobile ? "stretch" : "center",
+            gap: isMobile ? 12 : 18,
             marginBottom: 18,
           }}
         >
@@ -87,7 +91,7 @@ export function ConsoleResonator({ name }: { name: string }) {
           >
             ◢ MODULE / RESONATOR_PROFILE · UID_{String(idx + 1).padStart(3, "0")}
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Link
               href={`/r/${encodeURIComponent(prev.name)}`}
               style={{
@@ -119,7 +123,7 @@ export function ConsoleResonator({ name }: { name: string }) {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "440px 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "440px 1fr", gap: 14 }}>
           <KPanel
             label={`PROFILE.${r.name.toUpperCase()}`}
             code={`UID.${String(idx + 1).padStart(3, "0")}`}
@@ -129,7 +133,7 @@ export function ConsoleResonator({ name }: { name: string }) {
             <div
               style={{
                 position: "relative",
-                height: 580,
+                height: isMobile ? 430 : isTablet ? 520 : 580,
                 background: `radial-gradient(circle at 50% 60%, ${el.hex}25, transparent 70%)`,
                 overflow: "hidden",
               }}
@@ -142,7 +146,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                   bottom: -10,
                   left: "50%",
                   transform: "translateX(-50%)",
-                  height: "100%",
+                  height: isMobile ? "102%" : "100%",
                   width: "auto",
                   maxWidth: "none",
                   filter: `drop-shadow(0 20px 40px ${el.glow})`,
@@ -242,7 +246,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                 <div
                   style={{
                     ...kStyles.display,
-                    fontSize: 42,
+                    fontSize: isMobile ? 34 : 42,
                     color: K_PAL.text,
                     lineHeight: 1,
                     textShadow: `0 0 16px ${el.glow}`,
@@ -264,7 +268,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gridTemplateColumns: isMobile ? "repeat(2, minmax(0, 1fr))" : "repeat(4, 1fr)",
                     gap: 12,
                   }}
                 >
@@ -399,14 +403,15 @@ export function ConsoleResonator({ name }: { name: string }) {
                     background: "rgba(0,0,0,0.3)",
                     border: `1px solid ${K_PAL.border}`,
                     display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
                     gap: 14,
-                    alignItems: "center",
+                    alignItems: isMobile ? "stretch" : "center",
                   }}
                 >
                   <div
                     style={{
-                      width: 88,
-                      height: 88,
+                      width: isMobile ? 76 : 88,
+                      height: isMobile ? 76 : 88,
                       background: `radial-gradient(circle at 50% 50%, ${el.hex}20, transparent 70%)`,
                       border: `1px solid ${el.hex}40`,
                       display: "flex",
@@ -415,7 +420,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                       flexShrink: 0,
                     }}
                   >
-                    <WeaponImg name={r.weapon} size={80} />
+                    <WeaponImg name={r.weapon} size={isMobile ? 68 : 80} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
@@ -513,9 +518,9 @@ export function ConsoleResonator({ name }: { name: string }) {
                     key={i}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "30px 1fr 60px 60px",
+                      gridTemplateColumns: isMobile ? "1fr" : "30px 1fr 60px 60px",
                       gap: 10,
-                      alignItems: "center",
+                      alignItems: isMobile ? "stretch" : "center",
                       padding: "8px 0",
                       borderBottom:
                         i < Math.min(3, teams.length - 1)
@@ -533,7 +538,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                     >
                       #{String(t.rank).padStart(2, "0")}
                     </div>
-                    <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
                       {t.team.map((n) => {
                         const rr = rosterByName[n];
                         const elx = rr ? ELEMENTS[rr.element] : null;
@@ -570,7 +575,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                         ...kStyles.mono,
                         fontSize: 11,
                         color: K_PAL.text,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                       }}
                     >
                       {t.best}
@@ -580,7 +585,7 @@ export function ConsoleResonator({ name }: { name: string }) {
                         ...kStyles.mono,
                         fontSize: 10,
                         color: K_PAL.textDim,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                       }}
                     >
                       ~{t.average}

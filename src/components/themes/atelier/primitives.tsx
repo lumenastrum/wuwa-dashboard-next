@@ -17,6 +17,7 @@ export function ACard({ children, style }: { children: ReactNode; style?: CSSPro
         padding: 22,
         background: A_PAL.surfaceStrong,
         border: `1px solid ${A_PAL.border}`,
+        minWidth: 0,
         ...style,
       }}
     >

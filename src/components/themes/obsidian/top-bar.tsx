@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IMPLEMENTED_THEMES, THEME_LIST, useTheme } from "@/lib/theme-context";
 import { useData } from "@/lib/data-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { PageId } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 
@@ -36,15 +37,19 @@ export function ObsidianTopBar() {
   const { theme, setTheme, lastResonator } = useTheme();
   const { syncStatus } = useData();
   const sync = SYNC_LABEL[syncStatus] ?? SYNC_LABEL.loading;
+  const { isMobile, isTablet } = useDashboardViewport();
+  const isCompact = isTablet;
 
   return (
     <div
       style={{
-        height: 64,
-        padding: "0 32px",
+        minHeight: isCompact ? 104 : 64,
+        padding: isCompact ? "10px 16px 12px" : "0 32px",
         display: "flex",
+        flexDirection: isCompact ? "column" : "row",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: isCompact ? 10 : 0,
         borderBottom: `1px solid ${O_PAL.border}`,
         background: "rgba(10,13,20,0.7)",
         backdropFilter: "blur(20px)",
@@ -53,7 +58,16 @@ export function ObsidianTopBar() {
         zIndex: 50,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 40 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isCompact ? "column" : "row",
+          alignItems: isCompact ? "stretch" : "center",
+          gap: isCompact ? 10 : 40,
+          width: isCompact ? "100%" : "auto",
+          minWidth: 0,
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
@@ -72,11 +86,20 @@ export function ObsidianTopBar() {
           >
             R
           </div>
-          <div style={{ ...oStyles.display, fontSize: 19, letterSpacing: 0.5 }}>
+          <div style={{ ...oStyles.display, fontSize: isCompact ? 18 : 19, letterSpacing: 0.5 }}>
             Resonance Atelier
           </div>
         </div>
-        <div style={{ display: "flex", gap: 28, fontSize: 13 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: isCompact ? 20 : 28,
+            fontSize: 13,
+            overflowX: isCompact ? "auto" : "visible",
+            paddingBottom: isCompact ? 2 : 0,
+            scrollbarWidth: "none",
+          }}
+        >
           {NAV.map((n) => {
             const href = n.id === "resonator" ? `/r/${encodeURIComponent(lastResonator)}` : n.href;
             const isActive = active === n.id;
@@ -98,7 +121,18 @@ export function ObsidianTopBar() {
           })}
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: isCompact ? "wrap" : "nowrap",
+          gap: isCompact ? 10 : 16,
+          width: isCompact ? "100%" : "auto",
+          overflowX: "visible",
+          paddingBottom: isCompact ? 2 : 0,
+          scrollbarWidth: "none",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -121,7 +155,7 @@ export function ObsidianTopBar() {
                 style={{
                   padding: "5px 12px",
                   borderRadius: 999,
-                  fontSize: 11,
+                  fontSize: isMobile ? 10 : 11,
                   cursor: isImplemented ? "pointer" : "not-allowed",
                   background: isActive ? O_PAL.accent : "transparent",
                   color: isActive ? "#0a0d14" : O_PAL.textDim,
@@ -147,6 +181,7 @@ export function ObsidianTopBar() {
             display: "flex",
             alignItems: "center",
             gap: 5,
+            flexShrink: 0,
           }}
           title={`Supabase sync · ${syncStatus}`}
         >
@@ -164,6 +199,7 @@ export function ObsidianTopBar() {
             gap: 8,
             fontSize: 12,
             color: O_PAL.textDim,
+            flexShrink: 0,
           }}
         >
           <div style={{ width: 6, height: 6, borderRadius: 999, background: "#5fe1b3" }} />

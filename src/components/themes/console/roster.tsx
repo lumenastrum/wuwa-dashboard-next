@@ -6,6 +6,7 @@ import { useData } from "@/lib/data-context";
 import { useState } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
@@ -14,6 +15,7 @@ const FILTERS: (ElementName | "All")[] = ["All", "Fusion", "Glacio", "Electro", 
 
 export function ConsoleRoster() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const filtered = filter === "All" ? roster : roster.filter((r) => r.element === filter);
@@ -22,12 +24,14 @@ export function ConsoleRoster() {
   return (
     <div style={kStyles.shell}>
       <KScanlines />
-      <div style={{ position: "relative", padding: "24px 28px" }}>
+      <div style={{ position: "relative", padding: isMobile ? "18px 16px 24px" : isTablet ? "22px 22px" : "24px 28px" }}>
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "flex-end",
+            alignItems: isMobile ? "stretch" : "flex-end",
+            gap: isMobile ? 12 : 18,
             marginBottom: 20,
           }}
         >
@@ -43,14 +47,15 @@ export function ConsoleRoster() {
             >
               ◢ MODULE / ROSTER_INDEX
             </div>
-            <div style={{ ...kStyles.display, fontSize: 38, letterSpacing: -1 }}>
+            <div style={{ ...kStyles.display, fontSize: isMobile ? 30 : 38, letterSpacing: 0 }}>
               Roster Index &nbsp;<span style={{ color: K_PAL.cyan }}>//</span>&nbsp;
-              <span style={{ color: K_PAL.textDim, fontSize: 22 }}>n={roster.length}</span>
+              <span style={{ color: K_PAL.textDim, fontSize: isMobile ? 18 : 22 }}>n={roster.length}</span>
             </div>
           </div>
           <div
             style={{
               display: "flex",
+              flexWrap: "wrap",
               gap: 18,
               ...kStyles.mono,
               fontSize: 10,
@@ -70,7 +75,7 @@ export function ConsoleRoster() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 14 }}>
           {([
             ["roster LV.90", `${roster.length}/20`, "FULL CAPACITY", K_PAL.cyan],
             ["PEAK CLEAR", raw.benchmarks[0].best, "FUSION ALPHA", K_PAL.amber],
@@ -105,7 +110,7 @@ export function ConsoleRoster() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: 6, marginTop: 18, marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: 6, marginTop: 18, marginBottom: 14, overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0 }}>
           {FILTERS.map((f) => {
             const isActive = filter === f;
             return (
@@ -151,8 +156,8 @@ export function ConsoleRoster() {
           </div>
         </div>
 
-        <KPanel label="RESONATOR_GRID" code="GRD.001" style={{ padding: 20 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 }}>
+        <KPanel label="RESONATOR_GRID" code="GRD.001" style={{ padding: isMobile ? 14 : 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(5, 1fr)", gap: 10 }}>
             {filtered.map((r, idx) => {
               const el = ELEMENTS[r.element];
               const status = r.audit?.priorityStatus ?? "neutral";

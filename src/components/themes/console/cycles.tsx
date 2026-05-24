@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
 
 export function ConsoleCycles() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const cycles = raw.endstateMatrix.cycles;
   const [sel, setSel] = useState(cycles.length - 1);
@@ -18,7 +20,7 @@ export function ConsoleCycles() {
   return (
     <div style={kStyles.shell}>
       <KScanlines />
-      <div style={{ position: "relative", padding: "24px 28px" }}>
+      <div style={{ position: "relative", padding: isMobile ? "18px 16px 24px" : isTablet ? "22px 22px" : "24px 28px" }}>
         <div style={{ marginBottom: 18 }}>
           <div
             style={{
@@ -31,18 +33,20 @@ export function ConsoleCycles() {
           >
             ◢ MODULE / ENDSTATE_MATRIX
           </div>
-          <div style={{ ...kStyles.display, fontSize: 38, letterSpacing: -1 }}>
+          <div style={{ ...kStyles.display, fontSize: isMobile ? 30 : 38, letterSpacing: 0 }}>
             Endstate Matrix &nbsp;<span style={{ color: K_PAL.cyan }}>//</span>&nbsp;{" "}
-            <span style={{ color: K_PAL.textDim, fontSize: 22 }}>cycles={cycles.length}</span>
+            <span style={{ color: K_PAL.textDim, fontSize: isMobile ? 18 : 22 }}>cycles={cycles.length}</span>
           </div>
         </div>
 
         <div
           style={{
-            display: "grid",
+            display: isMobile ? "flex" : "grid",
             gridTemplateColumns: `repeat(${cycles.length}, 1fr)`,
             gap: 12,
             marginBottom: 14,
+            overflowX: isMobile ? "auto" : "visible",
+            paddingBottom: isMobile ? 2 : 0,
           }}
         >
           {cycles.map((cc, i) => {
@@ -51,7 +55,7 @@ export function ConsoleCycles() {
               <KPanel
                 key={cc.id}
                 accent={active ? K_PAL.magenta : K_PAL.border}
-                style={{ padding: 14, cursor: "pointer" }}
+                style={{ padding: 14, cursor: "pointer", flex: isMobile ? "0 0 290px" : undefined }}
                 label={`CYCLE.${String(cc.id).padStart(2, "0")}`}
                 code={cc.date}
               >
@@ -68,8 +72,10 @@ export function ConsoleCycles() {
                   <div
                     style={{
                       display: "flex",
+                      flexDirection: isMobile ? "column" : "row",
                       justifyContent: "space-between",
-                      alignItems: "baseline",
+                      alignItems: isMobile ? "flex-start" : "baseline",
+                      gap: isMobile ? 8 : 0,
                       marginTop: 8,
                     }}
                   >
@@ -100,7 +106,7 @@ export function ConsoleCycles() {
           })}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.5fr 1fr", gap: 14 }}>
           <KPanel
             label={`RUN_LOG · ${c.label.toUpperCase()}`}
             code={`C.${String(c.id).padStart(2, "0")}`}
@@ -108,7 +114,7 @@ export function ConsoleCycles() {
           >
             <div
               style={{
-                display: "grid",
+                display: isMobile ? "none" : "grid",
                 gridTemplateColumns: "24px 1fr 90px 70px",
                 gap: 12,
                 padding: "0 4px 8px 4px",
@@ -139,9 +145,9 @@ export function ConsoleCycles() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "24px 1fr 90px 70px",
+                      gridTemplateColumns: isMobile ? "1fr" : "24px 1fr 90px 70px",
                       gap: 12,
-                      alignItems: "center",
+                      alignItems: isMobile ? "stretch" : "center",
                     }}
                   >
                     <div
@@ -154,7 +160,7 @@ export function ConsoleCycles() {
                       0{t.order}
                     </div>
                     <div>
-                      <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                      <div style={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
                         {t.members.map((n) => {
                           const rr = rosterByName[n];
                           const el = rr ? ELEMENTS[rr.element] : null;
@@ -203,12 +209,12 @@ export function ConsoleCycles() {
                         ...kStyles.mono,
                         fontSize: 14,
                         color: t.over5k ? (crowned ? K_PAL.amber : K_PAL.text) : K_PAL.textDim,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                       }}
                     >
                       {t.score.toLocaleString()}
                     </div>
-                    <div style={{ textAlign: "right" }}>
+                    <div style={{ textAlign: isMobile ? "left" : "right" }}>
                       {t.rating ? (
                         <div
                           style={{

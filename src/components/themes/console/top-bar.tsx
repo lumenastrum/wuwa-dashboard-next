@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { IMPLEMENTED_THEMES, THEME_LIST, useTheme } from "@/lib/theme-context";
 import { useData } from "@/lib/data-context";
 import { useEditMode } from "@/lib/edit-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { PageId } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
 
@@ -37,15 +38,19 @@ export function ConsoleTopBar() {
   const { syncStatus } = useData();
   const sync = SYNC_LABEL[syncStatus] ?? SYNC_LABEL.loading;
   const { editMode, toggleEditMode } = useEditMode();
+  const { isMobile, isTablet } = useDashboardViewport();
+  const isCompact = isTablet;
 
   return (
     <div
       style={{
-        height: 56,
-        padding: "0 28px",
+        minHeight: isCompact ? 104 : 56,
+        padding: isCompact ? "10px 16px 12px" : "0 28px",
         display: "flex",
+        flexDirection: isCompact ? "column" : "row",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: isCompact ? 10 : 0,
         borderBottom: `1px solid ${K_PAL.border}`,
         background: "linear-gradient(180deg, rgba(80,160,200,0.08), transparent)",
         position: "sticky",
@@ -54,7 +59,16 @@ export function ConsoleTopBar() {
         backdropFilter: "blur(8px)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isCompact ? "column" : "row",
+          alignItems: isCompact ? "stretch" : "center",
+          gap: isCompact ? 10 : 32,
+          width: isCompact ? "100%" : "auto",
+          minWidth: 0,
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <svg
             width="22"
@@ -66,11 +80,19 @@ export function ConsoleTopBar() {
             <path d="M11 6 L16 9 L16 13 L11 16 L6 13 L6 9 Z" fill="none" stroke={K_PAL.cyan} strokeWidth="1" />
             <circle cx="11" cy="11" r="2" fill={K_PAL.cyan} />
           </svg>
-          <div style={{ ...kStyles.mono, fontSize: 13, color: K_PAL.text, letterSpacing: 3 }}>
+          <div style={{ ...kStyles.mono, fontSize: isCompact ? 11 : 13, color: K_PAL.text, letterSpacing: isCompact ? 2 : 3 }}>
             RESONANCE//CONSOLE
           </div>
         </div>
-        <div style={{ display: "flex", gap: 22 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: isCompact ? 18 : 22,
+            overflowX: isCompact ? "auto" : "visible",
+            paddingBottom: isCompact ? 2 : 0,
+            scrollbarWidth: "none",
+          }}
+        >
           {NAV.map((n) => {
             const href = n.id === "resonator" ? `/r/${encodeURIComponent(lastResonator)}` : n.href;
             const isActive = active === n.id;
@@ -93,7 +115,18 @@ export function ConsoleTopBar() {
           })}
         </div>
       </div>
-      <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: isCompact ? 10 : 14,
+          alignItems: "center",
+          flexWrap: isCompact ? "wrap" : "nowrap",
+          width: isCompact ? "100%" : "auto",
+          overflowX: "visible",
+          paddingBottom: isCompact ? 2 : 0,
+          scrollbarWidth: "none",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -112,7 +145,7 @@ export function ConsoleTopBar() {
                 title={isImplemented ? t.sub : "Coming next"}
                 style={{
                   padding: "5px 12px",
-                  fontSize: 10,
+                  fontSize: isMobile ? 9 : 10,
                   cursor: isImplemented ? "pointer" : "not-allowed",
                   background: isActive ? K_PAL.cyan : "transparent",
                   color: isActive ? K_PAL.ink : K_PAL.textDim,
@@ -138,6 +171,7 @@ export function ConsoleTopBar() {
             display: "flex",
             alignItems: "center",
             gap: 5,
+            flexShrink: 0,
           }}
           title={`Supabase sync · ${syncStatus}`}
         >
@@ -157,11 +191,12 @@ export function ConsoleTopBar() {
             color: editMode ? K_PAL.ink : K_PAL.textDim,
             border: `1px solid ${editMode ? K_PAL.amber : K_PAL.border}`,
             fontWeight: editMode ? 600 : 400,
+            flexShrink: 0,
           }}
         >
           {editMode ? "◐ EDIT" : "▣ LOCK"}
         </button>
-        <div style={{ ...kStyles.mono, fontSize: 10, color: K_PAL.amber, letterSpacing: 1.5 }}>
+        <div style={{ ...kStyles.mono, fontSize: 10, color: K_PAL.amber, letterSpacing: 1.5, flexShrink: 0 }}>
           OP // ANDRES
         </div>
       </div>

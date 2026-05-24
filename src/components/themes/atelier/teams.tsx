@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { elementIcon, portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
 
 export function AtelierTeams() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const [sel, setSel] = useState(0);
   const team = raw.benchmarks[sel];
@@ -17,7 +19,7 @@ export function AtelierTeams() {
 
   return (
     <div style={aStyles.shell}>
-      <div style={{ padding: "32px 48px" }}>
+      <div style={{ padding: isMobile ? "20px 16px 26px" : isTablet ? "28px 28px" : "32px 48px" }}>
         <div style={{ marginBottom: 26 }}>
           <div
             style={{
@@ -30,7 +32,7 @@ export function AtelierTeams() {
           >
             OVERDRIVE LEDGER
           </div>
-          <div style={{ ...aStyles.display, fontSize: 72, lineHeight: 0.95 }}>
+          <div style={{ ...aStyles.display, fontSize: isMobile ? 46 : isTablet ? 60 : 72, lineHeight: 0.95 }}>
             The hand against the dummy
             <em style={{ fontStyle: "italic", color: A_PAL.textDim }}>.</em>
           </div>
@@ -39,11 +41,11 @@ export function AtelierTeams() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 36 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.5fr 1fr", gap: isMobile ? 22 : 36 }}>
           <div>
             <div
               style={{
-                display: "grid",
+                display: isMobile ? "none" : "grid",
                 gridTemplateColumns: "30px 1fr 70px 70px 60px",
                 gap: 14,
                 padding: "8px 0",
@@ -80,9 +82,9 @@ export function AtelierTeams() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "30px 1fr 70px 70px 60px",
+                      gridTemplateColumns: isMobile ? "1fr" : "30px 1fr 70px 70px 60px",
                       gap: 14,
-                      alignItems: "center",
+                      alignItems: isMobile ? "stretch" : "center",
                     }}
                   >
                     <div
@@ -98,6 +100,7 @@ export function AtelierTeams() {
                       <div
                         style={{
                           display: "flex",
+                          flexWrap: "wrap",
                           gap: 8,
                           alignItems: "center",
                           marginBottom: 4,
@@ -151,7 +154,7 @@ export function AtelierTeams() {
                       style={{
                         ...aStyles.display,
                         fontSize: 22,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: i === 0 ? A_PAL.ink : A_PAL.text,
                       }}
                     >
@@ -161,7 +164,7 @@ export function AtelierTeams() {
                       style={{
                         ...aStyles.mono,
                         fontSize: 11,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: A_PAL.textDim,
                       }}
                     >
@@ -171,7 +174,7 @@ export function AtelierTeams() {
                       style={{
                         ...aStyles.mono,
                         fontSize: 11,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: A_PAL.textDim,
                       }}
                     >
@@ -183,8 +186,8 @@ export function AtelierTeams() {
             })}
           </div>
 
-          <div style={{ position: "sticky", top: 80, alignSelf: "flex-start" }}>
-            <ACard style={{ padding: 28 }}>
+          <div style={{ position: isTablet ? "static" : "sticky", top: 80, alignSelf: "flex-start" }}>
+            <ACard style={{ padding: isMobile ? 20 : 28 }}>
               <div
                 style={{
                   ...aStyles.mono,
@@ -220,7 +223,7 @@ export function AtelierTeams() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
                   gap: 8,
                   marginTop: 20,
                   padding: "14px 0",

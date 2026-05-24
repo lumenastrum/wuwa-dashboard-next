@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard } from "./primitives";
 
 export function ObsidianCycles() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const cycles = raw.endstateMatrix.cycles;
   const [sel, setSel] = useState(cycles.length - 1);
@@ -17,7 +19,7 @@ export function ObsidianCycles() {
 
   return (
     <div style={oStyles.shell}>
-      <div style={{ padding: "28px 32px" }}>
+      <div style={{ padding: isMobile ? "18px 16px 24px" : isTablet ? "24px 24px" : "28px 32px" }}>
         <div style={{ marginBottom: 22 }}>
           <div
             style={{
@@ -30,13 +32,13 @@ export function ObsidianCycles() {
           >
             ENDSTATE MATRIX
           </div>
-          <div style={{ ...oStyles.display, fontSize: 48, lineHeight: 1 }}>
+          <div style={{ ...oStyles.display, fontSize: isMobile ? 40 : 48, lineHeight: 1 }}>
             Eight teams. One run each.{" "}
             <em style={{ fontStyle: "italic", color: O_PAL.accent }}>No mulligans.</em>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, marginBottom: 22 }}>
+        <div style={{ display: "flex", gap: 10, marginBottom: 22, overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0 }}>
           {cycles.map((cc, i) => (
             <div
               key={cc.id}
@@ -47,10 +49,10 @@ export function ObsidianCycles() {
                 cursor: "pointer",
                 background: i === sel ? "rgba(233,212,155,0.08)" : O_PAL.surface,
                 border: `1px solid ${i === sel ? O_PAL.borderStrong : O_PAL.border}`,
-                flex: 1,
+                flex: isMobile ? "0 0 280px" : 1,
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", alignItems: isMobile ? "flex-start" : "baseline", gap: isMobile ? 10 : 0 }}>
                 <div>
                   <div
                     style={{
@@ -65,7 +67,7 @@ export function ObsidianCycles() {
                   <div style={{ ...oStyles.display, fontSize: 26, marginTop: 2 }}>{cc.label}</div>
                   <div style={{ fontSize: 12, color: O_PAL.textDim, marginTop: 4 }}>{cc.date}</div>
                 </div>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: isMobile ? "left" : "right" }}>
                   <div
                     style={{
                       ...oStyles.display,
@@ -91,7 +93,7 @@ export function ObsidianCycles() {
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.4fr 1fr", gap: 18 }}>
           <OCard>
             <div style={{ ...oStyles.display, fontSize: 24, marginBottom: 14 }}>
               The Run · {c.label}
@@ -105,7 +107,8 @@ export function ObsidianCycles() {
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "stretch" : "center",
                       gap: 12,
                       marginBottom: 6,
                     }}
@@ -120,7 +123,7 @@ export function ObsidianCycles() {
                     >
                       0{t.order}
                     </div>
-                    <div style={{ display: "flex", gap: 6, flex: 1 }}>
+                    <div style={{ display: "flex", gap: 6, flex: 1, flexWrap: "wrap" }}>
                       {t.members.map((name) => {
                         const rr = rosterByName[name];
                         const el = rr ? ELEMENTS[rr.element] : null;
@@ -181,8 +184,8 @@ export function ObsidianCycles() {
                         ...oStyles.display,
                         fontSize: 22,
                         color: t.over5k ? O_PAL.text : O_PAL.textDim,
-                        width: 80,
-                        textAlign: "right",
+                        width: isMobile ? "auto" : 80,
+                        textAlign: isMobile ? "left" : "right",
                       }}
                     >
                       {t.score.toLocaleString()}

@@ -20,6 +20,7 @@ export function KPanel({ children, label, code, accent = K_PAL.cyan, style }: KP
         border: `1px solid ${K_PAL.border}`,
         borderRadius: 4,
         padding: 18,
+        minWidth: 0,
         ...style,
       }}
     >

@@ -6,6 +6,7 @@ import { useData } from "@/lib/data-context";
 import { useState } from "react";
 import { ELEMENTS } from "@/lib/elements";
 import { elementIcon, tallPortrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName } from "@/lib/types";
 import { A_PAL, aStyles } from "./styles";
 import { APill } from "./primitives";
@@ -14,6 +15,7 @@ const FILTERS: (ElementName | "All")[] = ["All", "Fusion", "Glacio", "Electro", 
 
 export function AtelierRoster() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const filtered = filter === "All" ? roster : roster.filter((r) => r.element === filter);
@@ -21,12 +23,14 @@ export function AtelierRoster() {
 
   return (
     <div style={aStyles.shell}>
-      <div style={{ padding: "32px 48px" }}>
+      <div style={{ padding: isMobile ? "20px 16px 26px" : isTablet ? "28px 28px" : "32px 48px" }}>
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "flex-end",
+            alignItems: isMobile ? "stretch" : "flex-end",
+            gap: isMobile ? 18 : 24,
             marginBottom: 32,
           }}
         >
@@ -42,7 +46,7 @@ export function AtelierRoster() {
             >
               VOLUME II · ISSUE 02 · MAY MMXXVI
             </div>
-            <div style={{ ...aStyles.display, fontSize: 80, lineHeight: 0.95 }}>
+            <div style={{ ...aStyles.display, fontSize: isMobile ? 48 : isTablet ? 64 : 80, lineHeight: 0.95 }}>
               The Roster{" "}
               <em style={{ fontStyle: "italic", color: A_PAL.textDim }}>— annotated.</em>
             </div>
@@ -59,7 +63,7 @@ export function AtelierRoster() {
               clearing five thousand.
             </div>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, minmax(120px, 1fr))", gap: 12 }}>
             {([
               ["Resonators", roster.length],
               ["Crowned", cycle.teams.filter((t) => t.rating === "CROWNED" || t.rating === "SSS").length],
@@ -104,14 +108,16 @@ export function AtelierRoster() {
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: isMobile ? "stretch" : "center",
+            gap: isMobile ? 12 : 0,
             paddingBottom: 18,
             marginBottom: 18,
             borderBottom: `1px solid ${A_PAL.borderStrong}`,
           }}
         >
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 6, overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0 }}>
             {FILTERS.map((f) => {
               const isActive = filter === f;
               return (
@@ -162,7 +168,7 @@ export function AtelierRoster() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 22 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: isMobile ? 18 : 22 }}>
           {filtered.map((r) => {
             const el = ELEMENTS[r.element];
             const num = roster.findIndex((x) => x.name === r.name) + 1;
@@ -249,7 +255,7 @@ export function AtelierRoster() {
                   }}
                 >
                   <div>
-                    <div style={{ ...aStyles.display, fontSize: 24, lineHeight: 1 }}>{r.name}</div>
+                    <div style={{ ...aStyles.display, fontSize: isMobile ? 28 : 24, lineHeight: 1 }}>{r.name}</div>
                     <div style={{ fontSize: 11, color: A_PAL.textDim, marginTop: 4 }}>
                       {r.role} · {r.sequence}
                     </div>

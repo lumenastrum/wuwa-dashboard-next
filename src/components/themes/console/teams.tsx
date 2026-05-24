@@ -6,6 +6,7 @@ import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
 import { portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { Benchmark } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
@@ -24,6 +25,7 @@ function KTeamRow({
   onClick: () => void;
 }) {
   const { rosterByName } = useData();
+  const { isMobile } = useDashboardViewport();
   const sec = durationToSec(b.best);
   const w = (1 - (sec - 30) / (maxSec - 30)) * 100;
   const isRank1 = idx === 0;
@@ -32,9 +34,9 @@ function KTeamRow({
       onClick={onClick}
       style={{
         display: "grid",
-        gridTemplateColumns: "36px 220px 1fr 70px 80px 60px",
+        gridTemplateColumns: isMobile ? "1fr" : "36px 220px 1fr 70px 80px 60px",
         gap: 14,
-        alignItems: "center",
+        alignItems: isMobile ? "stretch" : "center",
         padding: "10px 8px",
         borderBottom: `1px solid ${K_PAL.border}`,
         background: selected ? "rgba(126,224,255,0.05)" : "transparent",
@@ -64,7 +66,7 @@ function KTeamRow({
       >
         #{String(idx + 1).padStart(2, "0")}
       </div>
-      <div style={{ display: "flex", gap: 4 }}>
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
         {b.team.map((name) => {
           const rr = rosterByName[name];
           const el = rr ? ELEMENTS[rr.element] : null;
@@ -146,7 +148,7 @@ function KTeamRow({
           ...kStyles.mono,
           fontSize: 13,
           color: isRank1 ? K_PAL.amber : K_PAL.text,
-          textAlign: "right",
+          textAlign: isMobile ? "left" : "right",
         }}
       >
         {b.best}
@@ -156,7 +158,7 @@ function KTeamRow({
           ...kStyles.mono,
           fontSize: 11,
           color: K_PAL.textDim,
-          textAlign: "right",
+          textAlign: isMobile ? "left" : "right",
         }}
       >
         ~{b.average}
@@ -166,7 +168,7 @@ function KTeamRow({
           ...kStyles.mono,
           fontSize: 10,
           color: b.deaths === 0 ? K_PAL.cyan : K_PAL.magenta,
-          textAlign: "right",
+          textAlign: isMobile ? "left" : "right",
         }}
       >
         {b.deaths === 0 ? "CLEAN" : `D${b.deaths}`}
@@ -177,6 +179,7 @@ function KTeamRow({
 
 export function ConsoleTeams() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const [sel, setSel] = useState(0);
   const team = raw.benchmarks[sel];
@@ -186,12 +189,14 @@ export function ConsoleTeams() {
   return (
     <div style={kStyles.shell}>
       <KScanlines />
-      <div style={{ position: "relative", padding: "24px 28px" }}>
+      <div style={{ position: "relative", padding: isMobile ? "18px 16px 24px" : isTablet ? "22px 22px" : "24px 28px" }}>
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "flex-end",
+            alignItems: isMobile ? "stretch" : "flex-end",
+            gap: isMobile ? 12 : 18,
             marginBottom: 18,
           }}
         >
@@ -207,14 +212,15 @@ export function ConsoleTeams() {
             >
               ◢ MODULE / BENCHMARK_TELEMETRY
             </div>
-            <div style={{ ...kStyles.display, fontSize: 38, letterSpacing: -1 }}>
+            <div style={{ ...kStyles.display, fontSize: isMobile ? 30 : 38, letterSpacing: 0 }}>
               Combat Telemetry &nbsp;<span style={{ color: K_PAL.cyan }}>//</span>&nbsp;{" "}
-              <span style={{ color: K_PAL.textDim, fontSize: 22 }}>q2_2026</span>
+              <span style={{ color: K_PAL.textDim, fontSize: isMobile ? 18 : 22 }}>q2_2026</span>
             </div>
           </div>
           <div
             style={{
               display: "flex",
+              flexWrap: "wrap",
               gap: 18,
               ...kStyles.mono,
               fontSize: 10,
@@ -237,15 +243,15 @@ export function ConsoleTeams() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.6fr 1fr", gap: 14 }}>
           <KPanel
             label="LINEUP_TELEMETRY · BEST × AVG × SPREAD"
             code="TBL.001"
-            style={{ padding: 20 }}
+            style={{ padding: isMobile ? 14 : 20 }}
           >
             <div
               style={{
-                display: "grid",
+                display: isMobile ? "none" : "grid",
                 gridTemplateColumns: "36px 220px 1fr 70px 80px 60px",
                 gap: 14,
                 padding: "0 8px 8px 8px",
@@ -290,7 +296,7 @@ export function ConsoleTeams() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
                 gap: 6,
                 marginTop: 16,
               }}

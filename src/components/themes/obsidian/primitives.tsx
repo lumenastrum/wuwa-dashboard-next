@@ -16,6 +16,7 @@ export function OCard({ children, style }: { children: ReactNode; style?: CSSPro
         background: O_PAL.surface,
         border: `1px solid ${O_PAL.border}`,
         backdropFilter: "blur(12px)",
+        minWidth: 0,
         ...style,
       }}
     >

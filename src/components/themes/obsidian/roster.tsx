@@ -8,6 +8,7 @@ import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName, RosterEntry } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill, OKpi, OStatusDot } from "./primitives";
@@ -94,6 +95,7 @@ function ORosterTile({ r }: { r: RosterEntry }) {
 
 function OFeaturedHero({ r }: { r: RosterEntry }) {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const el = ELEMENTS[r.element];
   const bench = raw.benchmarks.find((b) => b.team.includes(r.name));
@@ -105,19 +107,28 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
         position: "relative",
         background: `linear-gradient(135deg, ${el.glow}, rgba(10,13,20,0.6) 60%)`,
         border: `1px solid ${O_PAL.border}`,
-        height: 380,
+        minHeight: isMobile ? 0 : 380,
         display: "flex",
+        flexDirection: isMobile ? "column" : "row",
       }}
     >
-      <div style={{ flex: "0 0 360px", position: "relative", overflow: "hidden" }}>
+      <div
+        style={{
+          flex: isMobile ? "0 0 320px" : isTablet ? "0 0 300px" : "0 0 360px",
+          minHeight: isMobile ? 320 : "auto",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         <img
           src={tallPortrait(r.name)}
           alt={r.name}
           style={{
             position: "absolute",
-            top: -20,
-            left: -20,
-            height: "115%",
+            top: isMobile ? -10 : -20,
+            left: isMobile ? "50%" : -20,
+            transform: isMobile ? "translateX(-50%)" : "none",
+            height: isMobile ? "105%" : "115%",
             width: "auto",
             maxWidth: "none",
             filter: `drop-shadow(0 20px 40px ${el.glow})`,
@@ -134,21 +145,22 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
       <div
         style={{
           flex: 1,
-          padding: "36px 40px",
+          padding: isMobile ? "22px 20px 20px" : "36px 40px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          gap: isMobile ? 18 : 0,
         }}
       >
         <div>
           <OElementPill el={r.element} weapon={r.weaponType} />
-          <div style={{ ...oStyles.display, fontSize: 64, marginTop: 8, lineHeight: 1 }}>{r.name}</div>
+          <div style={{ ...oStyles.display, fontSize: isMobile ? 46 : 64, marginTop: 8, lineHeight: 1 }}>{r.name}</div>
           <div style={{ fontSize: 14, color: O_PAL.textDim, marginTop: 10, maxWidth: 480 }}>
             Sequence {r.sequence} · {r.role}{r.audit?.notes ? ` — ${r.audit.notes}` : ""}.
           </div>
         </div>
         {r.audit && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, minmax(0, 1fr))" : "repeat(4, 1fr)", gap: 12 }}>
             {r.audit.stats.map((s) => (
               <div
                 key={s.label}
@@ -175,7 +187,7 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
             ))}
           </div>
         )}
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap" }}>
           <Link
             href={`/r/${encodeURIComponent(r.name)}`}
             style={{
@@ -197,7 +209,7 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
                 ...oStyles.mono,
                 fontSize: 11,
                 color: O_PAL.textMute,
-                marginLeft: "auto",
+                marginLeft: isMobile ? 0 : "auto",
               }}
             >
               BEST {bench.best} · AVG {bench.average} · DEATHS {bench.deaths}
@@ -358,6 +370,7 @@ export function ObsidianRoster() {
   const { raw, roster, rosterByName } = useData();
 
   const { lastResonator } = useTheme();
+  const { isMobile, isTablet } = useDashboardViewport();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const featured = rosterByName[lastResonator] ?? roster[0];
   const filtered = filter === "All" ? roster : roster.filter((r) => r.element === filter);
@@ -365,12 +378,14 @@ export function ObsidianRoster() {
 
   return (
     <div style={oStyles.shell}>
-      <div style={{ padding: "28px 32px" }}>
+      <div style={{ padding: isMobile ? "18px 16px 24px" : isTablet ? "24px 24px" : "28px 32px" }}>
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "flex-end",
+            alignItems: isMobile ? "stretch" : "flex-end",
+            gap: isMobile ? 18 : 24,
             marginBottom: 24,
           }}
         >
@@ -386,7 +401,7 @@ export function ObsidianRoster() {
             >
               CYCLE 002 · CLOSED 2026.05.23
             </div>
-            <div style={{ ...oStyles.display, fontSize: 52, lineHeight: 1 }}>
+            <div style={{ ...oStyles.display, fontSize: isMobile ? 48 : 52, lineHeight: 1 }}>
               Good evening,{" "}
               <em style={{ fontStyle: "italic", color: O_PAL.accent }}>Rover</em>.
             </div>
@@ -394,7 +409,7 @@ export function ObsidianRoster() {
               The atelier closed strong — {cycle.totalPoints.toLocaleString()} points, {cycle.teamsOver5k} teams over five thousand.
             </div>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, minmax(140px, 1fr))", gap: 12 }}>
             <OKpi
               label="Resonators"
               value={`${roster.length}`}
@@ -419,7 +434,7 @@ export function ObsidianRoster() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.6fr 1fr",
+            gridTemplateColumns: isTablet ? "1fr" : "1.6fr 1fr",
             gap: 18,
             marginTop: 18,
           }}
@@ -428,8 +443,10 @@ export function ObsidianRoster() {
             <div
               style={{
                 display: "flex",
+                flexDirection: isMobile ? "column" : "row",
                 justifyContent: "space-between",
-                alignItems: "baseline",
+                alignItems: isMobile ? "stretch" : "baseline",
+                gap: isMobile ? 14 : 0,
                 marginBottom: 16,
               }}
             >
@@ -439,7 +456,7 @@ export function ObsidianRoster() {
                   {roster.length} resonators · all max level · click any to inspect
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: isMobile ? "nowrap" : "wrap", overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0 }}>
                 {FILTERS.map((f) => {
                   const isActive = filter === f;
                   return (
@@ -474,7 +491,7 @@ export function ObsidianRoster() {
                 })}
               </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 10 }}>
               {filtered.map((r) => (
                 <ORosterTile key={r.name} r={r} />
               ))}

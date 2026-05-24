@@ -9,11 +9,13 @@ import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { STATUS_HEX } from "@/lib/elements";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OStatBar } from "./primitives";
 
 export function ObsidianResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
@@ -29,8 +31,8 @@ export function ObsidianResonator({ name }: { name: string }) {
 
   return (
     <div style={oStyles.shell}>
-      <div style={{ padding: "28px 32px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
+      <div style={{ padding: isMobile ? "18px 16px 24px" : isTablet ? "24px 24px" : "28px 32px" }}>
+        <div style={{ display: "flex", alignItems: isMobile ? "stretch" : "center", flexDirection: isMobile ? "column" : "row", gap: 14, marginBottom: 16 }}>
           <div
             style={{
               ...oStyles.mono,
@@ -41,7 +43,7 @@ export function ObsidianResonator({ name }: { name: string }) {
           >
             roster → № {String(idx + 1).padStart(2, "0")} / {roster.length}
           </div>
-          <div style={{ flex: 1 }} />
+          <div style={{ flex: isMobile ? "0 0 auto" : 1 }} />
           <Link
             href={`/r/${encodeURIComponent(prev.name)}`}
             style={{
@@ -72,7 +74,7 @@ export function ObsidianResonator({ name }: { name: string }) {
           </Link>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "560px 1fr", gap: 32 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "560px 1fr", gap: isMobile ? 22 : 32 }}>
           <div>
             <div
               style={{
@@ -81,16 +83,16 @@ export function ObsidianResonator({ name }: { name: string }) {
                 overflow: "hidden",
                 background: `linear-gradient(180deg, ${el.glow}, rgba(10,13,20,0.6))`,
                 border: `1px solid ${O_PAL.border}`,
-                height: 720,
+                height: isMobile ? 420 : isTablet ? 560 : 720,
               }}
             >
               <div
                 style={{
                   position: "absolute",
-                  top: 24,
-                  right: 24,
-                  width: 76,
-                  height: 76,
+                  top: isMobile ? 16 : 24,
+                  right: isMobile ? 16 : 24,
+                  width: isMobile ? 56 : 76,
+                  height: isMobile ? 56 : 76,
                   borderRadius: 999,
                   border: `1px solid ${O_PAL.borderStrong}`,
                   display: "flex",
@@ -100,17 +102,17 @@ export function ObsidianResonator({ name }: { name: string }) {
                   backdropFilter: "blur(8px)",
                 }}
               >
-                <img src={elementIcon(r.element)} alt="" style={{ width: 36, height: 36 }} />
+                <img src={elementIcon(r.element)} alt="" style={{ width: isMobile ? 28 : 36, height: isMobile ? 28 : 36 }} />
               </div>
               <img
                 src={tallPortrait(r.name)}
                 alt={r.name}
                 style={{
                   position: "absolute",
-                  bottom: -20,
+                  bottom: isMobile ? -12 : -20,
                   left: "50%",
                   transform: "translateX(-50%)",
-                  height: "105%",
+                  height: isMobile ? "102%" : "105%",
                   width: "auto",
                   maxWidth: "none",
                   filter: `drop-shadow(0 30px 50px ${el.glow})`,
@@ -122,7 +124,7 @@ export function ObsidianResonator({ name }: { name: string }) {
                   bottom: 18,
                   left: 28,
                   ...oStyles.display,
-                  fontSize: 180,
+                  fontSize: isMobile ? 110 : 180,
                   lineHeight: 0.8,
                   color: "rgba(255,255,255,0.04)",
                   letterSpacing: "-0.05em",
@@ -135,11 +137,11 @@ export function ObsidianResonator({ name }: { name: string }) {
           </div>
 
           <div>
-            <div style={{ ...oStyles.display, fontSize: 96, lineHeight: 0.95 }}>{r.name}</div>
+            <div style={{ ...oStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 96, lineHeight: 0.95 }}>{r.name}</div>
             <div
               style={{
                 ...oStyles.display,
-                fontSize: 24,
+                fontSize: isMobile ? 20 : 24,
                 fontStyle: "italic",
                 color: O_PAL.textDim,
                 marginTop: -4,
@@ -151,7 +153,8 @@ export function ObsidianResonator({ name }: { name: string }) {
             <div
               style={{
                 display: "flex",
-                gap: 32,
+                flexWrap: "wrap",
+                gap: isMobile ? 18 : 32,
                 marginTop: 28,
                 paddingBottom: 22,
                 borderBottom: `1px solid ${O_PAL.border}`,
@@ -199,14 +202,15 @@ export function ObsidianResonator({ name }: { name: string }) {
                     background: O_PAL.surface,
                     border: `1px solid ${O_PAL.border}`,
                     display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
                     gap: 16,
-                    alignItems: "center",
+                    alignItems: isMobile ? "stretch" : "center",
                   }}
                 >
                   <div
                     style={{
-                      width: 88,
-                      height: 88,
+                      width: isMobile ? 76 : 88,
+                      height: isMobile ? 76 : 88,
                       borderRadius: 8,
                       overflow: "hidden",
                       background: `linear-gradient(135deg, ${el.glow}, rgba(0,0,0,0.4))`,
@@ -217,7 +221,7 @@ export function ObsidianResonator({ name }: { name: string }) {
                       flexShrink: 0,
                     }}
                   >
-                    <WeaponImg name={r.weapon} size={80} />
+                    <WeaponImg name={r.weapon} size={isMobile ? 68 : 80} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
@@ -233,7 +237,7 @@ export function ObsidianResonator({ name }: { name: string }) {
                     <div
                       style={{
                         ...oStyles.display,
-                        fontSize: 26,
+                        fontSize: isMobile ? 24 : 26,
                         marginTop: 4,
                         lineHeight: 1.1,
                       }}
@@ -325,7 +329,8 @@ export function ObsidianResonator({ name }: { name: string }) {
                     key={t.rank}
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "stretch" : "center",
                       gap: 14,
                       padding: "12px 14px",
                       borderRadius: 10,
@@ -368,7 +373,7 @@ export function ObsidianResonator({ name }: { name: string }) {
                       </div>
                       <div style={{ fontSize: 11, color: O_PAL.textDim, marginTop: 2 }}>{t.notes}</div>
                     </div>
-                    <div style={{ textAlign: "right" }}>
+                    <div style={{ textAlign: isMobile ? "left" : "right" }}>
                       <div style={{ ...oStyles.display, fontSize: 22 }}>{t.best}</div>
                       <div
                         style={{

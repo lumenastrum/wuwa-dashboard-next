@@ -6,11 +6,13 @@ import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
 import { portrait } from "@/lib/portraits";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill } from "./primitives";
 
 export function ObsidianTeams() {
   const { raw, roster, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
 
   const [sel, setSel] = useState(0);
   const team = raw.benchmarks[sel];
@@ -19,7 +21,7 @@ export function ObsidianTeams() {
 
   return (
     <div style={oStyles.shell}>
-      <div style={{ padding: "28px 32px" }}>
+      <div style={{ padding: isMobile ? "18px 16px 24px" : isTablet ? "24px 24px" : "28px 32px" }}>
         <div style={{ marginBottom: 24 }}>
           <div
             style={{
@@ -32,7 +34,7 @@ export function ObsidianTeams() {
           >
             BENCHMARKS · OVERDRIVE
           </div>
-          <div style={{ ...oStyles.display, fontSize: 48, lineHeight: 1 }}>
+          <div style={{ ...oStyles.display, fontSize: isMobile ? 42 : 48, lineHeight: 1 }}>
             The hand against the dummy.
           </div>
           <div style={{ fontSize: 13, color: O_PAL.textDim, marginTop: 8 }}>
@@ -40,13 +42,13 @@ export function ObsidianTeams() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.4fr 1fr", gap: 18 }}>
           <OCard style={{ padding: 0, overflow: "hidden" }}>
             <div
               style={{
+                display: isMobile ? "none" : "grid",
                 padding: "14px 22px",
                 borderBottom: `1px solid ${O_PAL.border}`,
-                display: "grid",
                 gridTemplateColumns: "36px 1fr 90px 80px 60px 60px",
                 gap: 12,
                 ...oStyles.mono,
@@ -92,9 +94,9 @@ export function ObsidianTeams() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "36px 1fr 90px 80px 60px 60px",
+                      gridTemplateColumns: isMobile ? "1fr" : "36px 1fr 90px 80px 60px 60px",
                       gap: 12,
-                      alignItems: "center",
+                      alignItems: isMobile ? "stretch" : "center",
                     }}
                   >
                     <div
@@ -106,7 +108,7 @@ export function ObsidianTeams() {
                     >
                       #{String(b.rank).padStart(2, "0")}
                     </div>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
                       {b.team.map((name) => {
                         const rr = rosterByName[name];
                         const el = rr ? ELEMENTS[rr.element] : null;
@@ -142,7 +144,7 @@ export function ObsidianTeams() {
                       style={{
                         ...oStyles.mono,
                         fontSize: 13,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: i === 0 ? O_PAL.accent : O_PAL.text,
                       }}
                     >
@@ -152,7 +154,7 @@ export function ObsidianTeams() {
                       style={{
                         ...oStyles.mono,
                         fontSize: 11,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: O_PAL.textDim,
                       }}
                     >
@@ -162,7 +164,7 @@ export function ObsidianTeams() {
                       style={{
                         ...oStyles.mono,
                         fontSize: 11,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: O_PAL.textDim,
                       }}
                     >
@@ -172,7 +174,7 @@ export function ObsidianTeams() {
                       style={{
                         ...oStyles.mono,
                         fontSize: 11,
-                        textAlign: "right",
+                        textAlign: isMobile ? "left" : "right",
                         color: b.deaths === 0 ? "#5fe1b3" : "#ff7a8a",
                       }}
                     >
@@ -221,7 +223,7 @@ export function ObsidianTeams() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
                 gap: 10,
                 marginTop: 22,
               }}
