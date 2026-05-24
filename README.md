@@ -22,7 +22,7 @@ Four pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`),
 | State | DataProvider context with debounced auto-save (650ms) |
 | Edit | EditableField primitive, Console-theme only |
 | Mutation CLI | `tsx scripts/update.ts` via `npm run update` |
-| Deploy | (pending — see "Deployment" below) |
+| Deploy | GitHub Pages (static export) — auto-deploys on push to `main` via `.github/workflows/pages.yml`. [Live](https://lumenastrum.github.io/wuwa-dashboard-next/) |
 
 ## Quick start
 
@@ -89,8 +89,18 @@ npm run update -- action 0 status green
 npm run update -- action 0 detail "DONE — finished farming session"
 npm run update -- finding 0 "new finding text"
 
+# Signature weapons (addressed by WEAPON name, not resonator)
+npm run update -- sigweapon "Ages of Harvest" passivename "Tidesculptor"
+npm run update -- sigweapon "Ages of Harvest" passive "On Skill, ATK +12% (max 2x); coordinated attacks +48% DMG."
+npm run update -- sigweapon "Ages of Harvest" synergy "Tuned for Jinhsi's Incandescence ramp into Liberation."
+npm run update -- sigweapon "Ages of Harvest" baseatk "500"
+npm run update -- sigweapon "Ages of Harvest" mainstat "Crit DMG"
+npm run update -- sigweapon "Ages of Harvest" mainstatvalue "+72.0%"
+npm run update -- addsigweapon "New Weapon Name" Sword Aemeath   # create a blank entry
+npm run update -- sigweapon "Ages of Harvest" passive            # (no value) clears the field
+
 # Inspection
-npm run update -- list
+npm run update -- list                                           # also lists ●/○ documented weapons
 npm run update -- help
 ```
 
@@ -177,6 +187,7 @@ wuwa-dashboard-next/
 │  └─ data/                    (Empty — data.json moved to public/)
 ├─ scripts/
 │  ├─ update.ts                CLI mutator (run via `npm run update -- …`)
+│  ├─ migrate-sigweapons.ts    One-time: backup live row + seed signatureWeapons stubs
 │  └─ refactor-data-imports.py One-shot codemod, kept for reference
 └─ package.json
 ```
@@ -188,6 +199,15 @@ The wiki convention is `Weapon_{Name_With_Underscores}.webp`. Example: `Weapon_E
 **Apostrophe gotcha:** the wiki URL-encodes `'` as `%27` in filenames. So a wiki download might land as `Weapon_Defier%27s_Thorn.webp`. Rename it to use a literal apostrophe (`Weapon_Defier's_Thorn.webp`) — that's what the default helper expects.
 
 If a filename diverges from the convention (different extension, weird casing), add an entry to the `WEAPON_OVERRIDES` map in `src/lib/weapons.ts`.
+
+## Signature weapons
+
+Each resonator's signature weapon has a detail entry — **what it does** (passive + stats) and **why it's cracked for that resonator** (the synergy take). These render in the `SIGNATURE WEAPON` block on every resonator page.
+
+- **Data:** a top-level `signatureWeapons: SignatureWeapon[]` collection (see `src/lib/types.ts`), keyed by `name` which matches the resonator's `weapon` field. Fields: `type`, `wearer`, `baseAtk`, `mainStat`, `mainStatValue`, `passiveName`, `passive`, `synergy`.
+- **Self-healing:** `ensureSignatureWeapons()` in `data-context.tsx` adds a blank stub for any resonator weapon that lacks one, so a newly-added resonator auto-gets an entry to fill. The CLI does the same on write.
+- **Editing:** CLI `sigweapon <weapon> <field> <value>` (and `addsigweapon`), or inline in **Console** edit mode (passive + synergy are textareas). Obsidian and Atelier render it read-only; a blank weapon shows a muted "not documented yet" line.
+- **Seeding the live row:** entries are seeded into Supabase by `scripts/migrate-sigweapons.ts` (backs up the row to `./backups/` first, then adds missing stubs — idempotent, never clobbers filled entries).
 
 ## Themes
 
@@ -201,14 +221,29 @@ Adding a fourth theme: copy `src/components/themes/obsidian/`, replace the palet
 
 ## Deployment
 
-**Currently dev-only.** Target deploy is GitHub Pages from `lumenastrum/wuwa-dashboard-next`. To get there:
+**Live at https://lumenastrum.github.io/wuwa-dashboard-next/.** Deploys automatically on every push to `main`.
 
-1. Add `output: 'export'` to `next.config.ts`.
-2. Add `generateStaticParams()` to `src/app/r/[name]/page.tsx` returning all 20 resonator names so each gets a pre-rendered HTML.
-3. Set up `.github/workflows/pages.yml` to build + publish to the `gh-pages` branch on push to `main`.
-4. Configure Pages source = `gh-pages` branch in repo settings.
+### How it works
 
-Once deployed, the live site reads from the same Supabase row — so the dashboard is *truly* live across devices, no rebuild needed for data changes.
+`.github/workflows/pages.yml` runs the official GitHub Pages Actions (no `gh-pages` branch — the build artifact is uploaded directly):
+
+```
+push to main → npm ci → npm run build → upload `out/` artifact → deploy-pages
+```
+
+The static export is configured in `next.config.ts`:
+
+- `output: 'export'` — emits a fully static `out/` directory.
+- `basePath` / `assetPrefix` = `/wuwa-dashboard-next` **in prod only** (so the project-pages URL `lumenastrum.github.io/wuwa-dashboard-next/` resolves assets correctly; `npm run dev` stays at `/`).
+- `images: { unoptimized: true }` — required for static export.
+- `src/lib/base-path.ts` mirrors `basePath` for the things Next doesn't auto-prefix: plain `<img>` `src` and `fetch()` URLs.
+
+`src/app/r/[name]/page.tsx` calls `generateStaticParams()` (reading `public/data.json`) so every resonator gets its own pre-rendered `/r/{name}/` HTML.
+
+### Data vs. deploy — what needs a rebuild
+
+- **Editing existing data** (stats, notes, sequences, benchmark times, cycle scores…): **no rebuild.** The live site reads the same Supabase row, so edits propagate to every device on next load.
+- **Adding a brand-new resonator:** needs a rebuild + push. `generateStaticParams()` reads `public/data.json` at build time, so a new `/r/{name}/` page only exists once the seed includes them and `main` redeploys. (The roster grid itself still shows them live from Supabase — it's only the dedicated detail route that 404s until rebuilt.)
 
 ## Troubleshooting
 

@@ -45,7 +45,50 @@ interface Data {
   actionItems: AnyRecord[];
   keyFindings: string[];
   endstateMatrix: { cycles: { id: number; teams: AnyRecord[]; [k: string]: unknown }[] };
+  signatureWeapons?: { name: string; [k: string]: unknown }[];
   [k: string]: unknown;
+}
+
+// command field → SignatureWeapon key (case-insensitive lookup)
+const SIGWEAPON_FIELDS: Record<string, string> = {
+  type: "type",
+  wearer: "wearer",
+  baseatk: "baseAtk",
+  mainstat: "mainStat",
+  mainstatvalue: "mainStatValue",
+  passivename: "passiveName",
+  passive: "passive",
+  synergy: "synergy",
+};
+
+function ensureSigWeapons(data: Data) {
+  if (!Array.isArray(data.signatureWeapons)) data.signatureWeapons = [];
+  const known = new Set(data.signatureWeapons.map((w) => w.name));
+  for (const r of data.resonators) {
+    const weapon = r.weapon as string | undefined;
+    if (weapon && !known.has(weapon)) {
+      data.signatureWeapons.push({
+        name: weapon,
+        type: (r.weaponType as string) ?? "",
+        wearer: (r.name as string) ?? "",
+        baseAtk: "",
+        mainStat: "",
+        mainStatValue: "",
+        passiveName: "",
+        passive: "",
+        synergy: "",
+      });
+      known.add(weapon);
+    }
+  }
+  return data.signatureWeapons;
+}
+
+function findSigWeapon(data: Data, name: string) {
+  const list = ensureSigWeapons(data);
+  const w = list.find((x) => x.name === name);
+  if (!w) throw new Error(`No signature weapon "${name}". Known: ${list.map((x) => x.name).join(", ")}`);
+  return w;
 }
 
 function findResonator(data: Data, name: string) {
@@ -88,6 +131,13 @@ resonator:
   weapon <name> <text>                  set resonator weapon name
   rank <name> <text>                    set weaponRank (R1..R5)
   echo <name> <text>                    set echoSet
+
+signature weapon (by weapon name, not resonator):
+  sigweapon <weapon> <field> <value>    field: ${Object.keys(SIGWEAPON_FIELDS).join("|")}
+  addsigweapon <weapon> <type> <wearer> create a new blank weapon entry
+    e.g. sigweapon "Ages of Harvest" passive "On cast, ATK +12%..."
+         sigweapon "Ages of Harvest" synergy "Doubles Jinhsi's Incandescence ramp"
+         sigweapon "Ages of Harvest" mainstat "Crit DMG"
 
 benchmark:
   bench <rank> <best|worst|average|spread|notes|element> <value>
@@ -136,6 +186,13 @@ async function main() {
     console.log(`key findings: ${data.keyFindings.length}`);
     console.log("\nResonators:");
     for (const r of data.resonators) console.log(`  ${r.name} (${r.element} ${r.sequence} ${r.role})`);
+    const sigs = ensureSigWeapons(data);
+    const documented = sigs.filter((w) => (w.passive as string) || (w.synergy as string)).length;
+    console.log(`\nSignature weapons: ${sigs.length} (${documented} documented, ${sigs.length - documented} blank)`);
+    for (const w of sigs) {
+      const filled = (w.passive as string) || (w.synergy as string) ? "●" : "○";
+      console.log(`  ${filled} ${w.name} → ${w.wearer}`);
+    }
     return;
   }
 
@@ -205,6 +262,36 @@ async function main() {
       const r = findResonator(data, name);
       r.level = parseIntOrThrow(value, "level");
       console.log(`${name} level: ${r.level}`);
+      break;
+    }
+    case "sigweapon": {
+      const [name, fieldRaw, ...valueParts] = rest;
+      if (!name || !fieldRaw) throw new Error(`usage: sigweapon <weapon> <field> <value>  (fields: ${Object.keys(SIGWEAPON_FIELDS).join(", ")})`);
+      const key = SIGWEAPON_FIELDS[fieldRaw.toLowerCase()];
+      if (!key) throw new Error(`sigweapon field must be one of: ${Object.keys(SIGWEAPON_FIELDS).join(", ")} (got "${fieldRaw}")`);
+      const w = findSigWeapon(data, name);
+      const value = valueParts.join(" ");
+      console.log(`${name} ${key}: ${w[key] ?? ""} → ${value}`);
+      w[key] = value;
+      break;
+    }
+    case "addsigweapon": {
+      const [name, type, ...wearerParts] = rest;
+      if (!name) throw new Error(`usage: addsigweapon <weapon> <type> <wearer>`);
+      const list = ensureSigWeapons(data);
+      if (list.some((x) => x.name === name)) throw new Error(`Signature weapon "${name}" already exists`);
+      list.push({
+        name,
+        type: type ?? "",
+        wearer: wearerParts.join(" "),
+        baseAtk: "",
+        mainStat: "",
+        mainStatValue: "",
+        passiveName: "",
+        passive: "",
+        synergy: "",
+      });
+      console.log(`added signature weapon "${name}" (${type ?? "?"} · ${wearerParts.join(" ") || "no wearer"}) — fill it with: sigweapon "${name}" passive "..."`);
       break;
     }
     case "bench": {

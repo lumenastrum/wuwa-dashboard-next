@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS } from "@/lib/elements";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
@@ -21,6 +21,9 @@ export function ObsidianResonator({ name }: { name: string }) {
   const el = ELEMENTS[r.element];
   const teams = teamsFeaturingOf(raw, r.name);
   const cycleTeams = cycleAppearancesOf(raw, r.name);
+  const sw = signatureWeaponOf(raw, r.weapon);
+  const swStats = [sw?.baseAtk && `ATK ${sw.baseAtk}`, sw?.mainStat && `${sw.mainStat}${sw.mainStatValue ? ` ${sw.mainStatValue}` : ""}`].filter(Boolean).join("  ·  ");
+  const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -256,6 +259,52 @@ export function ObsidianResonator({ name }: { name: string }) {
                       {r.weaponRank} · LV.{r.level}
                     </div>
                   </div>
+                </div>
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: 10,
+                    background: O_PAL.surface,
+                    border: `1px solid ${O_PAL.border}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      ...oStyles.mono,
+                      fontSize: 10,
+                      color: O_PAL.textMute,
+                      letterSpacing: 1,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 12,
+                    }}
+                  >
+                    <span>SIGNATURE PASSIVE{sw?.passiveName ? ` · ${sw.passiveName}` : ""}</span>
+                    {swStats && <span style={{ color: O_PAL.textDim }}>{swStats}</span>}
+                  </div>
+                  {swHasDetail ? (
+                    <>
+                      {sw?.passive && (
+                        <div style={{ fontSize: 14, marginTop: 6, lineHeight: 1.55, color: O_PAL.text }}>
+                          {sw.passive}
+                        </div>
+                      )}
+                      {sw?.synergy && (
+                        <div style={{ marginTop: sw?.passive ? 12 : 6 }}>
+                          <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.accent, letterSpacing: 1 }}>
+                            WHY IT&apos;S CRACKED
+                          </div>
+                          <div style={{ fontSize: 14, marginTop: 4, lineHeight: 1.55, color: O_PAL.textDim, fontStyle: "italic" }}>
+                            {sw.synergy}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div style={{ fontSize: 13, marginTop: 6, color: O_PAL.textMute, fontStyle: "italic" }}>
+                      Passive &amp; synergy not documented yet — add via Console edit mode or the CLI.
+                    </div>
+                  )}
                 </div>
                 <div
                   style={{

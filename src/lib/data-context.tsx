@@ -15,7 +15,7 @@ import {
   SUPABASE_TABLE,
 } from "./supabase";
 import { BASE_PATH } from "./base-path";
-import type { DashboardData, Resonator, RosterEntry } from "./types";
+import type { DashboardData, Resonator, RosterEntry, SignatureWeapon } from "./types";
 
 export type SyncStatus = "loading" | "live" | "saving" | "local" | "error";
 
@@ -29,6 +29,30 @@ interface DataContextValue {
 }
 
 const DataCtx = createContext<DataContextValue | null>(null);
+
+// Make sure every resonator's signature weapon has an entry. Additive +
+// idempotent, so adding a resonator later auto-gets a blank stub to fill in.
+function ensureSignatureWeapons(data: DashboardData): DashboardData {
+  if (!Array.isArray(data.signatureWeapons)) data.signatureWeapons = [];
+  const known = new Set(data.signatureWeapons.map((w) => w.name));
+  for (const r of data.resonators) {
+    if (r.weapon && !known.has(r.weapon)) {
+      data.signatureWeapons.push({
+        name: r.weapon,
+        type: r.weaponType,
+        wearer: r.name,
+        baseAtk: "",
+        mainStat: "",
+        mainStatValue: "",
+        passiveName: "",
+        passive: "",
+        synergy: "",
+      });
+      known.add(r.weapon);
+    }
+  }
+  return data;
+}
 
 function deriveRoster(raw: DashboardData) {
   const roster: RosterEntry[] = raw.resonators.map((r) => ({
@@ -84,6 +108,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (!mounted) return;
+        ensureSignatureWeapons(data);
         latestRaw.current = data;
         setRaw(data);
         setSyncStatus(supa ? "live" : "local");
@@ -150,6 +175,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       .maybeSingle();
     if (!error && row?.data) {
       const data = row.data as DashboardData;
+      ensureSignatureWeapons(data);
       latestRaw.current = data;
       setRaw(data);
       setSyncStatus("live");
@@ -228,6 +254,13 @@ export function cycleAppearancesOf(raw: DashboardData, name: string) {
       .filter((t) => t.members.includes(name))
       .map((t) => ({ ...t, cycleId: c.id, cycleLabel: c.label })),
   );
+}
+
+export function signatureWeaponOf(
+  raw: DashboardData,
+  weaponName: string,
+): SignatureWeapon | undefined {
+  return raw.signatureWeapons?.find((w) => w.name === weaponName);
 }
 
 export function getResonatorOrFirstOf(

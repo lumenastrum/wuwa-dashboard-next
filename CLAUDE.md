@@ -19,6 +19,8 @@ Full context: **read `README.md`**. This file is the carry-on.
 
 **Add a weapon image:** Drop `Weapon_{Name_With_Underscores}.webp` into `public/weapons/`. Apostrophes are literal `'`, not `%27` — rename wiki downloads if needed.
 
+**Fill a signature weapon (passive / why-cracked / stats):** CLI `npm run update -- sigweapon "<weapon name>" <field> "<value>"` (fields: passive, synergy, passivename, baseatk, mainstat, mainstatvalue, type, wearer), OR inline in Console edit mode. Addressed by **weapon name**, not resonator. New weapons get a blank stub automatically (`ensureSignatureWeapons`); `addsigweapon` creates one explicitly.
+
 **Style a value differently per theme:** Find it in `components/themes/<theme>/{page}.tsx` — each theme owns its full render.
 
 ## Don't / gotchas
@@ -36,10 +38,15 @@ Full context: **read `README.md`**. This file is the carry-on.
 - Edit mode: `src/lib/edit-context.tsx`, `src/components/editable-field.tsx`
 - Theme switching: `src/lib/theme-context.tsx`, `src/components/top-bar.tsx`
 - CLI: `scripts/update.ts`
+- Signature weapons: type in `src/lib/types.ts` (`SignatureWeapon`), `signatureWeaponOf`/`ensureSignatureWeapons` in `data-context.tsx`, render in each theme's `resonator.tsx` (Console editable), seed/migrate via `scripts/migrate-sigweapons.ts`
 - Design source: `../.design-handoff/design_handoff_wuwa_roster/` (sibling to `wuwa-dashboard-next/`)
 
 ## Active scope
 
 - Inline edits on Console **Teams** and **Cycles** pages: NOT wired. Use CLI in the meantime.
 - EXPORT button (download JSONB snapshot): NOT ported from ZZZ. Supabase is the source of truth so it's lower priority; revisit if Andres wants an offline backup gesture.
-- Deployment: dev-only. GH Pages config + GitHub Action pending. See README "Deployment" section.
+
+## Deployment (shipped)
+
+- **Live** at https://lumenastrum.github.io/wuwa-dashboard-next/ via `.github/workflows/pages.yml` (GitHub Pages Actions, static export — no `gh-pages` branch). Auto-deploys on push to `main`.
+- Editing existing data needs **no** redeploy (live from Supabase). Adding a **new resonator** needs a rebuild + push so `generateStaticParams()` emits its `/r/{name}/` page. See README "Deployment".

@@ -1710,5 +1710,227 @@
         ]
       }
     ]
-  }
+  },
+  "signatureWeapons": [
+    {
+      "name": "Everbright Polestar",
+      "type": "Sword",
+      "wearer": "Aemeath",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "The Last Dance",
+      "type": "Pistols",
+      "wearer": "Carlotta",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Defier's Thorn",
+      "type": "Sword",
+      "wearer": "Cartethyia",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Lethean Elegy",
+      "type": "Pistols",
+      "wearer": "Phrolova",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Thunderflare Dominion",
+      "type": "Broadblade",
+      "wearer": "Augusta",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Ages of Harvest",
+      "type": "Sword",
+      "wearer": "Jinhsi",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Blazing Brilliance",
+      "type": "Sword",
+      "wearer": "Changli",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Blazing Justice",
+      "type": "Gauntlets",
+      "wearer": "Zani",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Moongazer's Sigil",
+      "type": "Rectifier",
+      "wearer": "Iuno",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Spectrum Blaster",
+      "type": "Pistols",
+      "wearer": "Lynae",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Whispers of Sirens",
+      "type": "Rectifier",
+      "wearer": "Cantarella",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Luminous Hymn",
+      "type": "Pistols",
+      "wearer": "Phoebe",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Woodland Aria",
+      "type": "Rectifier",
+      "wearer": "Ciaccona",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Wildfire Mark",
+      "type": "Broadblade",
+      "wearer": "Lupa",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Forged Dwarf Star",
+      "type": "Rectifier",
+      "wearer": "Denia",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Rime-Draped Sprouts",
+      "type": "Rectifier",
+      "wearer": "Zhezhi",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Discord",
+      "type": "Broadblade",
+      "wearer": "Mornye",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Kumokiri",
+      "type": "Sword",
+      "wearer": "Chisa",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Tragicomedy",
+      "type": "Gauntlets",
+      "wearer": "Roccia",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    },
+    {
+      "name": "Stellar Symphony",
+      "type": "Rectifier",
+      "wearer": "Shorekeeper",
+      "baseAtk": "",
+      "mainStat": "",
+      "mainStatValue": "",
+      "passiveName": "",
+      "passive": "",
+      "synergy": ""
+    }
+  ]
 }

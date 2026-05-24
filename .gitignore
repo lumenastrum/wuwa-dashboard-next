@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local Supabase row backups (from scripts/migrate-sigweapons.ts)
+/backups/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

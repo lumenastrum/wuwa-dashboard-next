@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
@@ -91,6 +91,9 @@ export function AtelierResonator({ name }: { name: string }) {
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
   const teams = teamsFeaturingOf(raw, r.name);
+  const sw = signatureWeaponOf(raw, r.weapon);
+  const swStats = [sw?.baseAtk && `ATK ${sw.baseAtk}`, sw?.mainStat && `${sw.mainStat}${sw.mainStatValue ? ` ${sw.mainStatValue}` : ""}`].filter(Boolean).join("  ·  ");
+  const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -369,6 +372,52 @@ export function AtelierResonator({ name }: { name: string }) {
                         {r.weaponRank} · LV.{r.level}
                       </div>
                     </div>
+                  </div>
+                  <div
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      background: A_PAL.surfaceStrong,
+                      border: `1px solid ${A_PAL.border}`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...aStyles.mono,
+                        fontSize: 10,
+                        color: A_PAL.textMute,
+                        letterSpacing: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                      }}
+                    >
+                      <span>SIGNATURE PASSIVE{sw?.passiveName ? ` · ${sw.passiveName}` : ""}</span>
+                      {swStats && <span style={{ color: A_PAL.textDim }}>{swStats}</span>}
+                    </div>
+                    {swHasDetail ? (
+                      <>
+                        {sw?.passive && (
+                          <div style={{ fontSize: 14, color: A_PAL.ink, marginTop: 5, lineHeight: 1.55 }}>
+                            {sw.passive}
+                          </div>
+                        )}
+                        {sw?.synergy && (
+                          <div style={{ marginTop: sw?.passive ? 10 : 5 }}>
+                            <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.accent, letterSpacing: 1 }}>
+                              WHY IT&apos;S CRACKED
+                            </div>
+                            <div style={{ fontSize: 14, color: A_PAL.textDim, marginTop: 3, lineHeight: 1.55, fontStyle: "italic" }}>
+                              {sw.synergy}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div style={{ fontSize: 13, color: A_PAL.textMute, marginTop: 5, fontStyle: "italic" }}>
+                        Passive &amp; synergy not documented yet — add via Console edit mode or the CLI.
+                      </div>
+                    )}
                   </div>
                   <div
                     style={{

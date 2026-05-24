@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, roleAccent } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, roleAccent, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
@@ -24,6 +24,7 @@ export function ConsoleResonator({ name }: { name: string }) {
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
   const teams = teamsFeaturingOf(raw, r.name);
+  const sw = signatureWeaponOf(raw, r.weapon);
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -64,6 +65,24 @@ export function ConsoleResonator({ name }: { name: string }) {
       if (field === "_status") a.stats[statIdx]._status = value as Status;
       else if (field === "current") a.stats[statIdx].current = value;
       else a.stats[statIdx].optimal = value;
+    });
+  };
+  const setSigWeaponField = (
+    field: "baseAtk" | "mainStat" | "mainStatValue" | "passiveName" | "passive" | "synergy",
+    value: string,
+  ) => {
+    update((d) => {
+      if (!Array.isArray(d.signatureWeapons)) d.signatureWeapons = [];
+      let target = d.signatureWeapons.find((w) => w.name === r.weapon);
+      if (!target) {
+        target = {
+          name: r.weapon, type: r.weaponType, wearer: r.name,
+          baseAtk: "", mainStat: "", mainStatValue: "",
+          passiveName: "", passive: "", synergy: "",
+        };
+        d.signatureWeapons.push(target);
+      }
+      target[field] = value;
     });
   };
 
@@ -469,6 +488,122 @@ export function ConsoleResonator({ name }: { name: string }) {
                         value={String(r.level)}
                         onCommit={setResonatorLevel}
                         width={56}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: 12,
+                    background: "rgba(0,0,0,0.3)",
+                    border: `1px solid ${K_PAL.border}`,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      ...kStyles.mono,
+                      fontSize: 10,
+                      color: K_PAL.textDim,
+                      letterSpacing: 1,
+                      display: "flex",
+                      gap: 8,
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span style={{ color: el.hex }}>BASE ATK</span>
+                    <EditableField
+                      value={sw?.baseAtk ?? ""}
+                      onCommit={(v) => setSigWeaponField("baseAtk", v)}
+                      width={60}
+                      placeholder="—"
+                    />
+                    <span>·</span>
+                    <EditableField
+                      value={sw?.mainStat ?? ""}
+                      onCommit={(v) => setSigWeaponField("mainStat", v)}
+                      width={92}
+                      placeholder="main stat"
+                    />
+                    <EditableField
+                      value={sw?.mainStatValue ?? ""}
+                      onCommit={(v) => setSigWeaponField("mainStatValue", v)}
+                      width={70}
+                      placeholder="+0%"
+                    />
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        ...kStyles.mono,
+                        fontSize: 9,
+                        color: el.hex,
+                        letterSpacing: 2,
+                        display: "flex",
+                        gap: 6,
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>▸ PASSIVE</span>
+                      <EditableField
+                        value={sw?.passiveName ?? ""}
+                        onCommit={(v) => setSigWeaponField("passiveName", v)}
+                        placeholder="skill name"
+                        inputStyle={{ fontSize: 11 }}
+                        staticStyle={{ color: K_PAL.textDim }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        ...kStyles.mono,
+                        fontSize: 11,
+                        marginTop: 5,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      <EditableField
+                        value={sw?.passive ?? ""}
+                        onCommit={(v) => setSigWeaponField("passive", v)}
+                        multiline
+                        placeholder="what it does — fill in edit mode or via the CLI"
+                        staticStyle={{
+                          color: sw?.passive ? K_PAL.text : K_PAL.textMute,
+                          fontStyle: sw?.passive ? "normal" : "italic",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        ...kStyles.mono,
+                        fontSize: 9,
+                        color: K_PAL.amber,
+                        letterSpacing: 2,
+                      }}
+                    >
+                      ▸ WHY IT&apos;S CRACKED
+                    </div>
+                    <div
+                      style={{
+                        ...kStyles.mono,
+                        fontSize: 11,
+                        marginTop: 5,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      <EditableField
+                        value={sw?.synergy ?? ""}
+                        onCommit={(v) => setSigWeaponField("synergy", v)}
+                        multiline
+                        placeholder="why it's cracked for this resonator"
+                        staticStyle={{
+                          color: sw?.synergy ? K_PAL.text : K_PAL.textMute,
+                          fontStyle: sw?.synergy ? "normal" : "italic",
+                        }}
                       />
                     </div>
                   </div>

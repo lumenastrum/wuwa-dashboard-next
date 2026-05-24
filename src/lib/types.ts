@@ -108,6 +108,18 @@ export interface EndstateMatrix {
   cycles: Cycle[];
 }
 
+export interface SignatureWeapon {
+  name: string;          // matches Resonator.weapon — the link key
+  type: WeaponType;
+  wearer: string;        // resonator who owns it (1:1)
+  baseAtk: string;       // e.g. "587"
+  mainStat: string;      // e.g. "Crit DMG"
+  mainStatValue: string; // e.g. "+72.0%"
+  passiveName: string;   // weapon skill name
+  passive: string;       // what it does (mechanics)
+  synergy: string;       // why it's cracked for the wearer (the Clio take)
+}
+
 export interface DashboardData {
   meta: DashboardMeta;
   resonators: Resonator[];
@@ -118,6 +130,7 @@ export interface DashboardData {
   actionItems: ActionItem[];
   keyFindings: string[];
   endstateMatrix: EndstateMatrix;
+  signatureWeapons: SignatureWeapon[];
 }
 
 export type RosterEntry = Resonator & { audit?: AuditEntry };
