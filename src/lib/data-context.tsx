@@ -14,6 +14,7 @@ import {
   SAVE_DEBOUNCE_MS,
   SUPABASE_TABLE,
 } from "./supabase";
+import { BASE_PATH } from "./base-path";
 import type { DashboardData, Resonator, RosterEntry } from "./types";
 
 export type SyncStatus = "loading" | "live" | "saving" | "local" | "error";
@@ -65,7 +66,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (!data) {
-          const resp = await fetch("/data.json", { cache: "no-store" });
+          const resp = await fetch(`${BASE_PATH}/data.json`, { cache: "no-store" });
           if (!resp.ok) throw new Error("HTTP " + resp.status);
           data = (await resp.json()) as DashboardData;
           if (supa) {

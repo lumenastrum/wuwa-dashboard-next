@@ -1,4 +1,5 @@
 import type { ElementName } from "./types";
+import { BASE_PATH } from "./base-path";
 
 const PORTRAIT_OVERRIDES: Record<string, string> = {
   Carlotta: "Carlotta.png",
@@ -20,14 +21,14 @@ const TALL_OVERRIDES: Record<string, string> = {
 
 export function portrait(name: string): string {
   const file = PORTRAIT_OVERRIDES[name] ?? `${name.toLowerCase()}.png`;
-  return `/portraits/${file}`;
+  return `${BASE_PATH}/portraits/${file}`;
 }
 
 export function tallPortrait(name: string): string {
   const file = TALL_OVERRIDES[name] ?? `${name}_Full_Sprite.webp`;
-  return `/tall-portraits/${file}`;
+  return `${BASE_PATH}/tall-portraits/${file}`;
 }
 
 export function elementIcon(el: ElementName | string): string {
-  return `/portraits/element_${el.toLowerCase()}.png`;
+  return `${BASE_PATH}/portraits/element_${el.toLowerCase()}.png`;
 }
