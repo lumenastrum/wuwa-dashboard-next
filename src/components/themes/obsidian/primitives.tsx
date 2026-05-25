@@ -3,8 +3,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
-import { elementIcon } from "@/lib/portraits";
-import type { AuditStat, ElementName, Status } from "@/lib/types";
+import { elementIcon, weaponTypeIcon } from "@/lib/portraits";
+import type { AuditStat, ElementName, Status, WeaponType } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 
 export function OCard({ children, style }: { children: ReactNode; style?: CSSProperties }) {
@@ -58,21 +58,36 @@ export function OKpi({
   );
 }
 
-export function OElementPill({ el, weapon, small }: { el: ElementName; weapon?: string; small?: boolean }) {
+export function OElementPill({ el, weapon, small }: { el: ElementName; weapon?: WeaponType; small?: boolean }) {
   const c = ELEMENTS[el];
+  const sz = small ? 12 : 16;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       <Image
         src={elementIcon(el)}
         alt={el}
-        width={small ? 12 : 16}
-        height={small ? 12 : 16}
-        style={{ width: small ? 12 : 16, height: small ? 12 : 16 }}
+        width={sz}
+        height={sz}
+        style={{ width: sz, height: sz }}
         unoptimized
       />
       <span style={{ ...oStyles.mono, fontSize: small ? 10 : 11, color: c.hex, letterSpacing: 1.5 }}>
-        {c.label.toUpperCase()}{weapon ? ` · ${weapon.toUpperCase()}` : ""}
+        {c.label.toUpperCase()}
       </span>
+      {weapon && (
+        <>
+          <span style={{ ...oStyles.mono, fontSize: small ? 10 : 11, color: c.hex, opacity: 0.5 }}>·</span>
+          <Image
+            src={weaponTypeIcon(weapon)}
+            alt={weapon}
+            title={weapon}
+            width={sz + 2}
+            height={sz + 2}
+            style={{ width: sz + 2, height: sz + 2, opacity: 0.9 }}
+            unoptimized
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS } from "@/lib/elements";
-import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
+import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
 import { STATUS_HEX } from "@/lib/elements";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
@@ -140,7 +140,15 @@ export function ObsidianResonator({ name }: { name: string }) {
           </div>
 
           <div>
-            <div style={{ ...oStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 96, lineHeight: 0.95 }}>{r.name}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 18 }}>
+              <img
+                src={fiveStarIcon()}
+                alt="5★"
+                title="5★ Resonator"
+                style={{ height: isMobile ? 16 : 20, width: "auto", flexShrink: 0 }}
+              />
+              <div style={{ ...oStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 96, lineHeight: 0.95 }}>{r.name}</div>
+            </div>
             <div
               style={{
                 ...oStyles.display,
@@ -180,7 +188,16 @@ export function ObsidianResonator({ name }: { name: string }) {
                   >
                     {k.toUpperCase()}
                   </div>
-                  <div style={{ fontSize: 16, marginTop: 4 }}>{v}</div>
+                  <div style={{ fontSize: 16, marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                    {k === "Weapon" && (
+                      <img
+                        src={weaponTypeIcon(r.weaponType)}
+                        alt={r.weaponType}
+                        style={{ width: 18, height: 18 }}
+                      />
+                    )}
+                    {v}
+                  </div>
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import type { ElementName } from "./types";
+import type { ElementName, WeaponType } from "./types";
 import { BASE_PATH } from "./base-path";
 
 const PORTRAIT_OVERRIDES: Record<string, string> = {
@@ -31,4 +31,12 @@ export function tallPortrait(name: string): string {
 
 export function elementIcon(el: ElementName | string): string {
   return `${BASE_PATH}/portraits/element_${el.toLowerCase()}.png`;
+}
+
+export function weaponTypeIcon(t: WeaponType | string): string {
+  return `${BASE_PATH}/Icons/${t}_Icon.webp`;
+}
+
+export function fiveStarIcon(): string {
+  return `${BASE_PATH}/Icons/Icon_5_Stars.webp`;
 }

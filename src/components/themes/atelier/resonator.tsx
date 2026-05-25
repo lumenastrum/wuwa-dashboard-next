@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
-import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
+import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
@@ -234,15 +234,32 @@ export function AtelierResonator({ name }: { name: string }) {
                     fontSize: 10,
                     color: A_PAL.textMute,
                     letterSpacing: 1.5,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
                   }}
                 >
-                  {el.label.toUpperCase()} · {r.weaponType.toUpperCase()}
+                  <span>{el.label.toUpperCase()} ·</span>
+                  <img
+                    src={weaponTypeIcon(r.weaponType)}
+                    alt={r.weaponType}
+                    style={{ width: 14, height: 14, opacity: 0.85 }}
+                  />
+                  <span>{r.weaponType.toUpperCase()}</span>
                 </div>
               </div>
             </div>
 
             <div style={{ paddingTop: 4 }}>
-              <div style={{ ...aStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 92, lineHeight: 0.95 }}>{r.name}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 18 }}>
+                <img
+                  src={fiveStarIcon()}
+                  alt="5★"
+                  title="5★ Resonator"
+                  style={{ height: isMobile ? 16 : 20, width: "auto", flexShrink: 0 }}
+                />
+                <div style={{ ...aStyles.display, fontSize: isMobile ? 58 : isTablet ? 76 : 92, lineHeight: 0.95 }}>{r.name}</div>
+              </div>
               <div
                 style={{
                   ...aStyles.display,
@@ -289,8 +306,18 @@ export function AtelierResonator({ name }: { name: string }) {
                         color: A_PAL.ink,
                         marginTop: 4,
                         fontWeight: 500,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
                       }}
                     >
+                      {k === "Weapon" && (
+                        <img
+                          src={weaponTypeIcon(r.weaponType)}
+                          alt={r.weaponType}
+                          style={{ width: 18, height: 18 }}
+                        />
+                      )}
                       {v}
                     </div>
                   </div>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useData } from "@/lib/data-context";
 import { useState } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
-import { elementIcon, portrait } from "@/lib/portraits";
+import { elementIcon, portrait, weaponTypeIcon } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
@@ -247,9 +247,18 @@ export function ConsoleRoster() {
                           color: el.hex,
                           marginTop: 2,
                           letterSpacing: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 5,
                         }}
                       >
-                        {r.sequence} · {r.weaponType.toUpperCase()}
+                        <span>{r.sequence} ·</span>
+                        <img
+                          src={weaponTypeIcon(r.weaponType)}
+                          alt={r.weaponType}
+                          title={r.weaponType}
+                          style={{ width: 12, height: 12, opacity: 0.9 }}
+                        />
                       </div>
                     </div>
                     <div

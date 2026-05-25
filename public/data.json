@@ -45,7 +45,7 @@
     {
       "name": "Phrolova",
       "element": "Havoc",
-      "weaponType": "Pistols",
+      "weaponType": "Rectifier",
       "role": "Main DPS",
       "sequence": "S2",
       "weapon": "Lethean Elegy",
@@ -69,7 +69,7 @@
     {
       "name": "Jinhsi",
       "element": "Spectro",
-      "weaponType": "Sword",
+      "weaponType": "Broadblade",
       "role": "Main DPS",
       "sequence": "S0",
       "weapon": "Ages of Harvest",
@@ -105,7 +105,7 @@
     {
       "name": "Iuno",
       "element": "Aero",
-      "weaponType": "Rectifier",
+      "weaponType": "Gauntlets",
       "role": "Sub-DPS",
       "sequence": "S1",
       "weapon": "Moongazer's Sigil",
@@ -141,7 +141,7 @@
     {
       "name": "Phoebe",
       "element": "Spectro",
-      "weaponType": "Pistols",
+      "weaponType": "Rectifier",
       "role": "Sub-DPS",
       "sequence": "S1",
       "weapon": "Luminous Hymn",
@@ -153,7 +153,7 @@
     {
       "name": "Ciaccona",
       "element": "Aero",
-      "weaponType": "Rectifier",
+      "weaponType": "Pistols",
       "role": "Sub-DPS",
       "sequence": "S0",
       "weapon": "Woodland Aria",
@@ -213,7 +213,7 @@
     {
       "name": "Chisa",
       "element": "Havoc",
-      "weaponType": "Sword",
+      "weaponType": "Broadblade",
       "role": "Support",
       "sequence": "S0",
       "weapon": "Kumokiri",
@@ -1747,7 +1747,7 @@
     },
     {
       "name": "Lethean Elegy",
-      "type": "Pistols",
+      "type": "Rectifier",
       "wearer": "Phrolova",
       "baseAtk": "",
       "mainStat": "",
@@ -1769,7 +1769,7 @@
     },
     {
       "name": "Ages of Harvest",
-      "type": "Sword",
+      "type": "Broadblade",
       "wearer": "Jinhsi",
       "baseAtk": "",
       "mainStat": "",
@@ -1802,7 +1802,7 @@
     },
     {
       "name": "Moongazer's Sigil",
-      "type": "Rectifier",
+      "type": "Gauntlets",
       "wearer": "Iuno",
       "baseAtk": "",
       "mainStat": "",
@@ -1835,7 +1835,7 @@
     },
     {
       "name": "Luminous Hymn",
-      "type": "Pistols",
+      "type": "Rectifier",
       "wearer": "Phoebe",
       "baseAtk": "",
       "mainStat": "",
@@ -1846,7 +1846,7 @@
     },
     {
       "name": "Woodland Aria",
-      "type": "Rectifier",
+      "type": "Pistols",
       "wearer": "Ciaccona",
       "baseAtk": "",
       "mainStat": "",
@@ -1901,7 +1901,7 @@
     },
     {
       "name": "Kumokiri",
-      "type": "Sword",
+      "type": "Broadblade",
       "wearer": "Chisa",
       "baseAtk": "",
       "mainStat": "",

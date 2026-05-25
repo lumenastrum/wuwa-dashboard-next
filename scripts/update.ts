@@ -35,6 +35,7 @@ const SUPABASE_TABLE = "dashboard_profiles";
 const PROFILE_KEY = "andres-wuwa";
 
 const STATUSES = ["green", "yellow", "red", "neutral"];
+const WEAPON_TYPES = ["Sword", "Pistols", "Broadblade", "Gauntlets", "Rectifier"];
 
 type AnyRecord = Record<string, unknown>;
 interface Data {
@@ -129,6 +130,7 @@ resonator:
   seq <name> <S0..S6>                   set resonator sequence
   level <name> <int>                    set resonator level
   weapon <name> <text>                  set resonator weapon name
+  weapontype <name> <type>              set resonator weapon type (${WEAPON_TYPES.join("|")})
   rank <name> <text>                    set weaponRank (R1..R5)
   echo <name> <text>                    set echoSet
 
@@ -262,6 +264,17 @@ async function main() {
       const r = findResonator(data, name);
       r.level = parseIntOrThrow(value, "level");
       console.log(`${name} level: ${r.level}`);
+      break;
+    }
+    case "weapontype": {
+      const [name, value] = rest;
+      if (!name || !value) throw new Error(`usage: weapontype <name> <${WEAPON_TYPES.join("|")}>`);
+      if (!WEAPON_TYPES.includes(value)) {
+        throw new Error(`weapon type must be one of: ${WEAPON_TYPES.join(", ")} (got "${value}")`);
+      }
+      const r = findResonator(data, name);
+      console.log(`${name} weaponType: ${r.weaponType ?? ""} → ${value}`);
+      r.weaponType = value;
       break;
     }
     case "sigweapon": {

@@ -6,7 +6,7 @@ import { useData, roleAccent } from "@/lib/data-context";
 import { useState } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
-import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
+import { elementIcon, fiveStarIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName, RosterEntry } from "@/lib/types";
@@ -154,7 +154,15 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
       >
         <div>
           <OElementPill el={r.element} weapon={r.weaponType} />
-          <div style={{ ...oStyles.display, fontSize: isMobile ? 46 : 64, marginTop: 8, lineHeight: 1 }}>{r.name}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 14, marginTop: 8 }}>
+            <img
+              src={fiveStarIcon()}
+              alt="5★"
+              title="5★ Resonator"
+              style={{ height: isMobile ? 15 : 18, width: "auto", flexShrink: 0 }}
+            />
+            <div style={{ ...oStyles.display, fontSize: isMobile ? 46 : 64, lineHeight: 1 }}>{r.name}</div>
+          </div>
           <div style={{ fontSize: 14, color: O_PAL.textDim, marginTop: 10, maxWidth: 480 }}>
             Sequence {r.sequence} · {r.role}{r.audit?.notes ? ` — ${r.audit.notes}` : ""}.
           </div>

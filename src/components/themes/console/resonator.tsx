@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, roleAccent, signatureWeaponOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
-import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
+import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
@@ -255,23 +255,41 @@ export function ConsoleResonator({ name }: { name: string }) {
                           fontSize: 12,
                           color: K_PAL.text,
                           marginTop: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 5,
                         }}
                       >
+                        {k === "WEAPON" && (
+                          <img
+                            src={weaponTypeIcon(r.weaponType)}
+                            alt={r.weaponType}
+                            style={{ width: 14, height: 14 }}
+                          />
+                        )}
                         {v}
                       </div>
                     </div>
                   ))}
                 </div>
-                <div
-                  style={{
-                    ...kStyles.display,
-                    fontSize: isMobile ? 34 : 42,
-                    color: K_PAL.text,
-                    lineHeight: 1,
-                    textShadow: `0 0 16px ${el.glow}`,
-                  }}
-                >
-                  {r.name.toUpperCase()}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <img
+                    src={fiveStarIcon()}
+                    alt="5★"
+                    title="5★ Resonator"
+                    style={{ height: isMobile ? 13 : 16, width: "auto", flexShrink: 0 }}
+                  />
+                  <div
+                    style={{
+                      ...kStyles.display,
+                      fontSize: isMobile ? 34 : 42,
+                      color: K_PAL.text,
+                      lineHeight: 1,
+                      textShadow: `0 0 16px ${el.glow}`,
+                    }}
+                  >
+                    {r.name.toUpperCase()}
+                  </div>
                 </div>
               </div>
             </div>
