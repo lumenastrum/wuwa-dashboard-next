@@ -22,12 +22,14 @@ const NAV: { id: PageId; label: string; href: string }[] = [
   { id: "resonator", label: "Resonator", href: "" },
   { id: "teams",     label: "Teams",     href: "/teams" },
   { id: "cycles",    label: "Cycles",    href: "/cycles" },
+  { id: "convene",   label: "Convene",   href: "/convene" },
 ];
 
 function activePage(pathname: string): PageId {
   if (pathname.startsWith("/r/")) return "resonator";
   if (pathname.startsWith("/teams")) return "teams";
   if (pathname.startsWith("/cycles")) return "cycles";
+  if (pathname.startsWith("/convene")) return "convene";
   return "roster";
 }
 

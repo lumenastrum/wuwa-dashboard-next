@@ -6,7 +6,7 @@ export type WeaponType = "Sword" | "Pistols" | "Broadblade" | "Gauntlets" | "Rec
 export type Rating = "" | "S" | "SS" | "SSS" | "CROWNED";
 
 export type ThemeId = "obsidian" | "atelier" | "console";
-export type PageId = "roster" | "resonator" | "teams" | "cycles";
+export type PageId = "roster" | "resonator" | "teams" | "cycles" | "convene";
 
 export interface DashboardMeta {
   title: string;

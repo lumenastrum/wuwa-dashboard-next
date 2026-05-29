@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "update": "tsx scripts/update.ts"
+    "update": "tsx scripts/update.ts",
+    "convene": "tsx scripts/convene-sync.ts",
+    "convene:import": "tsx scripts/convene-import.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",

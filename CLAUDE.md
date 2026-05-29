@@ -15,6 +15,10 @@ Full context: **read `README.md`**. This file is the carry-on.
 
 **Update a value:** Use the CLI — `npm run update -- help` for the full surface. Couch-Clio runs it on PowerShell (Win) or terminal (Mac); Claude Code runs via Bash.
 
+**Sync convene (gacha pull) history:** `npm run convene`. Requires the convene URL to be cached in the WuWa logs first — **launch WuWa → open Convene History in-game**, then run it. Auto-finds the URL in `Client.log` or the webview `debug.log`, queries all 7 banners from Kuro's official API, and **archival-merges** into the `andres-wuwa-pulls` Supabase row (separate from the roster blob). Kuro only serves a rolling ~6-month window; the merge keeps everything older we've already captured (boundary-splice on `time`, never deletes) so the archive outlives the game's retention. Flags: `--dry` (fetch + print, no write), `--url "…"` (paste URL manually), `--game "F:\…"` (override install dir; default `F:\Wuthering Waves\Wuthering Waves Game`).
+
+**Import historical pull data:** `npm run convene:import -- --file "path.json"` grafts pre-window pulls from an old tracker export (records OLDER than the current archive only; in-window records ignored since the API is authoritative there). **Preview by default — writes nothing without `--commit`.** Tolerant parser (flat array or banner-keyed object, loose field names); if a file won't map, eyeball a sample and extend `normalize()` in `scripts/convene-import.ts`. Merge logic for both sync + import lives in `src/lib/convene-merge.ts` (`mergeWindow` / `graftOlder`).
+
 **Add a resonator / sequence / weapon:** Edit Supabase directly via Studio, OR add to `public/data.json` and `npm run update -- list` to confirm.
 
 **Add a weapon image:** Drop `Weapon_{Name_With_Underscores}.webp` into `public/weapons/`. Apostrophes are literal `'`, not `%27` — rename wiki downloads if needed.
@@ -37,12 +41,14 @@ Full context: **read `README.md`**. This file is the carry-on.
 - Data layer: `src/lib/data-context.tsx`, `src/lib/supabase.ts`, `src/lib/types.ts`
 - Edit mode: `src/lib/edit-context.tsx`, `src/components/editable-field.tsx`
 - Theme switching: `src/lib/theme-context.tsx`, `src/components/top-bar.tsx`
-- CLI: `scripts/update.ts`
+- CLI: `scripts/update.ts` (roster), `scripts/convene-sync.ts` (pull-history sync), `scripts/convene-import.ts` (historical graft)
 - Signature weapons: type in `src/lib/types.ts` (`SignatureWeapon`), `signatureWeaponOf`/`ensureSignatureWeapons` in `data-context.tsx`, render in each theme's `resonator.tsx` (Console editable), seed/migrate via `scripts/migrate-sigweapons.ts`
+- Convene: `src/lib/convene-types.ts`, `src/lib/convene-analytics.ts` (pure pity/50-50/distribution math), `src/lib/convene-merge.ts` (boundary-splice archival merge), `src/lib/use-pulls.ts` (read-only loader), `src/app/convene/page.tsx`, `src/components/themes/*/convene.tsx`
 - Design source: `../.design-handoff/design_handoff_wuwa_roster/` (sibling to `wuwa-dashboard-next/`)
 
 ## Active scope
 
+- **Convene (pull history) section:** Console render SHIPPED (`/convene` — global KPIs, banner selector, 5★ timeline, pity bar, 50/50 win/loss/guar tags, distribution histogram). Obsidian + Atelier are **placeholder** renders (headline number + "view in Console") — full theme ports PENDING. 50/50 is derived from the fixed standard-5★ pool (Calcharo/Encore/Jianxin/Lingyang/Verina), no banner-date mapping. Read-only (no edit mode) — synced via `npm run convene`.
 - Inline edits on Console **Teams** and **Cycles** pages: NOT wired. Use CLI in the meantime.
 - EXPORT button (download JSONB snapshot): NOT ported from ZZZ. Supabase is the source of truth so it's lower priority; revisit if Andres wants an offline backup gesture.
 
