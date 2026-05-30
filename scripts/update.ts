@@ -51,6 +51,7 @@ import type {
   StatWeights,
 } from "../src/lib/types";
 import { rateResonator } from "../src/lib/resonator-rating";
+import { deriveStatStatus } from "../src/lib/stat-audit";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -309,6 +310,13 @@ async function main() {
       const stat = findStat(audit, label);
       console.log(`${name} ${label}: ${stat.current} → ${value}`);
       stat.current = value;
+      // Numbers are ground truth: re-derive status from the band so the rating
+      // follows. Preserve the existing status when there's no numeric basis.
+      const derived = deriveStatStatus(stat as unknown as AuditStat);
+      if (derived && derived !== stat._status) {
+        console.log(`${name} ${label} status: ${stat._status} → ${derived} (auto)`);
+        stat._status = derived;
+      }
       break;
     }
     case "statopt": {

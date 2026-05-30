@@ -14,6 +14,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { EchoCost, EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, statusOf, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
+import { deriveStatStatus } from "@/lib/stat-audit";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
 
@@ -143,9 +144,17 @@ export function ConsoleResonator({ name }: { name: string }) {
     update((d) => {
       const a = d.audit.find((x) => x.name === r.name);
       if (!a || !a.stats[statIdx]) return;
-      if (field === "_status") a.stats[statIdx]._status = value as Status;
-      else if (field === "current") a.stats[statIdx].current = value;
-      else a.stats[statIdx].optimal = value;
+      const stat = a.stats[statIdx];
+      if (field === "_status") {
+        stat._status = value as Status; // explicit manual override
+      } else if (field === "current") {
+        stat.current = value;
+        // Numbers are ground truth: re-derive status from the band, falling back
+        // to the existing status when there's no numeric basis to judge against.
+        stat._status = deriveStatStatus(stat) ?? stat._status;
+      } else {
+        stat.optimal = value;
+      }
     });
   };
   const setSigWeaponField = (
