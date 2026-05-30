@@ -14,6 +14,10 @@
  *   npm run update -- weapon Aemeath "Everbright Polestar"
  *   npm run update -- rank Aemeath R1
  *   npm run update -- echo Aemeath "Trailblazing Star 5/5"
+ *   npm run update -- echoslot Aemeath 1 main "Crit DMG" 44
+ *   npm run update -- echoslot Aemeath 1 sub 1 "Crit Rate" 9.3
+ *   npm run update -- echoslot Aemeath show
+ *   npm run update -- echoweight Aemeath "Resonance Liberation DMG" 0.8
  *   npm run update -- bench 1 best 0:31
  *   npm run update -- bench 1 notes "New PB 2026-05-30"
  *   npm run update -- deaths 1 0
@@ -27,6 +31,24 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import {
+  blankEchoes,
+  defaultWeightsFor,
+  MAIN_STAT_POOLS,
+  SLOT_COSTS,
+  SUBSTAT_POOL,
+  scoreBuild,
+  scoreEcho,
+} from "../src/lib/echo-audit";
+import type {
+  Echo,
+  EchoBuild,
+  EchoCost,
+  EchoMainStatLabel,
+  EchoSubstatLabel,
+  ElementName,
+  StatWeights,
+} from "../src/lib/types";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -47,6 +69,7 @@ interface Data {
   keyFindings: string[];
   endstateMatrix: { cycles: { id: number; teams: AnyRecord[]; [k: string]: unknown }[] };
   signatureWeapons?: { name: string; [k: string]: unknown }[];
+  echoBuilds?: EchoBuild[];
   [k: string]: unknown;
 }
 
@@ -92,6 +115,40 @@ function findSigWeapon(data: Data, name: string) {
   return w;
 }
 
+// Echo builds — mirror ensureSigWeapons. Additive + idempotent.
+const ALL_MAIN_STATS = new Set<string>(Object.values(MAIN_STAT_POOLS).flat());
+const ALL_ECHO_STATS = new Set<string>([...SUBSTAT_POOL, ...ALL_MAIN_STATS]);
+
+function ensureEchoBuilds(data: Data): EchoBuild[] {
+  if (!Array.isArray(data.echoBuilds)) data.echoBuilds = [];
+  const known = new Set(data.echoBuilds.map((b) => b.resonator));
+  for (const r of data.resonators) {
+    const name = r.name as string;
+    if (!name || known.has(name)) continue;
+    const buildType = (data.audit.find((a) => a.name === name)?.buildType as string) ?? "";
+    data.echoBuilds.push({
+      resonator: name,
+      echoes: blankEchoes(),
+      weights: defaultWeightsFor(buildType, r.element as ElementName),
+    });
+    known.add(name);
+  }
+  return data.echoBuilds;
+}
+
+function findEchoBuild(data: Data, name: string): EchoBuild {
+  const list = ensureEchoBuilds(data);
+  const b = list.find((x) => x.resonator === name);
+  if (!b) throw new Error(`No resonator named "${name}". Known: ${list.map((x) => x.resonator).join(", ")}`);
+  return b;
+}
+
+function parseFloatOrThrow(v: string, label = "value") {
+  const n = parseFloat(v);
+  if (Number.isNaN(n)) throw new Error(`Expected number for ${label}, got "${v}"`);
+  return n;
+}
+
 function findResonator(data: Data, name: string) {
   const r = data.resonators.find((x) => x.name === name);
   if (!r) throw new Error(`No resonator named "${name}". Known: ${data.resonators.map((x) => x.name).join(", ")}`);
@@ -132,7 +189,17 @@ resonator:
   weapon <name> <text>                  set resonator weapon name
   weapontype <name> <type>              set resonator weapon type (${WEAPON_TYPES.join("|")})
   rank <name> <text>                    set weaponRank (R1..R5)
-  echo <name> <text>                    set echoSet
+  echo <name> <text>                    set echoSet (set name, e.g. "Frosty Resolve 5/5")
+
+echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
+  echoslot <name> <1-5> main <stat> [value]       set a slot's main stat
+  echoslot <name> <1-5> sub <1-5> <stat> <value>  set a substat (stat + roll value)
+  echoslot <name> show                            print build + stat grade
+  echoweight <name> <stat> <0..1>                 tune one audit weight
+  echoweight <name> reset                         re-seed weights from buildType
+    e.g. echoslot Aemeath 1 main "Crit DMG" 44
+         echoslot Aemeath 1 sub 1 "Crit Rate" 9.3
+         echoweight Aemeath "Resonance Liberation DMG" 0.8
 
 signature weapon (by weapon name, not resonator):
   sigweapon <weapon> <field> <value>    field: ${Object.keys(SIGWEAPON_FIELDS).join("|")}
@@ -305,6 +372,78 @@ async function main() {
         synergy: "",
       });
       console.log(`added signature weapon "${name}" (${type ?? "?"} · ${wearerParts.join(" ") || "no wearer"}) — fill it with: sigweapon "${name}" passive "..."`);
+      break;
+    }
+    case "echoslot": {
+      const [name, slotArg, ...slotRest] = rest;
+      if (!name) throw new Error(`usage: echoslot <name> <1-5|show> ...`);
+      const build = findEchoBuild(data, name);
+
+      if (slotArg === "show") {
+        const echoes = build.echoes as Echo[];
+        const bv = scoreBuild(echoes, build.weights as StatWeights);
+        console.log(`${name} — ${bv.grade}${bv.score !== null ? ` (${Math.round(bv.score)})` : ""} · ${bv.graded} graded · ${bv.headline}`);
+        echoes.forEach((e, i) => {
+          const ev = scoreEcho(e, build.weights as StatWeights);
+          const subs = e.substats.filter((s) => s.stat).map((s) => `${s.stat} ${s.value}`).join(", ") || "—";
+          const grade = ev.score !== null ? `${ev.grade} (${Math.round(ev.score)})` : "—";
+          console.log(`  [${e.cost}c] slot ${i + 1}: ${e.mainStat || "—"} ${e.mainValue || ""} · subs: ${subs} · ${grade}${ev.deadStats.length ? ` · dead: ${ev.deadStats.join(", ")}` : ""}`);
+        });
+        mutated = false;
+        return;
+      }
+
+      const slot = parseIntOrThrow(slotArg, "slot");
+      if (slot < 1 || slot > 5) throw new Error(`slot must be 1-5 (got ${slot})`);
+      const echo = (build.echoes as Echo[])[slot - 1];
+      const cost = SLOT_COSTS[slot - 1] as EchoCost;
+      const [kind, ...kindRest] = slotRest;
+
+      if (kind === "main") {
+        const [stat, valueStr] = [kindRest[0], kindRest[1]];
+        if (!stat) throw new Error(`usage: echoslot ${name} ${slot} main <stat> [value]`);
+        if (!MAIN_STAT_POOLS[cost].includes(stat as EchoMainStatLabel)) {
+          throw new Error(`"${stat}" is not a valid main stat for a ${cost}-cost echo. Pool: ${MAIN_STAT_POOLS[cost].join(", ")}`);
+        }
+        echo.mainStat = stat as EchoMainStatLabel;
+        if (valueStr !== undefined) echo.mainValue = parseFloatOrThrow(valueStr, "main value");
+        console.log(`${name} slot ${slot} (${cost}c) main: ${echo.mainStat}${valueStr !== undefined ? ` = ${echo.mainValue}` : ""}`);
+      } else if (kind === "sub") {
+        const [subIdxStr, stat, valueStr] = [kindRest[0], kindRest[1], kindRest[2]];
+        const subIdx = parseIntOrThrow(subIdxStr, "substat index");
+        if (subIdx < 1 || subIdx > 5) throw new Error(`substat index must be 1-5 (got ${subIdx})`);
+        if (!stat || !SUBSTAT_POOL.includes(stat as EchoSubstatLabel)) {
+          throw new Error(`"${stat}" is not a valid substat. Pool: ${SUBSTAT_POOL.join(", ")}`);
+        }
+        const value = parseFloatOrThrow(valueStr, "substat value");
+        while (echo.substats.length < subIdx) echo.substats.push({ stat: "", value: 0 });
+        echo.substats[subIdx - 1] = { stat: stat as EchoSubstatLabel, value };
+        console.log(`${name} slot ${slot} (${cost}c) sub ${subIdx}: ${stat} = ${value}`);
+      } else {
+        throw new Error(`usage: echoslot ${name} ${slot} <main|sub> ...`);
+      }
+      break;
+    }
+    case "echoweight": {
+      const [name, statArg, weightStr] = rest;
+      if (!name) throw new Error(`usage: echoweight <name> <stat> <0..1> | echoweight <name> reset`);
+      const build = findEchoBuild(data, name);
+
+      if (statArg === "reset") {
+        const r = findResonator(data, name);
+        const buildType = (findAudit(data, name).buildType as string) ?? "";
+        build.weights = defaultWeightsFor(buildType, r.element as ElementName);
+        console.log(`${name} weights re-seeded from buildType "${buildType}"`);
+        break;
+      }
+
+      if (!statArg || !ALL_ECHO_STATS.has(statArg)) {
+        throw new Error(`"${statArg}" is not a known echo stat. Valid: ${[...ALL_ECHO_STATS].join(", ")}`);
+      }
+      const weight = parseFloatOrThrow(weightStr, "weight");
+      if (weight < 0 || weight > 1) throw new Error(`weight must be 0..1 (got ${weight})`);
+      (build.weights as StatWeights)[statArg as EchoSubstatLabel] = weight;
+      console.log(`${name} weight ${statArg} → ${weight}`);
       break;
     }
     case "bench": {

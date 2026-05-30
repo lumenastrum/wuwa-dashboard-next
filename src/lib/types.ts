@@ -120,6 +120,50 @@ export interface SignatureWeapon {
   synergy: string;       // why it's cracked for the wearer (the Clio take)
 }
 
+// --- Echoes -------------------------------------------------------------
+// A WuWa build is 5 echoes in fixed cost slots: [4, 3, 3, 1, 1].
+export type EchoCost = 4 | 3 | 1;
+
+// Substat pool — shared across all costs. Flat (HP/ATK/DEF) and % variants
+// are DISTINCT stats with distinct roll ranges; never collapse them.
+export type EchoSubstatLabel =
+  | "HP" | "ATK" | "DEF"                  // flat
+  | "HP%" | "ATK%" | "DEF%"
+  | "Crit Rate" | "Crit DMG" | "Energy Regen"
+  | "Basic Attack DMG" | "Heavy Attack DMG"
+  | "Resonance Skill DMG" | "Resonance Liberation DMG";
+
+// Main stat vocabulary = substats plus the main-only stats (Healing, element DMG).
+export type EchoMainStatLabel =
+  | EchoSubstatLabel
+  | "Healing Bonus"
+  | "Glacio DMG" | "Fusion DMG" | "Electro DMG"
+  | "Aero DMG" | "Spectro DMG" | "Havoc DMG";
+
+export interface EchoSubstat {
+  stat: EchoSubstatLabel | "";   // "" = empty slot
+  value: number;                 // unit implied by stat (% or flat); 0 when empty
+}
+
+export interface Echo {
+  cost: EchoCost;
+  name?: string;                 // optional echo name (e.g. "Inferno Rider")
+  mainStat: EchoMainStatLabel | "";
+  mainValue: number;
+  substats: EchoSubstat[];       // up to 5
+}
+
+// Per-resonator stat weights (0..1) — the audit "brain". Seeded from buildType
+// + element, then user-tunable. Keyed on the echo-stat vocabulary, NOT the
+// audit's abstract StatLabel.
+export type StatWeights = Partial<Record<EchoSubstatLabel | EchoMainStatLabel, number>>;
+
+export interface EchoBuild {
+  resonator: string;             // 1:1 link to Resonator.name
+  echoes: Echo[];                // exactly 5, costs [4, 3, 3, 1, 1]
+  weights: StatWeights;
+}
+
 export interface DashboardData {
   meta: DashboardMeta;
   resonators: Resonator[];
@@ -131,6 +175,7 @@ export interface DashboardData {
   keyFindings: string[];
   endstateMatrix: EndstateMatrix;
   signatureWeapons: SignatureWeapon[];
+  echoBuilds: EchoBuild[];
 }
 
 export type RosterEntry = Resonator & { audit?: AuditEntry };

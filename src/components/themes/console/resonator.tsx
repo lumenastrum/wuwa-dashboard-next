@@ -2,29 +2,58 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, roleAccent, signatureWeaponOf } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, roleAccent, signatureWeaponOf, echoBuildOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
 import { useTheme } from "@/lib/theme-context";
+import { useEditMode } from "@/lib/edit-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
-import type { Sequence, Status } from "@/lib/types";
+import type { EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
+import { scoreBuild, scoreEcho, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
 
 const SEQUENCES: readonly Sequence[] = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 const STATUSES: readonly Status[] = ["green", "yellow", "red", "neutral"];
 
+// Grade chip used by the echo audit — colored by the shared Status palette.
+function GradePill({ grade, status, score, big }: { grade: EchoGrade; status: Status; score: number | null; big?: boolean }) {
+  const hex = STATUS_HEX[status];
+  return (
+    <span
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 5,
+        padding: big ? "5px 11px" : "2px 7px",
+        border: `1px solid ${hex}`, borderRadius: 3, color: hex,
+        ...kStyles.mono, fontSize: big ? 16 : 11, letterSpacing: 1, lineHeight: 1,
+        background: `${hex}14`,
+      }}
+    >
+      <span style={{ fontWeight: 700 }}>{grade}</span>
+      {score !== null && <span style={{ opacity: 0.7, fontSize: big ? 11 : 9 }}>{Math.round(score)}</span>}
+    </span>
+  );
+}
+
+// roll-quality 0..1 → a status tier for the substat bar color.
+function qualityStatus(q: number): Status {
+  return q >= 0.66 ? "green" : q >= 0.33 ? "yellow" : "red";
+}
+
 export function ConsoleResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName, update } = useData();
   const { isMobile, isTablet } = useDashboardViewport();
+  const { editMode } = useEditMode();
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
   const teams = teamsFeaturingOf(raw, r.name);
   const sw = signatureWeaponOf(raw, r.weapon);
+  const echoBuild = echoBuildOf(raw, r.name);
+  const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -83,6 +112,40 @@ export function ConsoleResonator({ name }: { name: string }) {
         d.signatureWeapons.push(target);
       }
       target[field] = value;
+    });
+  };
+
+  // Echo edit closures — look up build + slot by name inside the mutator.
+  const parseNum = (v: string) => {
+    const n = parseFloat(v);
+    return Number.isNaN(n) ? 0 : n;
+  };
+  const setEchoMain = (slot: number, field: "mainStat" | "mainValue", value: string) => {
+    update((d) => {
+      const e = d.echoBuilds?.find((x) => x.resonator === r.name)?.echoes[slot];
+      if (!e) return;
+      if (field === "mainStat") e.mainStat = value as EchoMainStatLabel | "";
+      else e.mainValue = parseNum(value);
+    });
+  };
+  const setEchoSub = (slot: number, sub: number, field: "stat" | "value", value: string) => {
+    update((d) => {
+      const e = d.echoBuilds?.find((x) => x.resonator === r.name)?.echoes[slot];
+      if (!e?.substats[sub]) return;
+      if (field === "stat") e.substats[sub].stat = value as EchoSubstatLabel | "";
+      else e.substats[sub].value = parseNum(value);
+    });
+  };
+  const addEchoSub = (slot: number) => {
+    update((d) => {
+      const e = d.echoBuilds?.find((x) => x.resonator === r.name)?.echoes[slot];
+      if (e && e.substats.length < 5) e.substats.push({ stat: "", value: 0 });
+    });
+  };
+  const removeEchoSub = (slot: number, sub: number) => {
+    update((d) => {
+      const e = d.echoBuilds?.find((x) => x.resonator === r.name)?.echoes[slot];
+      if (e && e.substats.length > 1) e.substats.splice(sub, 1);
     });
   };
 
@@ -659,6 +722,139 @@ export function ConsoleResonator({ name }: { name: string }) {
                 </div>
               </div>
             </KPanel>
+
+            {echoBuild && echoVerdict && (
+              <KPanel label="ECHO AUDIT" code="ECHO.001" accent={el.hex}>
+                {/* overall stat grade */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+                  <GradePill grade={echoVerdict.grade} status={echoVerdict.status} score={echoVerdict.score} big />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ ...kStyles.display, fontSize: 15, color: K_PAL.text }}>{echoVerdict.headline}</div>
+                    <div style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textDim, letterSpacing: 1.5, marginTop: 2 }}>
+                      {echoVerdict.graded} GRADED · STAT GRADE ONLY — SET BONUS NOT SCORED
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
+                  {echoBuild.echoes.map((echo, i) => {
+                    const ev = scoreEcho(echo, echoBuild.weights);
+                    const mainPool: readonly string[] = ["", ...MAIN_STAT_POOLS[echo.cost]];
+                    const subPool: readonly string[] = ["", ...SUBSTAT_POOL];
+                    return (
+                      <div
+                        key={i}
+                        style={{
+                          padding: 12,
+                          background: "rgba(0,0,0,0.3)",
+                          border: `1px solid ${K_PAL.border}`,
+                        }}
+                      >
+                        {/* cost badge + per-echo grade */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                          <span style={{ ...kStyles.mono, fontSize: 10, color: el.hex, letterSpacing: 1.5 }}>
+                            {echo.cost}-COST
+                          </span>
+                          <GradePill grade={ev.grade} status={ev.status} score={ev.score} />
+                        </div>
+
+                        {/* main stat */}
+                        <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 8 }}>
+                          <span style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textDim, letterSpacing: 1, minWidth: 32 }}>MAIN</span>
+                          <EditableField
+                            value={echo.mainStat}
+                            onCommit={(v) => setEchoMain(i, "mainStat", v)}
+                            options={mainPool}
+                            width={132}
+                            placeholder="—"
+                            staticStyle={{ color: echo.mainStat ? K_PAL.text : K_PAL.textMute, fontStyle: echo.mainStat ? "normal" : "italic", fontSize: 12 }}
+                            inputStyle={{ fontSize: 11 }}
+                          />
+                          <EditableField
+                            value={echo.mainValue ? String(echo.mainValue) : ""}
+                            onCommit={(v) => setEchoMain(i, "mainValue", v)}
+                            width={46}
+                            align="right"
+                            inputStyle={{ fontSize: 11 }}
+                            staticStyle={{ color: K_PAL.textDim, fontSize: 12 }}
+                          />
+                          {echo.mainStat && isPercentStat(echo.mainStat) && (
+                            <span style={{ ...kStyles.mono, fontSize: 10, color: K_PAL.textMute }}>%</span>
+                          )}
+                        </div>
+
+                        {/* substats */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                          {echo.substats.map((sub, j) => {
+                            const sv = ev.substatVerdicts[j];
+                            return (
+                              <div key={j} style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                <EditableField
+                                  value={sub.stat}
+                                  onCommit={(v) => setEchoSub(i, j, "stat", v)}
+                                  options={subPool}
+                                  width={124}
+                                  placeholder="—"
+                                  staticStyle={{
+                                    color: sub.stat ? (sv?.dead ? K_PAL.textMute : K_PAL.text) : K_PAL.textMute,
+                                    textDecoration: sv?.dead ? "line-through" : "none",
+                                    fontSize: 11,
+                                  }}
+                                  inputStyle={{ fontSize: 11 }}
+                                />
+                                <EditableField
+                                  value={sub.value ? String(sub.value) : ""}
+                                  onCommit={(v) => setEchoSub(i, j, "value", v)}
+                                  width={42}
+                                  align="right"
+                                  inputStyle={{ fontSize: 11 }}
+                                  staticStyle={{ color: K_PAL.textDim, fontSize: 11 }}
+                                />
+                                {sub.stat && isPercentStat(sub.stat) && (
+                                  <span style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textMute }}>%</span>
+                                )}
+                                {sub.stat && (
+                                  <div style={{ flex: 1, minWidth: 24, height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
+                                    <div style={{ width: `${Math.round((sv?.quality ?? 0) * 100)}%`, height: "100%", background: sv?.dead ? K_PAL.textMute : STATUS_HEX[qualityStatus(sv?.quality ?? 0)] }} />
+                                  </div>
+                                )}
+                                {editMode && echo.substats.length > 1 && (
+                                  <button
+                                    onClick={() => removeEchoSub(i, j)}
+                                    style={{ ...kStyles.mono, fontSize: 12, lineHeight: 1, color: K_PAL.textMute, background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
+                                    title="remove substat"
+                                  >
+                                    ×
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })}
+                          {editMode && echo.substats.length < 5 && (
+                            <button
+                              onClick={() => addEchoSub(i)}
+                              style={{ ...kStyles.mono, fontSize: 10, letterSpacing: 1, color: el.hex, background: "none", border: `1px dashed ${K_PAL.border}`, cursor: "pointer", padding: "3px 0", marginTop: 2 }}
+                            >
+                              + SUBSTAT
+                            </button>
+                          )}
+                        </div>
+
+                        {!editMode && ev.deadStats.length > 0 && (
+                          <div style={{ ...kStyles.mono, fontSize: 9, color: STATUS_HEX.red, marginTop: 7, letterSpacing: 0.5 }}>
+                            ⚠ {ev.deadStats.length} dead substat{ev.deadStats.length > 1 ? "s" : ""}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textMute, letterSpacing: 1, marginTop: 12 }}>
+                  weights seeded from build type · tune via CLI: <span style={{ color: K_PAL.textDim }}>npm run update -- echoweight &quot;{r.name}&quot; &lt;stat&gt; &lt;0..1&gt;</span>
+                </div>
+              </KPanel>
+            )}
 
             {teams.length > 0 && (
               <KPanel

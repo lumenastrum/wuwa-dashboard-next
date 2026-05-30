@@ -15,7 +15,8 @@ import {
   SUPABASE_TABLE,
 } from "./supabase";
 import { BASE_PATH } from "./base-path";
-import type { DashboardData, Resonator, RosterEntry, SignatureWeapon } from "./types";
+import type { DashboardData, EchoBuild, Resonator, RosterEntry, SignatureWeapon } from "./types";
+import { blankEchoes, defaultWeightsFor } from "./echo-audit";
 
 export type SyncStatus = "loading" | "live" | "saving" | "local" | "error";
 
@@ -49,6 +50,28 @@ function ensureSignatureWeapons(data: DashboardData): DashboardData {
         synergy: "",
       });
       known.add(r.weapon);
+    }
+  }
+  return data;
+}
+
+// Make sure every resonator has an echo build. Additive + idempotent: only
+// adds blank builds for resonators lacking one, and only seeds weights when
+// absent/empty — never overwrites a user-tuned profile or deletes data.
+export function ensureEchoBuilds(data: DashboardData): DashboardData {
+  if (!Array.isArray(data.echoBuilds)) data.echoBuilds = [];
+  const byName = new Map(data.echoBuilds.map((b) => [b.resonator, b]));
+  for (const r of data.resonators) {
+    const buildType = data.audit.find((a) => a.name === r.name)?.buildType ?? "";
+    const existing = byName.get(r.name);
+    if (!existing) {
+      data.echoBuilds.push({
+        resonator: r.name,
+        echoes: blankEchoes(),
+        weights: defaultWeightsFor(buildType, r.element),
+      });
+    } else if (!existing.weights || Object.keys(existing.weights).length === 0) {
+      existing.weights = defaultWeightsFor(buildType, r.element);
     }
   }
   return data;
@@ -109,6 +132,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
         if (!mounted) return;
         ensureSignatureWeapons(data);
+        ensureEchoBuilds(data);
         latestRaw.current = data;
         setRaw(data);
         setSyncStatus(supa ? "live" : "local");
@@ -176,6 +200,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     if (!error && row?.data) {
       const data = row.data as DashboardData;
       ensureSignatureWeapons(data);
+      ensureEchoBuilds(data);
       latestRaw.current = data;
       setRaw(data);
       setSyncStatus("live");
@@ -261,6 +286,13 @@ export function signatureWeaponOf(
   weaponName: string,
 ): SignatureWeapon | undefined {
   return raw.signatureWeapons?.find((w) => w.name === weaponName);
+}
+
+export function echoBuildOf(
+  raw: DashboardData,
+  resonatorName: string,
+): EchoBuild | undefined {
+  return raw.echoBuilds?.find((b) => b.resonator === resonatorName);
 }
 
 export function getResonatorOrFirstOf(

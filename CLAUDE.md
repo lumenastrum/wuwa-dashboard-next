@@ -25,6 +25,8 @@ Full context: **read `README.md`**. This file is the carry-on.
 
 **Fill a signature weapon (passive / why-cracked / stats):** CLI `npm run update -- sigweapon "<weapon name>" <field> "<value>"` (fields: passive, synergy, passivename, baseatk, mainstat, mainstatvalue, type, wearer), OR inline in Console edit mode. Addressed by **weapon name**, not resonator. New weapons get a blank stub automatically (`ensureSignatureWeapons`); `addsigweapon` creates one explicitly.
 
+**Enter / audit echoes (per-resonator):** Each resonator has an `EchoBuild` — 5 slots (cost 4/3/3/1/1), each with a main stat + value and up to 5 substats (stat + roll value). The Console ECHO AUDIT panel grades each echo (and the build) **for that resonator** via an editable per-resonator stat-weight profile, seeded from buildType + element. CLI: `npm run update -- echoslot "<name>" <1-5> main "<stat>" [value]`, `echoslot "<name>" <1-5> sub <1-5> "<stat>" <value>`, `echoslot "<name>" show`, `echoweight "<name>" "<stat>" <0..1>`, `echoweight "<name>" reset`. OR fill inline in Console edit mode (cost-filtered dropdowns + value inputs). Blank builds are auto-stubbed (`ensureEchoBuilds`). Scoring math is pure in `src/lib/echo-audit.ts` (imported by both the UI and the CLI). It's a **stat grade only** — set bonuses (2pc/5pc) are NOT scored; `echoSet` still holds the set name separately.
+
 **Style a value differently per theme:** Find it in `components/themes/<theme>/{page}.tsx` — each theme owns its full render.
 
 ## Don't / gotchas
@@ -43,12 +45,14 @@ Full context: **read `README.md`**. This file is the carry-on.
 - Theme switching: `src/lib/theme-context.tsx`, `src/components/top-bar.tsx`
 - CLI: `scripts/update.ts` (roster), `scripts/convene-sync.ts` (pull-history sync), `scripts/convene-import.ts` (historical graft)
 - Signature weapons: type in `src/lib/types.ts` (`SignatureWeapon`), `signatureWeaponOf`/`ensureSignatureWeapons` in `data-context.tsx`, render in each theme's `resonator.tsx` (Console editable), seed/migrate via `scripts/migrate-sigweapons.ts`
+- Echoes: types in `src/lib/types.ts` (`Echo`/`EchoBuild`/`StatWeights`), pure scorer in `src/lib/echo-audit.ts` (pools/ranges/`defaultWeightsFor`/`scoreEcho`/`scoreBuild`/`blankEchoes`), `echoBuildOf`/`ensureEchoBuilds` in `data-context.tsx`, render in `src/components/themes/console/resonator.tsx` (ECHO AUDIT panel, Console-only), CLI `echoslot`/`echoweight` in `scripts/update.ts`
 - Convene: `src/lib/convene-types.ts`, `src/lib/convene-analytics.ts` (pure pity/50-50/distribution math), `src/lib/convene-merge.ts` (boundary-splice archival merge), `src/lib/use-pulls.ts` (read-only loader), `src/app/convene/page.tsx`, `src/components/themes/*/convene.tsx`
 - Design source: `../.design-handoff/design_handoff_wuwa_roster/` (sibling to `wuwa-dashboard-next/`)
 
 ## Active scope
 
 - **Convene (pull history) section:** Console render SHIPPED (`/convene` — global KPIs, banner selector, 5★ timeline, pity bar, 50/50 win/loss/guar tags, distribution histogram). Obsidian + Atelier are **placeholder** renders (headline number + "view in Console") — full theme ports PENDING. 50/50 is derived from the fixed standard-5★ pool (Calcharo/Encore/Jianxin/Lingyang/Verina), no banner-date mapping. Read-only (no edit mode) — synced via `npm run convene`.
+- **Echo Audit section:** Console render SHIPPED (resonator page — overall stat-grade header + 5 cost slots with main/substat entry, per-echo grade pills, roll-quality bars, dead-stat flags). Editable inline (Console) or via `echoslot`/`echoweight` CLI. Per-resonator stat weights seeded from buildType+element, tunable via CLI. Obsidian + Atelier are **placeholder** (set-name string only) — full theme ports PENDING (same as Convene). **Stat grade only** — set-bonus (2pc/5pc) evaluation is out of scope. Default weight seeds in `echo-audit.ts` (`DEFAULT_WEIGHTS`) are starting points, not gospel — tune as needed.
 - Inline edits on Console **Teams** and **Cycles** pages: NOT wired. Use CLI in the meantime.
 - EXPORT button (download JSONB snapshot): NOT ported from ZZZ. Supabase is the source of truth so it's lower priority; revisit if Andres wants an offline backup gesture.
 
