@@ -11,7 +11,7 @@ import { useEditMode } from "@/lib/edit-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
-import type { EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
+import type { EchoCost, EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, statusOf, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { K_PAL, kStyles } from "./styles";
@@ -178,6 +178,22 @@ export function ConsoleResonator({ name }: { name: string }) {
       if (!e) return;
       if (field === "mainStat") e.mainStat = value as EchoMainStatLabel | "";
       else e.mainValue = parseNum(value);
+    });
+  };
+  // Cost is per-echo, so a resonator can run a non-standard spread (e.g. an HP
+  // scaler's 4-4-1-1-1). Changing a slot's cost may orphan its main stat if the
+  // stat isn't in the new cost's pool — clear it so the build can't go invalid.
+  const setEchoCost = (slot: number, value: string) => {
+    const cost = parseInt(value, 10) as EchoCost;
+    if (cost !== 1 && cost !== 3 && cost !== 4) return;
+    update((d) => {
+      const e = d.echoBuilds?.find((x) => x.resonator === r.name)?.echoes[slot];
+      if (!e) return;
+      e.cost = cost;
+      if (e.mainStat && !MAIN_STAT_POOLS[cost].includes(e.mainStat as EchoMainStatLabel)) {
+        e.mainStat = "";
+        e.mainValue = 0;
+      }
     });
   };
   const setEchoSub = (slot: number, sub: number, field: "stat" | "value", value: string) => {
@@ -838,11 +854,16 @@ export function ConsoleResonator({ name }: { name: string }) {
                           border: `1px solid ${K_PAL.border}`,
                         }}
                       >
-                        {/* cost badge + per-echo grade */}
+                        {/* cost badge (editable spread) + per-echo grade */}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                          <span style={{ ...kStyles.mono, fontSize: 10, color: el.hex, letterSpacing: 1.5 }}>
-                            {echo.cost}-COST
-                          </span>
+                          <EditableField
+                            value={`${echo.cost}-COST`}
+                            onCommit={(v) => setEchoCost(i, v)}
+                            options={["4-COST", "3-COST", "1-COST"]}
+                            width={64}
+                            staticStyle={{ ...kStyles.mono, fontSize: 10, color: el.hex, letterSpacing: 1.5 }}
+                            inputStyle={{ ...kStyles.mono, fontSize: 10 }}
+                          />
                           <GradePill grade={ev.grade} status={ev.status} score={ev.score} />
                         </div>
 

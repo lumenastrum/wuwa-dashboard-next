@@ -160,7 +160,8 @@ export type StatWeights = Partial<Record<EchoSubstatLabel | EchoMainStatLabel, n
 
 export interface EchoBuild {
   resonator: string;             // 1:1 link to Resonator.name
-  echoes: Echo[];                // exactly 5, costs [4, 3, 3, 1, 1]
+  echoes: Echo[];                // exactly 5; cost is PER-echo (default spread
+                                 // [4,3,3,1,1], but e.g. HP scalers run 4-4-1-1-1)
   weights: StatWeights;
 }
 

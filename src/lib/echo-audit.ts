@@ -22,6 +22,9 @@ import type {
 } from "./types";
 
 // --- Slot layout --------------------------------------------------------
+// The DEFAULT cost spread for a fresh build. Cost is stored per-echo (Echo.cost)
+// and is editable, so a resonator can run a non-standard spread — e.g. HP
+// scalers like Cartethyia want 4-4-1-1-1 (a second 4-cost main over the 3-cost).
 export const SLOT_COSTS = [4, 3, 3, 1, 1] as const;
 
 // --- Main stat pools by cost -------------------------------------------

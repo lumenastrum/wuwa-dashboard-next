@@ -35,7 +35,6 @@ import {
   blankEchoes,
   defaultWeightsFor,
   MAIN_STAT_POOLS,
-  SLOT_COSTS,
   SUBSTAT_POOL,
   scoreBuild,
   scoreEcho,
@@ -197,6 +196,8 @@ resonator:
 echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
   echoslot <name> <1-5> main <stat> [value]       set a slot's main stat
   echoslot <name> <1-5> sub <1-5> <stat> <value>  set a substat (stat + roll value)
+  echoslot <name> <1-5> cost <1|3|4>              set one slot's cost
+  echoslot <name> spread <4-4-1-1-1>              set the whole cost spread at once
   echoslot <name> show                            print build + stat grade
   echoweight <name> <stat> <0..1>                 tune one audit weight
   echoweight <name> reset                         re-seed weights from buildType
@@ -427,10 +428,33 @@ async function main() {
         return;
       }
 
+      // Set the whole cost spread at once, e.g. `echoslot Cartethyia spread 4-4-1-1-1`.
+      if (slotArg === "spread") {
+        const spec = slotRest[0];
+        if (!spec) throw new Error(`usage: echoslot ${name} spread <e.g. 4-4-1-1-1>`);
+        const costs = spec.split("-").map((c) => parseIntOrThrow(c, "cost"));
+        if (costs.length !== 5) throw new Error(`spread needs exactly 5 costs (got ${costs.length}): "${spec}"`);
+        const echoes = build.echoes as Echo[];
+        const cleared: number[] = [];
+        costs.forEach((c, i) => {
+          if (c !== 1 && c !== 3 && c !== 4) throw new Error(`cost must be 1, 3, or 4 (slot ${i + 1} got ${c})`);
+          echoes[i].cost = c as EchoCost;
+          if (echoes[i].mainStat && !MAIN_STAT_POOLS[c as EchoCost].includes(echoes[i].mainStat as EchoMainStatLabel)) {
+            echoes[i].mainStat = "";
+            echoes[i].mainValue = 0;
+            cleared.push(i + 1);
+          }
+        });
+        const total = costs.reduce((a, b) => a + b, 0);
+        console.log(`${name} spread set: ${costs.join("-")} (total cost ${total}${total > 12 ? " — OVER the 12 budget!" : ""})`);
+        if (cleared.length) console.log(`  cleared now-invalid main stat on slot(s): ${cleared.join(", ")}`);
+        break;
+      }
+
       const slot = parseIntOrThrow(slotArg, "slot");
       if (slot < 1 || slot > 5) throw new Error(`slot must be 1-5 (got ${slot})`);
       const echo = (build.echoes as Echo[])[slot - 1];
-      const cost = SLOT_COSTS[slot - 1] as EchoCost;
+      const cost = echo.cost; // per-echo, not the standard spread — supports custom layouts
       const [kind, ...kindRest] = slotRest;
 
       if (kind === "main") {
@@ -453,8 +477,19 @@ async function main() {
         while (echo.substats.length < subIdx) echo.substats.push({ stat: "", value: 0 });
         echo.substats[subIdx - 1] = { stat: stat as EchoSubstatLabel, value };
         console.log(`${name} slot ${slot} (${cost}c) sub ${subIdx}: ${stat} = ${value}`);
+      } else if (kind === "cost") {
+        const c = parseIntOrThrow(kindRest[0], "cost");
+        if (c !== 1 && c !== 3 && c !== 4) throw new Error(`cost must be 1, 3, or 4 (got ${c})`);
+        echo.cost = c as EchoCost;
+        let note = "";
+        if (echo.mainStat && !MAIN_STAT_POOLS[c as EchoCost].includes(echo.mainStat as EchoMainStatLabel)) {
+          echo.mainStat = "";
+          echo.mainValue = 0;
+          note = " · cleared now-invalid main stat";
+        }
+        console.log(`${name} slot ${slot} cost: ${echo.cost}${note}`);
       } else {
-        throw new Error(`usage: echoslot ${name} ${slot} <main|sub> ...`);
+        throw new Error(`usage: echoslot ${name} ${slot} <main|sub|cost> ...`);
       }
       break;
     }
