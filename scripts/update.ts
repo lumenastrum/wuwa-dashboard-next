@@ -41,14 +41,17 @@ import {
   scoreEcho,
 } from "../src/lib/echo-audit";
 import type {
+  AuditStat,
   Echo,
   EchoBuild,
   EchoCost,
   EchoMainStatLabel,
   EchoSubstatLabel,
   ElementName,
+  Sequence,
   StatWeights,
 } from "../src/lib/types";
+import { rateResonator } from "../src/lib/resonator-rating";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -201,6 +204,9 @@ echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
          echoslot Aemeath 1 sub 1 "Crit Rate" 9.3
          echoweight Aemeath "Resonance Liberation DMG" 0.8
 
+resonator rating (read-only, Optimizer weighting):
+  rating <name>                                   echo+stats+sig+seq → one grade
+
 signature weapon (by weapon name, not resonator):
   sigweapon <weapon> <field> <value>    field: ${Object.keys(SIGWEAPON_FIELDS).join("|")}
   addsigweapon <weapon> <type> <wearer> create a new blank weapon entry
@@ -262,6 +268,34 @@ async function main() {
       const filled = (w.passive as string) || (w.synergy as string) ? "●" : "○";
       console.log(`  ${filled} ${w.name} → ${w.wearer}`);
     }
+    return;
+  }
+
+  if (cmd === "rating") {
+    const name = rest[0];
+    if (!name) throw new Error(`usage: rating <name>`);
+    const r = findResonator(data, name);
+    const audit = data.audit.find((x) => x.name === name);
+    const sig = data.signatureWeapons?.find((w) => w.name === r.weapon);
+    const build = data.echoBuilds?.find((b) => b.resonator === name);
+    const echoScore = build
+      ? scoreBuild(build.echoes as Echo[], build.weights as StatWeights).score
+      : null;
+    const rating = rateResonator({
+      sequence: r.sequence as Sequence,
+      weaponRank: r.weaponRank as string,
+      hasWeapon: !!r.weapon,
+      onSignature: !!sig && sig.wearer === name,
+      stats: (audit?.stats ?? []) as unknown as AuditStat[],
+      echoScore,
+    });
+    const scoreStr = rating.score !== null ? ` (${Math.round(rating.score)})` : "";
+    console.log(`${name} — RESONATOR RATING ${rating.grade}${scoreStr}${rating.partial ? " · PARTIAL" : ""}`);
+    for (const s of rating.subs) {
+      const v = s.score !== null ? String(Math.round(s.score)) : "—";
+      console.log(`  ${s.label.padEnd(10)} ${v.padStart(4)} · weight ${Math.round(s.weight * 100)}%`);
+    }
+    console.log(`  weighting: OPTIMIZER (echo 35 / stats 35 / sig 15 / seq 15)`);
     return;
   }
 

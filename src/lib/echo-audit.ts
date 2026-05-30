@@ -135,14 +135,23 @@ export function defaultWeightsFor(buildType: string, element: ElementName): Stat
 const WMAIN: Record<EchoCost, number> = { 4: 0.4, 3: 0.3, 1: 0.25 };
 const DEAD_THRESHOLD = 0.1;
 
+// Roll quality that anchors an "S" — "thrilled to get this". We normalize the
+// substat score against 5 relevant stats at THIS quality (a realistic-excellent
+// echo), NOT against all-max-rolled (the unicorn). Rolls above target push
+// substatScore past 1.0, which is what feeds the SSS/✦ overflow zone.
+const Q_TARGET = 0.75;
+
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
-// 0..1 — how close a substat value rolled to its max for that stat.
+// 0..1 — a substat's value as a fraction of its MAX possible roll. Floor-aware:
+// a minimum roll is genuinely ~55-60% of a max roll in-game, not worthless, so
+// we normalize against the ceiling. (The old (value-min)/(max-min) pinned floor
+// rolls to 0, which made correct-but-low builds score like off-stat garbage.)
 export function rollQuality(stat: EchoSubstatLabel | "", value: number): number {
   if (!stat || !(stat in SUBSTAT_RANGE)) return 0;
-  const { min, max } = SUBSTAT_RANGE[stat];
-  if (max === min) return 0;
-  return clamp01((value - min) / (max - min));
+  const { max } = SUBSTAT_RANGE[stat];
+  if (max <= 0) return 0;
+  return clamp01(value / max);
 }
 
 // The best a 5-substat echo can possibly do for this resonator: the sum of the
@@ -161,7 +170,7 @@ function isEchoEmpty(echo: Echo): boolean {
   return !echo.mainStat && !echo.substats.some((s) => s.stat);
 }
 
-export type EchoGrade = "S" | "A" | "B" | "C" | "D" | "—";
+export type EchoGrade = "✦" | "SSS" | "S" | "A" | "B" | "C" | "D" | "—";
 
 export interface SubstatVerdict {
   stat: EchoSubstatLabel | "";
@@ -188,19 +197,25 @@ export interface BuildVerdict {
   graded: string;               // "n/5"
 }
 
+// Generous middle, mythic top. S = "thrilled to get this" (~90). The prestige
+// tiers live in the overflow zone above 100 — only reachable when rolls blow
+// past the realistic target, so SSS/✦ stay rare. D is reserved for genuinely
+// off-stat builds (handled by the score naturally collapsing), not low rolls.
 function gradeOf(score: number): EchoGrade {
+  if (score >= 115) return "✦";
+  if (score >= 105) return "SSS";
   if (score >= 90) return "S";
-  if (score >= 80) return "A";
-  if (score >= 70) return "B";
-  if (score >= 60) return "C";
+  if (score >= 78) return "A";
+  if (score >= 65) return "B";
+  if (score >= 50) return "C";
   return "D";
 }
 
 export function statusOf(score: number | null): Status {
   if (score === null) return "neutral";
-  if (score >= 80) return "green";
-  if (score >= 60) return "yellow";
-  return "red";
+  if (score >= 78) return "green";   // A and up — green light
+  if (score >= 50) return "yellow";  // C/B — right idea, keep tuning
+  return "red";                      // D — off-stat
 }
 
 export function scoreEcho(echo: Echo, weights: StatWeights): EchoVerdict {
@@ -214,20 +229,22 @@ export function scoreEcho(echo: Echo, weights: StatWeights): EchoVerdict {
   const mainWeight = echo.mainStat ? weights[echo.mainStat] ?? 0 : 0;
   const mainMatch = bestMainWeight > 0 ? clamp01(mainWeight / bestMainWeight) : 0;
 
-  // Substats: Σ(weight × rollQuality) normalized by the best 5-substat combo
-  // achievable for this resonator — so a flawless echo scores 100.
-  const potential = bestSubstatPotential(weights);
+  // Substats: Σ(weight × rollQuality) normalized by a REALISTIC ideal — the top-5
+  // relevant stats at Q_TARGET quality, NOT all max-rolled. substatScore is
+  // deliberately NOT clamped at 1: rolls above target overflow past 1.0 and lift
+  // the echo into SSS/✦ territory, which is the whole point of the prestige tiers.
+  const potential = bestSubstatPotential(weights) * Q_TARGET;
   const substatVerdicts: SubstatVerdict[] = echo.substats.map((sub: EchoSubstat) => {
     const weight = sub.stat ? weights[sub.stat] ?? 0 : 0;
     const quality = rollQuality(sub.stat, sub.value);
     return { stat: sub.stat, value: sub.value, weight, quality, dead: !!sub.stat && weight < DEAD_THRESHOLD };
   });
   const substatSum = substatVerdicts.reduce((acc, v) => acc + v.weight * v.quality, 0);
-  const substatScore = potential > 0 ? clamp01(substatSum / potential) : 0;
+  const substatScore = potential > 0 ? Math.min(substatSum / potential, 1.5) : 0;
 
   const wMain = WMAIN[echo.cost];
   const raw = 100 * (wMain * mainMatch + (1 - wMain) * substatScore);
-  const score = Math.max(0, Math.min(100, raw));
+  const score = Math.max(0, Math.min(130, raw));
 
   return {
     score,
@@ -249,14 +266,24 @@ export function scoreBuild(echoes: Echo[], weights: StatWeights): BuildVerdict {
 
   const score = graded.reduce((acc, v) => acc + (v.score ?? 0), 0) / graded.length;
   const deadCount = verdicts.reduce((acc, v) => acc + v.deadStats.length, 0);
+  const avgMainMatch = graded.reduce((acc, v) => acc + v.mainMatch, 0) / graded.length;
   const grade = gradeOf(score);
 
+  // Headline is DIAGNOSTIC, not just a re-statement of the grade: it separates
+  // "wrong stats" (off-main) from "right stats, low rolls". The old code called
+  // any low score "off-stat — major substat waste", mislabeling a correct build
+  // that simply hadn't high-rolled yet (see Aemeath: perfect mains, low rolls).
   let headline: string;
-  if (grade === "S") headline = "Cracked — near-ideal stats";
-  else if (grade === "A") headline = "Strong build for this resonator";
-  else if (grade === "B") headline = "Solid, room to optimize";
-  else if (grade === "C") headline = "Underbuilt — re-roll priorities";
-  else headline = "Off-stat — major substat waste";
+  if (grade === "✦") headline = "Unicorn — flawless rolls, don't touch a thing";
+  else if (grade === "SSS") headline = "Cracked — elite rolls across the board";
+  else if (grade === "S") headline = "Thrilled — this is the build";
+  else if (grade === "A") headline = "Strong — right stats, minor tuning left";
+  else if (grade === "B") headline = "Solid — correct stats, keep rolling for value";
+  else if (grade === "C") {
+    headline = avgMainMatch < 0.7 ? "Mixed — some main stats are off-slot" : "Underrolled — right stats, low values";
+  } else {
+    headline = avgMainMatch < 0.6 ? "Off-stat — wrong main stats for this build" : "Underbuilt — dead substats dragging it down";
+  }
   if (deadCount > 0) headline += ` · ${deadCount} dead substat${deadCount > 1 ? "s" : ""}`;
 
   return { score, grade, status: statusOf(score), headline, graded: `${graded.length}/${echoes.length}` };

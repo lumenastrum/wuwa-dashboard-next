@@ -12,28 +12,52 @@ import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
-import { scoreBuild, scoreEcho, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { scoreBuild, scoreEcho, statusOf, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { rateResonator } from "@/lib/resonator-rating";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
 
 const SEQUENCES: readonly Sequence[] = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 const STATUSES: readonly Status[] = ["green", "yellow", "red", "neutral"];
 
-// Grade chip used by the echo audit — colored by the shared Status palette.
-function GradePill({ grade, status, score, big }: { grade: EchoGrade; status: Status; score: number | null; big?: boolean }) {
-  const hex = STATUS_HEX[status];
+// The prestige tiers earn their own chrome and a glow: S is GOLD (the optimal,
+// peak-state milestone — a genuine arrival), SSS goes violet, and ✦ (the Clio
+// sparkle — top of the ladder, basically a unicorn) gets a pink→gold gradient
+// glyph. Everything below S rides the shared Status palette, no glow.
+const PRESTIGE_HEX: Partial<Record<EchoGrade, string>> = { S: "#fbbf24", SSS: "#a78bfa", "✦": "#f9a8d4" };
+
+// Grade chip used by the echo audit + resonator rating. `hero` is the largest
+// size, reserved for the Resonator Rating — the at-a-glance number that grounds
+// the whole page.
+function GradePill({ grade, status, score, big, hero }: { grade: EchoGrade; status: Status; score: number | null; big?: boolean; hero?: boolean }) {
+  const sparkle = grade === "✦";
+  const glow = PRESTIGE_HEX[grade];
+  const hex = glow ?? STATUS_HEX[status];
+  const pad = hero ? "8px 16px" : big ? "5px 11px" : "2px 7px";
+  const fs = hero ? 23 : big ? 16 : 11;
+  const sfs = hero ? 14 : big ? 11 : 9;
+  const glowR = hero ? 20 : big ? 14 : 8;
   return (
     <span
       style={{
-        display: "inline-flex", alignItems: "center", gap: 5,
-        padding: big ? "5px 11px" : "2px 7px",
-        border: `1px solid ${hex}`, borderRadius: 3, color: hex,
-        ...kStyles.mono, fontSize: big ? 16 : 11, letterSpacing: 1, lineHeight: 1,
+        display: "inline-flex", alignItems: "center", gap: hero ? 7 : 5,
+        padding: pad,
+        border: `1px solid ${hex}`, borderRadius: hero ? 4 : 3, color: hex,
+        ...kStyles.mono, fontSize: fs, letterSpacing: hero ? 1.5 : 1, lineHeight: 1,
         background: `${hex}14`,
+        boxShadow: glow ? `0 0 ${glowR}px ${hex}66` : undefined,
       }}
     >
-      <span style={{ fontWeight: 700 }}>{grade}</span>
-      {score !== null && <span style={{ opacity: 0.7, fontSize: big ? 11 : 9 }}>{Math.round(score)}</span>}
+      <span
+        style={
+          sparkle
+            ? { fontWeight: 700, backgroundImage: "linear-gradient(90deg,#f9a8d4,#fcd34d)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }
+            : { fontWeight: 700 }
+        }
+      >
+        {grade}
+      </span>
+      {score !== null && <span style={{ opacity: 0.7, fontSize: sfs }}>{Math.round(score)}</span>}
     </span>
   );
 }
@@ -41,6 +65,26 @@ function GradePill({ grade, status, score, big }: { grade: EchoGrade; status: St
 // roll-quality 0..1 → a status tier for the substat bar color.
 function qualityStatus(q: number): Status {
   return q >= 0.66 ? "green" : q >= 0.33 ? "yellow" : "red";
+}
+
+// One input bar in the Resonator Rating breakdown: sub-score + effective weight.
+function RatingSubBar({ label, score, weight }: { label: string; score: number | null; weight: number }) {
+  const hex = STATUS_HEX[statusOf(score)];
+  const fill = score == null ? 0 : Math.min(100, score);
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", ...kStyles.mono, fontSize: 9, color: K_PAL.textMute, letterSpacing: 1.5 }}>
+        <span>{label}</span>
+        <span style={{ color: score == null ? K_PAL.textMute : hex }}>
+          {score == null ? "—" : Math.round(score)}
+          <span style={{ opacity: 0.5 }}> · {Math.round(weight * 100)}%</span>
+        </span>
+      </div>
+      <div style={{ height: 4, background: "#ffffff14", borderRadius: 2, marginTop: 4, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${fill}%`, background: hex }} />
+      </div>
+    </div>
+  );
 }
 
 export function ConsoleResonator({ name }: { name: string }) {
@@ -54,6 +98,14 @@ export function ConsoleResonator({ name }: { name: string }) {
   const sw = signatureWeaponOf(raw, r.weapon);
   const echoBuild = echoBuildOf(raw, r.name);
   const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
+  const rating = rateResonator({
+    sequence: r.sequence,
+    weaponRank: r.weaponRank,
+    hasWeapon: !!r.weapon,
+    onSignature: !!sw && sw.wearer === r.name,
+    stats: r.audit?.stats ?? [],
+    echoScore: echoVerdict?.score ?? null,
+  });
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -359,6 +411,42 @@ export function ConsoleResonator({ name }: { name: string }) {
           </KPanel>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {rating.score != null && (
+              <KPanel label="RESONATOR RATING" code="RR.001" accent={STATUS_HEX[rating.status]}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: 16,
+                    alignItems: isMobile ? "stretch" : "center",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 130 }}>
+                    <GradePill grade={rating.grade} status={rating.status} score={rating.score} hero />
+                    {rating.partial && (
+                      <span style={{ ...kStyles.mono, fontSize: 8, color: K_PAL.textMute, letterSpacing: 1 }}>
+                        PARTIAL
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+                      gap: 12,
+                      flex: 1,
+                    }}
+                  >
+                    {rating.subs.map((s) => (
+                      <RatingSubBar key={s.key} label={s.label} score={s.score} weight={s.weight} />
+                    ))}
+                  </div>
+                </div>
+                <div style={{ ...kStyles.mono, fontSize: 8.5, color: K_PAL.textMute, letterSpacing: 1, marginTop: 10 }}>
+                  OPTIMIZER WEIGHTING · ECHO 35 / STATS 35 / SIG 15 / SEQ 15 — BUILD QUALITY OVER INVESTMENT
+                </div>
+              </KPanel>
+            )}
             {r.audit && (
               <KPanel
                 label={`STATS_AUDIT · ${r.audit.buildType.toUpperCase()}`}
