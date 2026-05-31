@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf, signatureWeaponOf, echoBuildOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS } from "@/lib/elements";
 import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
@@ -11,8 +11,85 @@ import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
+import type { Status } from "@/lib/types";
+import { scoreBuild, scoreEcho, statusOf, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { rateResonator } from "@/lib/resonator-rating";
 import { O_PAL, oStyles } from "./styles";
-import { OStatBar } from "./primitives";
+import { OCard, OStatBar } from "./primitives";
+
+// Prestige tiers earn their own glow on the dark canvas: S gold, SSS violet,
+// ✦ a pink→gold gradient glyph. Everything below S rides the shared Status hue.
+const O_PRESTIGE_HEX: Partial<Record<EchoGrade, string>> = { S: "#fbbf24", SSS: "#a78bfa", "✦": "#f9a8d4" };
+
+// roll-quality 0..1 → a status tier for the substat dot color.
+function oQualityStatus(q: number): Status {
+  return q >= 0.66 ? "green" : q >= 0.33 ? "yellow" : "red";
+}
+
+// Jewel grade medallion — serif glyph in a hairline-bordered tile. `hero` is the
+// Resonator Rating size, `md` the echo-build header, `sm` the per-echo chip.
+function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; status: Status; score: number | null; size?: "sm" | "md" | "hero" }) {
+  const glow = O_PRESTIGE_HEX[grade];
+  const hex = glow ?? STATUS_HEX[status];
+  const sparkle = grade === "✦";
+  const dim = size === "hero" ? 64 : size === "md" ? 40 : 26;
+  const fs = size === "hero" ? 34 : size === "md" ? 21 : 14;
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: dim,
+        height: dim,
+        borderRadius: size === "hero" ? 14 : 8,
+        border: `1px solid ${hex}`,
+        background: `${hex}14`,
+        boxShadow: glow ? `0 0 ${size === "hero" ? 26 : 12}px ${hex}55, inset 0 0 18px ${hex}10` : "none",
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+          ...oStyles.display,
+          fontSize: fs,
+          lineHeight: 1,
+          fontWeight: 600,
+          color: sparkle ? "transparent" : hex,
+          backgroundImage: sparkle ? "linear-gradient(120deg,#f9a8d4,#fcd34d)" : "none",
+          WebkitBackgroundClip: sparkle ? "text" : "border-box",
+          backgroundClip: sparkle ? "text" : "border-box",
+        }}
+      >
+        {grade}
+      </div>
+      {score != null && size !== "sm" && (
+        <div style={{ ...oStyles.mono, fontSize: size === "hero" ? 11 : 9, color: hex, opacity: 0.75, marginTop: 2 }}>{Math.round(score)}</div>
+      )}
+    </div>
+  );
+}
+
+// One input bar in the Resonator Rating breakdown: sub-score + effective weight.
+function ORatingBar({ label, score, weight }: { label: string; score: number | null; weight: number }) {
+  const hex = STATUS_HEX[statusOf(score)];
+  const fill = score == null ? 0 : Math.min(100, score);
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5 }}>
+        <span style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textMute, letterSpacing: 1.5 }}>{label}</span>
+        <span style={{ ...oStyles.mono, fontSize: 10, color: score == null ? O_PAL.textMute : hex }}>
+          {score == null ? "—" : Math.round(score)}
+          <span style={{ color: O_PAL.textMute }}> · {Math.round(weight * 100)}%</span>
+        </span>
+      </div>
+      <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 999, overflow: "hidden" }}>
+        <div style={{ width: `${fill}%`, height: "100%", background: hex }} />
+      </div>
+    </div>
+  );
+}
 
 export function ObsidianResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
@@ -24,6 +101,20 @@ export function ObsidianResonator({ name }: { name: string }) {
   const cycleTeams = cycleAppearancesOf(raw, r.name);
   const sw = signatureWeaponOf(raw, r.weapon);
   const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
+  const echoBuild = echoBuildOf(raw, r.name);
+  const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
+  // Read view: only show slots that actually grade (skip blank stubs).
+  const gradedEchoes = echoBuild
+    ? echoBuild.echoes.map((echo) => ({ echo, ev: scoreEcho(echo, echoBuild.weights) })).filter((x) => x.ev.score != null)
+    : [];
+  const rating = rateResonator({
+    sequence: r.sequence,
+    weaponRank: r.weaponRank,
+    hasWeapon: !!r.weapon,
+    onSignature: !!sw && sw.wearer === r.name,
+    stats: r.audit?.stats ?? [],
+    echoScore: echoVerdict?.score ?? null,
+  });
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -201,6 +292,44 @@ export function ObsidianResonator({ name }: { name: string }) {
                 </div>
               ))}
             </div>
+
+            {rating.score != null && (
+              <OCard
+                style={{
+                  marginTop: 22,
+                  padding: 20,
+                  background: "rgba(233,212,155,0.035)",
+                  border: "1px solid rgba(233,212,155,0.22)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: isMobile ? 16 : 24,
+                    alignItems: isMobile ? "stretch" : "center",
+                  }}
+                >
+                  <div style={{ display: "flex", flexDirection: isMobile ? "row" : "column", alignItems: "center", gap: 8 }}>
+                    <OGrade grade={rating.grade} status={rating.status} score={rating.score} size="hero" />
+                    <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 2 }}>RATING</div>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
+                      <div style={{ ...oStyles.display, fontSize: 22 }}>Resonator Rating</div>
+                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
+                        {rating.partial ? "PARTIAL · " : ""}OPTIMIZER 35/35/15/15
+                      </div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 16 }}>
+                      {rating.subs.map((s) => (
+                        <ORatingBar key={s.key} label={s.label} score={s.score} weight={s.weight} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </OCard>
+            )}
 
             <div style={{ marginTop: 22 }}>
               <div
@@ -383,6 +512,94 @@ export function ObsidianResonator({ name }: { name: string }) {
                   <OStatBar key={s.label} stat={s} />
                 ))}
               </div>
+            )}
+
+            {echoVerdict && echoVerdict.score != null && gradedEchoes.length > 0 && (
+              <OCard style={{ marginTop: 24 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
+                  <OGrade grade={echoVerdict.grade} status={echoVerdict.status} score={echoVerdict.score} size="md" />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                      <div style={{ ...oStyles.display, fontSize: 24 }}>Echo Audit</div>
+                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
+                        {echoVerdict.graded} GRADED · STAT GRADE ONLY
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 13, color: O_PAL.textDim, marginTop: 3, fontStyle: "italic" }}>{echoVerdict.headline}</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {gradedEchoes.map(({ echo, ev }, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobile ? "36px 1fr 34px" : "44px 150px 1fr 40px",
+                        gap: 14,
+                        alignItems: "center",
+                        padding: "12px 0",
+                        borderTop: i > 0 ? `1px solid ${O_PAL.border}` : "none",
+                      }}
+                    >
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ ...oStyles.display, fontSize: 26, lineHeight: 1, color: O_PAL.accent }}>{echo.cost}</div>
+                        <div style={{ ...oStyles.mono, fontSize: 8, color: O_PAL.textMute, letterSpacing: 1 }}>COST</div>
+                      </div>
+                      {!isMobile && (
+                        <div>
+                          <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1 }}>MAIN</div>
+                          <div style={{ fontSize: 13, marginTop: 1 }}>{echo.mainStat || "—"}</div>
+                          <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textDim }}>
+                            {echo.mainValue || ""}
+                            {echo.mainStat && isPercentStat(echo.mainStat) ? "%" : ""}
+                          </div>
+                        </div>
+                      )}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {echo.substats.map((sub, j) => {
+                          if (!sub.stat) return null;
+                          const sv = ev.substatVerdicts[j];
+                          const dead = sv?.dead;
+                          const qhex = dead ? O_PAL.textMute : STATUS_HEX[oQualityStatus(sv?.quality ?? 0)];
+                          return (
+                            <div
+                              key={j}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "4px 9px",
+                                borderRadius: 999,
+                                background: "rgba(255,255,255,0.03)",
+                                border: `1px solid ${O_PAL.border}`,
+                              }}
+                            >
+                              <span style={{ width: 5, height: 5, borderRadius: 999, background: qhex }} />
+                              <span
+                                style={{
+                                  ...oStyles.mono,
+                                  fontSize: 10,
+                                  color: dead ? O_PAL.textMute : O_PAL.text,
+                                  textDecoration: dead ? "line-through" : "none",
+                                }}
+                              >
+                                {sub.stat} {sub.value}
+                                {isPercentStat(sub.stat) ? "%" : ""}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <OGrade grade={ev.grade} status={ev.status} score={null} size="sm" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1, marginTop: 14 }}>
+                  STAT GRADE ONLY — SET BONUS NOT SCORED · edit in the Console theme
+                </div>
+              </OCard>
             )}
 
             {teams.length > 0 && (

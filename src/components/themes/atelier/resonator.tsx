@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, signatureWeaponOf } from "@/lib/data-context";
+import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, getResonatorOrFirstOf, signatureWeaponOf, echoBuildOf } from "@/lib/data-context";
 import { useEffect } from "react";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
@@ -10,9 +10,93 @@ import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
-import type { AuditStat } from "@/lib/types";
+import type { AuditStat, Status } from "@/lib/types";
+import { scoreBuild, scoreEcho, statusOf, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { rateResonator } from "@/lib/resonator-rating";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
+
+// Legible-on-light grade hues. The shared STATUS greens/golds wash out on the
+// paper background, so the editorial theme keeps the grade MEANING but restyles
+// the chrome with darker, print-friendly inks.
+const A_GOLD = "#a9801a";
+const A_GREEN = "#1f9e6e";
+const A_PINK = "#c8478a";
+const A_VIOLET = "#6f55c9";
+const A_STATUS: Record<Status, string> = { green: A_GREEN, yellow: A_GOLD, red: "#cf445c", neutral: A_PAL.textMute };
+const A_PRESTIGE: Partial<Record<EchoGrade, string>> = { S: A_GOLD, SSS: A_VIOLET, "✦": A_PINK };
+
+function aGradeHex(grade: EchoGrade, status: Status): string {
+  return A_PRESTIGE[grade] ?? A_STATUS[status];
+}
+
+// roll-quality 0..1 → a status tier for the substat dot color.
+function aQualityStatus(q: number): Status {
+  return q >= 0.66 ? "green" : q >= 0.33 ? "yellow" : "red";
+}
+
+// Ink-outlined grade square with a serif glyph. Prestige tiers swap the ink
+// outline for their own hue + a faint wash. `hero` is the Resonator Rating size.
+function AGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; status: Status; score: number | null; size?: "sm" | "md" | "hero" }) {
+  const hex = aGradeHex(grade, status);
+  const prestige = !!A_PRESTIGE[grade];
+  const sparkle = grade === "✦";
+  const dim = size === "hero" ? 62 : size === "md" ? 40 : 26;
+  const fs = size === "hero" ? 34 : size === "md" ? 22 : 15;
+  return (
+    <div
+      style={{
+        display: "inline-flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: dim,
+        height: dim,
+        borderRadius: size === "hero" ? 4 : 3,
+        border: `1px solid ${prestige ? hex : A_PAL.ink}`,
+        background: prestige ? `${hex}12` : "transparent",
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+          ...aStyles.display,
+          fontSize: fs,
+          lineHeight: 1,
+          color: sparkle ? "transparent" : prestige ? hex : A_PAL.ink,
+          backgroundImage: sparkle ? "linear-gradient(120deg,#c8478a,#a9801a)" : "none",
+          WebkitBackgroundClip: sparkle ? "text" : "initial",
+          backgroundClip: sparkle ? "text" : "initial",
+        }}
+      >
+        {grade}
+      </div>
+      {score != null && size !== "sm" && (
+        <div style={{ ...aStyles.mono, fontSize: size === "hero" ? 10 : 9, color: prestige ? hex : A_PAL.textDim, marginTop: 1 }}>{Math.round(score)}</div>
+      )}
+    </div>
+  );
+}
+
+// One input bar in the Resonator Rating breakdown: sub-score + effective weight.
+function ARatingBar({ label, score, weight }: { label: string; score: number | null; weight: number }) {
+  const hex = A_STATUS[statusOf(score)];
+  const fill = score == null ? 0 : Math.min(100, score);
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5 }}>
+        <span style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textMute, letterSpacing: 1.5 }}>{label}</span>
+        <span style={{ ...aStyles.mono, fontSize: 10, color: score == null ? A_PAL.textMute : hex }}>
+          {score == null ? "—" : Math.round(score)}
+          <span style={{ color: A_PAL.textMute }}> · {Math.round(weight * 100)}%</span>
+        </span>
+      </div>
+      <div style={{ height: 3, background: "rgba(60,70,100,0.10)", borderRadius: 999, overflow: "hidden" }}>
+        <div style={{ width: `${fill}%`, height: "100%", background: hex }} />
+      </div>
+    </div>
+  );
+}
 
 function AStatBar({ stat }: { stat: AuditStat }) {
   const num = parseFloat(String(stat.current).replace(/[,%]/g, "")) || 0;
@@ -94,6 +178,20 @@ export function AtelierResonator({ name }: { name: string }) {
   const teams = teamsFeaturingOf(raw, r.name);
   const sw = signatureWeaponOf(raw, r.weapon);
   const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
+  const echoBuild = echoBuildOf(raw, r.name);
+  const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
+  // Read view: only show slots that actually grade (skip blank stubs).
+  const gradedEchoes = echoBuild
+    ? echoBuild.echoes.map((echo) => ({ echo, ev: scoreEcho(echo, echoBuild.weights) })).filter((x) => x.ev.score != null)
+    : [];
+  const rating = rateResonator({
+    sequence: r.sequence,
+    weaponRank: r.weaponRank,
+    hasWeapon: !!r.weapon,
+    onSignature: !!sw && sw.wearer === r.name,
+    stats: r.audit?.stats ?? [],
+    echoScore: echoVerdict?.score ?? null,
+  });
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
@@ -324,6 +422,37 @@ export function AtelierResonator({ name }: { name: string }) {
                 ))}
               </div>
 
+              {rating.score != null && (
+                <div style={{ marginTop: 24, paddingTop: 22, borderTop: `1px solid ${A_PAL.borderStrong}` }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: isMobile ? "column" : "row",
+                      gap: isMobile ? 16 : 24,
+                      alignItems: isMobile ? "stretch" : "center",
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: isMobile ? "row" : "column", alignItems: "center", gap: 6 }}>
+                      <AGrade grade={rating.grade} status={rating.status} score={rating.score} size="hero" />
+                      <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 2 }}>RATING</div>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
+                        <div style={{ ...aStyles.display, fontSize: 28 }}>Resonator rating</div>
+                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
+                          {rating.partial ? "PARTIAL · " : ""}OPTIMIZER 35/35/15/15
+                        </div>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 16 }}>
+                        {rating.subs.map((s) => (
+                          <ARatingBar key={s.key} label={s.label} score={s.score} weight={s.weight} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div style={{ marginTop: 20 }}>
                 <div
                   style={{
@@ -493,6 +622,92 @@ export function AtelierResonator({ name }: { name: string }) {
                   {r.audit.stats.map((s) => (
                     <AStatBar key={s.label} stat={s} />
                   ))}
+                </div>
+              )}
+
+              {echoVerdict && echoVerdict.score != null && gradedEchoes.length > 0 && (
+                <div style={{ marginTop: 26 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+                    <AGrade grade={echoVerdict.grade} status={echoVerdict.status} score={echoVerdict.score} size="md" />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                        <div style={{ ...aStyles.display, fontSize: 28 }}>Echo audit</div>
+                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
+                          {echoVerdict.graded} GRADED · STAT GRADE ONLY
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 13, color: A_PAL.textDim, marginTop: 2, fontStyle: "italic" }}>{echoVerdict.headline}</div>
+                    </div>
+                  </div>
+                  {gradedEchoes.map(({ echo, ev }, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobile ? "36px 1fr 32px" : "40px 140px 1fr 36px",
+                        gap: 14,
+                        alignItems: "center",
+                        padding: "12px 0",
+                        borderTop: `1px solid ${A_PAL.border}`,
+                      }}
+                    >
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ ...aStyles.display, fontSize: 28, lineHeight: 1, color: A_PAL.ink }}>{echo.cost}</div>
+                        <div style={{ ...aStyles.mono, fontSize: 8, color: A_PAL.textMute, letterSpacing: 1 }}>COST</div>
+                      </div>
+                      {!isMobile && (
+                        <div>
+                          <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1 }}>MAIN</div>
+                          <div style={{ fontSize: 13, color: A_PAL.ink, marginTop: 1 }}>{echo.mainStat || "—"}</div>
+                          <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textDim }}>
+                            {echo.mainValue || ""}
+                            {echo.mainStat && isPercentStat(echo.mainStat) ? "%" : ""}
+                          </div>
+                        </div>
+                      )}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {echo.substats.map((sub, j) => {
+                          if (!sub.stat) return null;
+                          const sv = ev.substatVerdicts[j];
+                          const dead = sv?.dead;
+                          const qhex = dead ? A_PAL.textMute : A_STATUS[aQualityStatus(sv?.quality ?? 0)];
+                          return (
+                            <div
+                              key={j}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "4px 9px",
+                                borderRadius: 999,
+                                background: A_PAL.surface,
+                                border: `1px solid ${A_PAL.border}`,
+                              }}
+                            >
+                              <span style={{ width: 5, height: 5, borderRadius: 999, background: qhex }} />
+                              <span
+                                style={{
+                                  ...aStyles.mono,
+                                  fontSize: 10,
+                                  color: dead ? A_PAL.textMute : A_PAL.text,
+                                  textDecoration: dead ? "line-through" : "none",
+                                }}
+                              >
+                                {sub.stat} {sub.value}
+                                {isPercentStat(sub.stat) ? "%" : ""}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <AGrade grade={ev.grade} status={ev.status} score={null} size="sm" />
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1, marginTop: 14 }}>
+                    STAT GRADE ONLY — SET BONUS NOT SCORED · edit in the Console theme
+                  </div>
                 </div>
               )}
 
