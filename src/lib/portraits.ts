@@ -44,7 +44,7 @@ export interface PortraitFrame {
 }
 
 const TEAM_FRAME: Record<string, PortraitFrame> = {
-  Aemeath: { top: 3.9, left: 53.4, height: 257.6 },
+  Aemeath: { top: 3.9, left: 68, height: 257.6 },
   Augusta: { top: -0.4, left: 36.1, height: 242.8 },
   Cantarella: { top: 0.7, left: 65.8, height: 243.5 },
   Carlotta: { top: 0.5, left: 64.4, height: 253.6 },
