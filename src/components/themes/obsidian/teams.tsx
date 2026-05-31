@@ -9,6 +9,8 @@ import { portrait, tallPortrait, teamPortraitFrame } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill } from "./primitives";
+import { SpinePortrait } from "@/components/spine-portrait";
+import { spinePortraitOf } from "@/lib/spine-portraits";
 
 export function ObsidianTeams() {
   const { raw, roster, rosterByName } = useData();
@@ -206,6 +208,7 @@ export function ObsidianTeams() {
           <OCard style={{ overflow: "hidden" }}>
             {/* magazine cover strip — the featured team, full-body */}
             <div
+              data-coverstrip
               style={{
                 position: "relative",
                 margin: "-22px -22px 20px",
@@ -219,6 +222,7 @@ export function ObsidianTeams() {
                 const rr = rosterByName[name];
                 const el = rr ? ELEMENTS[rr.element] : null;
                 const fr = teamPortraitFrame(name);
+                const sp = spinePortraitOf(name);
                 return (
                   <div
                     key={name}
@@ -229,20 +233,38 @@ export function ObsidianTeams() {
                       background: `linear-gradient(180deg, ${el?.glow ?? O_PAL.surface}, rgba(10,13,20,0.85))`,
                     }}
                   >
-                    <img
-                      src={tallPortrait(name)}
-                      alt={name}
-                      style={{
-                        position: "absolute",
-                        top: `${fr.top}%`,
-                        left: `${fr.left}%`,
-                        transform: "translateX(-50%)",
-                        height: `${fr.height}%`,
-                        width: "auto",
-                        maxWidth: "none",
-                        filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
-                      }}
-                    />
+                    {sp ? (
+                      // live formation portrait — the spine viewport frames the bust
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
+                        }}
+                      >
+                        <SpinePortrait
+                          bundle={sp.bundle}
+                          animation={sp.animation}
+                          viewport={sp.viewport}
+                          height="100%"
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={tallPortrait(name)}
+                        alt={name}
+                        style={{
+                          position: "absolute",
+                          top: `${fr.top}%`,
+                          left: `${fr.left}%`,
+                          transform: "translateX(-50%)",
+                          height: `${fr.height}%`,
+                          width: "auto",
+                          maxWidth: "none",
+                          filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
+                        }}
+                      />
+                    )}
                     <div
                       style={{
                         position: "absolute",

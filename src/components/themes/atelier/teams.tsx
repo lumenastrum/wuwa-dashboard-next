@@ -8,6 +8,8 @@ import { elementIcon, portrait, tallPortrait, teamPortraitFrame } from "@/lib/po
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
+import { SpinePortrait } from "@/components/spine-portrait";
+import { spinePortraitOf } from "@/lib/spine-portraits";
 
 export function AtelierTeams() {
   const { raw, roster, rosterByName } = useData();
@@ -190,6 +192,7 @@ export function AtelierTeams() {
             <ACard style={{ padding: isMobile ? 20 : 28, overflow: "hidden" }}>
               {/* magazine cover strip — the featured team, full-body */}
               <div
+                data-coverstrip
                 style={{
                   position: "relative",
                   margin: isMobile ? "-20px -20px 18px" : "-28px -28px 22px",
@@ -203,6 +206,7 @@ export function AtelierTeams() {
                   const rr = rosterByName[name];
                   const el = rr ? ELEMENTS[rr.element] : null;
                   const fr = teamPortraitFrame(name);
+                  const sp = spinePortraitOf(name);
                   return (
                     <div
                       key={name}
@@ -213,20 +217,38 @@ export function AtelierTeams() {
                         background: `linear-gradient(180deg, ${el?.glow ?? A_PAL.surface}, ${A_PAL.surfaceStrong})`,
                       }}
                     >
-                      <img
-                        src={tallPortrait(name)}
-                        alt={name}
-                        style={{
-                          position: "absolute",
-                          top: `${fr.top}%`,
-                          left: `${fr.left}%`,
-                          transform: "translateX(-50%)",
-                          height: `${fr.height}%`,
-                          width: "auto",
-                          maxWidth: "none",
-                          filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
-                        }}
-                      />
+                      {sp ? (
+                        // live formation portrait — the spine viewport frames the bust
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
+                          }}
+                        >
+                          <SpinePortrait
+                            bundle={sp.bundle}
+                            animation={sp.animation}
+                            viewport={sp.viewport}
+                            height="100%"
+                          />
+                        </div>
+                      ) : (
+                        <img
+                          src={tallPortrait(name)}
+                          alt={name}
+                          style={{
+                            position: "absolute",
+                            top: `${fr.top}%`,
+                            left: `${fr.left}%`,
+                            transform: "translateX(-50%)",
+                            height: `${fr.height}%`,
+                            width: "auto",
+                            maxWidth: "none",
+                            filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
+                          }}
+                        />
+                      )}
                       <div
                         style={{
                           position: "absolute",
