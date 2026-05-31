@@ -11,7 +11,7 @@ import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { AuditStat, Status } from "@/lib/types";
-import { scoreBuild, scoreEcho, statusOf, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
@@ -41,8 +41,8 @@ function AGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
   const hex = aGradeHex(grade, status);
   const prestige = !!A_PRESTIGE[grade];
   const sparkle = grade === "✦";
-  const dim = size === "hero" ? 62 : size === "md" ? 40 : 26;
-  const fs = size === "hero" ? 34 : size === "md" ? 22 : 15;
+  const dim = size === "hero" ? 104 : size === "md" ? 40 : 26;
+  const fs = size === "hero" ? 58 : size === "md" ? 22 : 15;
   return (
     <div
       style={{
@@ -52,7 +52,7 @@ function AGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
         justifyContent: "center",
         width: dim,
         height: dim,
-        borderRadius: size === "hero" ? 4 : 3,
+        borderRadius: size === "hero" ? 6 : 3,
         border: `1px solid ${prestige ? hex : A_PAL.ink}`,
         background: prestige ? `${hex}12` : "transparent",
         flexShrink: 0,
@@ -74,26 +74,6 @@ function AGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
       {score != null && size !== "sm" && (
         <div style={{ ...aStyles.mono, fontSize: size === "hero" ? 10 : 9, color: prestige ? hex : A_PAL.textDim, marginTop: 1 }}>{Math.round(score)}</div>
       )}
-    </div>
-  );
-}
-
-// One input bar in the Resonator Rating breakdown: sub-score + effective weight.
-function ARatingBar({ label, score, weight }: { label: string; score: number | null; weight: number }) {
-  const hex = A_STATUS[statusOf(score)];
-  const fill = score == null ? 0 : Math.min(100, score);
-  return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5 }}>
-        <span style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textMute, letterSpacing: 1.5 }}>{label}</span>
-        <span style={{ ...aStyles.mono, fontSize: 10, color: score == null ? A_PAL.textMute : hex }}>
-          {score == null ? "—" : Math.round(score)}
-          <span style={{ color: A_PAL.textMute }}> · {Math.round(weight * 100)}%</span>
-        </span>
-      </div>
-      <div style={{ height: 3, background: "rgba(60,70,100,0.10)", borderRadius: 999, overflow: "hidden" }}>
-        <div style={{ width: `${fill}%`, height: "100%", background: hex }} />
-      </div>
     </div>
   );
 }
@@ -428,26 +408,21 @@ export function AtelierResonator({ name }: { name: string }) {
                     style={{
                       display: "flex",
                       flexDirection: isMobile ? "column" : "row",
-                      gap: isMobile ? 16 : 24,
-                      alignItems: isMobile ? "stretch" : "center",
+                      gap: isMobile ? 16 : 28,
+                      alignItems: "center",
                     }}
                   >
-                    <div style={{ display: "flex", flexDirection: isMobile ? "row" : "column", alignItems: "center", gap: 6 }}>
-                      <AGrade grade={rating.grade} status={rating.status} score={rating.score} size="hero" />
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                      <AGrade grade={rating.grade} status={rating.status} score={null} size="hero" />
                       <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 2 }}>RATING</div>
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                        <div style={{ ...aStyles.display, fontSize: 28 }}>Resonator rating</div>
-                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
-                          {rating.partial ? "PARTIAL · " : ""}OPTIMIZER 35/35/15/15
+                    <div style={{ flex: 1, minWidth: 0, textAlign: isMobile ? "center" : "left" }}>
+                      <div style={{ ...aStyles.display, fontSize: 34, lineHeight: 1.02 }}>Resonator rating</div>
+                      {rating.partial && (
+                        <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1.5, marginTop: 8 }}>
+                          PARTIAL · SOME INPUTS MISSING
                         </div>
-                      </div>
-                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 16 }}>
-                        {rating.subs.map((s) => (
-                          <ARatingBar key={s.key} label={s.label} score={s.score} weight={s.weight} />
-                        ))}
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>

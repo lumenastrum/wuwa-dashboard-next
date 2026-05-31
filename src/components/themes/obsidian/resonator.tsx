@@ -12,7 +12,7 @@ import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { Status } from "@/lib/types";
-import { scoreBuild, scoreEcho, statusOf, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
+import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OStatBar } from "./primitives";
@@ -32,8 +32,8 @@ function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
   const glow = O_PRESTIGE_HEX[grade];
   const hex = glow ?? STATUS_HEX[status];
   const sparkle = grade === "✦";
-  const dim = size === "hero" ? 64 : size === "md" ? 40 : 26;
-  const fs = size === "hero" ? 34 : size === "md" ? 21 : 14;
+  const dim = size === "hero" ? 104 : size === "md" ? 40 : 26;
+  const fs = size === "hero" ? 58 : size === "md" ? 21 : 14;
   return (
     <div
       style={{
@@ -43,10 +43,10 @@ function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
         justifyContent: "center",
         width: dim,
         height: dim,
-        borderRadius: size === "hero" ? 14 : 8,
+        borderRadius: size === "hero" ? 20 : 8,
         border: `1px solid ${hex}`,
         background: `${hex}14`,
-        boxShadow: glow ? `0 0 ${size === "hero" ? 26 : 12}px ${hex}55, inset 0 0 18px ${hex}10` : "none",
+        boxShadow: glow ? `0 0 ${size === "hero" ? 40 : 12}px ${hex}55, inset 0 0 18px ${hex}10` : "none",
         flexShrink: 0,
       }}
     >
@@ -67,26 +67,6 @@ function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
       {score != null && size !== "sm" && (
         <div style={{ ...oStyles.mono, fontSize: size === "hero" ? 11 : 9, color: hex, opacity: 0.75, marginTop: 2 }}>{Math.round(score)}</div>
       )}
-    </div>
-  );
-}
-
-// One input bar in the Resonator Rating breakdown: sub-score + effective weight.
-function ORatingBar({ label, score, weight }: { label: string; score: number | null; weight: number }) {
-  const hex = STATUS_HEX[statusOf(score)];
-  const fill = score == null ? 0 : Math.min(100, score);
-  return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5 }}>
-        <span style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textMute, letterSpacing: 1.5 }}>{label}</span>
-        <span style={{ ...oStyles.mono, fontSize: 10, color: score == null ? O_PAL.textMute : hex }}>
-          {score == null ? "—" : Math.round(score)}
-          <span style={{ color: O_PAL.textMute }}> · {Math.round(weight * 100)}%</span>
-        </span>
-      </div>
-      <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 999, overflow: "hidden" }}>
-        <div style={{ width: `${fill}%`, height: "100%", background: hex }} />
-      </div>
     </div>
   );
 }
@@ -306,26 +286,21 @@ export function ObsidianResonator({ name }: { name: string }) {
                   style={{
                     display: "flex",
                     flexDirection: isMobile ? "column" : "row",
-                    gap: isMobile ? 16 : 24,
-                    alignItems: isMobile ? "stretch" : "center",
+                    gap: isMobile ? 16 : 28,
+                    alignItems: "center",
                   }}
                 >
-                  <div style={{ display: "flex", flexDirection: isMobile ? "row" : "column", alignItems: "center", gap: 8 }}>
-                    <OGrade grade={rating.grade} status={rating.status} score={rating.score} size="hero" />
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                    <OGrade grade={rating.grade} status={rating.status} score={null} size="hero" />
                     <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 2 }}>RATING</div>
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                      <div style={{ ...oStyles.display, fontSize: 22 }}>Resonator Rating</div>
-                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1, textAlign: "right" }}>
-                        {rating.partial ? "PARTIAL · " : ""}OPTIMIZER 35/35/15/15
+                  <div style={{ flex: 1, minWidth: 0, textAlign: isMobile ? "center" : "left" }}>
+                    <div style={{ ...oStyles.display, fontSize: 30, lineHeight: 1.05 }}>Resonator Rating</div>
+                    {rating.partial && (
+                      <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1.5, marginTop: 8 }}>
+                        PARTIAL · SOME INPUTS MISSING
                       </div>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 16 }}>
-                      {rating.subs.map((s) => (
-                        <ORatingBar key={s.key} label={s.label} score={s.score} weight={s.weight} />
-                      ))}
-                    </div>
+                    )}
                   </div>
                 </div>
               </OCard>
