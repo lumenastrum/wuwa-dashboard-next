@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
-import { portrait } from "@/lib/portraits";
+import { portrait, tallPortrait } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill } from "./primitives";
@@ -203,17 +203,90 @@ export function ObsidianTeams() {
             })}
           </OCard>
 
-          <OCard>
+          <OCard style={{ overflow: "hidden" }}>
+            {/* magazine cover strip — the featured team, full-body */}
             <div
               style={{
-                ...oStyles.mono,
-                fontSize: 10,
-                color: O_PAL.textMute,
-                letterSpacing: 2,
-                marginBottom: 6,
+                position: "relative",
+                margin: "-22px -22px 20px",
+                display: "grid",
+                gridTemplateColumns: `repeat(${team.team.length}, 1fr)`,
+                gap: 2,
+                background: O_PAL.border,
               }}
             >
-              RANK #{String(team.rank).padStart(2, "0")} · {team.element.toUpperCase()}
+              {team.team.map((name) => {
+                const rr = rosterByName[name];
+                const el = rr ? ELEMENTS[rr.element] : null;
+                return (
+                  <div
+                    key={name}
+                    style={{
+                      position: "relative",
+                      aspectRatio: "3 / 4",
+                      overflow: "hidden",
+                      background: `linear-gradient(180deg, ${el?.glow ?? O_PAL.surface}, rgba(10,13,20,0.85))`,
+                    }}
+                  >
+                    <img
+                      src={tallPortrait(name)}
+                      alt={name}
+                      style={{
+                        position: "absolute",
+                        top: "2%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        height: "158%",
+                        width: "auto",
+                        maxWidth: "none",
+                        filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: `radial-gradient(circle at 50% 38%, transparent, ${O_PAL.bg} 96%)`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        padding: "16px 6px 7px",
+                        background:
+                          "linear-gradient(180deg, transparent, rgba(10,13,20,0.92))",
+                        ...oStyles.mono,
+                        fontSize: 9,
+                        letterSpacing: 1,
+                        color: O_PAL.text,
+                        textAlign: "center",
+                      }}
+                    >
+                      {name}
+                    </div>
+                  </div>
+                );
+              })}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  ...oStyles.mono,
+                  fontSize: 10,
+                  letterSpacing: 1.5,
+                  color: O_PAL.accent,
+                  background: "rgba(10,13,20,0.7)",
+                  border: `1px solid ${O_PAL.border}`,
+                  padding: "4px 9px",
+                  borderRadius: 6,
+                }}
+              >
+                #{String(team.rank).padStart(2, "0")} · {team.element.toUpperCase()}
+              </div>
             </div>
             <div style={{ ...oStyles.display, fontSize: 32, lineHeight: 1.1 }}>
               {team.team.join(" · ")}

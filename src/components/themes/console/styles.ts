@@ -25,7 +25,7 @@ const mono: CSSProperties = {
 const display: CSSProperties = {
   fontFamily: "var(--font-space-grotesk), system-ui, sans-serif",
   fontWeight: 500,
-  letterSpacing: "-0.01em",
+  letterSpacing: 0,
 };
 
 const shell: CSSProperties = {

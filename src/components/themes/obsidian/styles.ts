@@ -17,7 +17,7 @@ export const O_PAL = {
 const display: CSSProperties = {
   fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif",
   fontWeight: 400,
-  letterSpacing: "-0.01em",
+  letterSpacing: 0,
 };
 
 const mono: CSSProperties = {

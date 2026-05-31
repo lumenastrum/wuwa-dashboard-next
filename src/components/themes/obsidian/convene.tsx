@@ -121,6 +121,8 @@ export function ObsidianConvene() {
         >
           {banners.map((b, i) => {
             const active = i === sel;
+            const pityCol = oPityColor(b.currentPity5);
+            const pityPct = Math.min((b.currentPity5 / HARD_PITY) * 100, 100);
             return (
               <div
                 key={b.cardPoolType}
@@ -130,8 +132,13 @@ export function ObsidianConvene() {
                   padding: "16px 20px",
                   borderRadius: 14,
                   cursor: "pointer",
-                  background: active ? "rgba(233,212,155,0.08)" : O_PAL.surface,
-                  border: `1px solid ${active ? "rgba(233,212,155,0.4)" : O_PAL.border}`,
+                  position: "relative",
+                  overflow: "hidden",
+                  background: active
+                    ? `linear-gradient(180deg, ${pityCol}16, rgba(255,255,255,0.03)), ${O_PAL.surface}`
+                    : O_PAL.surface,
+                  border: `1px solid ${active ? `${pityCol}80` : O_PAL.border}`,
+                  boxShadow: active ? `inset 0 0 0 1px ${pityCol}22, 0 18px 40px rgba(0,0,0,0.18)` : "none",
                 }}
               >
                 <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textMute, letterSpacing: 1.5 }}>
@@ -141,13 +148,17 @@ export function ObsidianConvene() {
                   {b.name}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 8 }}>
-                  <div style={{ ...oStyles.display, fontSize: 30, color: active ? O_GOLD : O_PAL.text }}>
+                  <div style={{ ...oStyles.display, fontSize: 30, color: active ? pityCol : O_PAL.text }}>
                     {b.currentPity5}
                     <span style={{ fontSize: 13, color: O_PAL.textMute }}> pity</span>
                   </div>
                   <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textMute }}>
                     {b.fiveStarCount}×5★ · {b.total}p
                   </div>
+                </div>
+                <div style={{ position: "relative", height: 5, marginTop: 14, borderRadius: 999, overflow: "hidden", background: "rgba(255,255,255,0.06)" }}>
+                  <div style={{ width: `${pityPct}%`, height: "100%", borderRadius: 999, background: pityCol }} />
+                  <div style={{ position: "absolute", left: `${(SOFT_PITY / HARD_PITY) * 100}%`, top: -3, bottom: -3, width: 1, background: O_GOLD, opacity: 0.8 }} />
                 </div>
               </div>
             );

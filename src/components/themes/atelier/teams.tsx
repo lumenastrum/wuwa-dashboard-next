@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
-import { elementIcon, portrait } from "@/lib/portraits";
+import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
@@ -187,17 +187,82 @@ export function AtelierTeams() {
           </div>
 
           <div style={{ position: isTablet ? "static" : "sticky", top: 80, alignSelf: "flex-start" }}>
-            <ACard style={{ padding: isMobile ? 20 : 28 }}>
+            <ACard style={{ padding: isMobile ? 20 : 28, overflow: "hidden" }}>
+              {/* magazine cover strip — the featured team, full-body */}
               <div
                 style={{
-                  ...aStyles.mono,
-                  fontSize: 10,
-                  color: A_PAL.textMute,
-                  letterSpacing: 2,
-                  marginBottom: 6,
+                  position: "relative",
+                  margin: isMobile ? "-20px -20px 18px" : "-28px -28px 22px",
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${team.team.length}, 1fr)`,
+                  gap: 2,
+                  background: A_PAL.border,
                 }}
               >
-                RANK № {String(team.rank).padStart(2, "0")} · {team.element.toUpperCase()}
+                {team.team.map((name) => {
+                  const rr = rosterByName[name];
+                  const el = rr ? ELEMENTS[rr.element] : null;
+                  return (
+                    <div
+                      key={name}
+                      style={{
+                        position: "relative",
+                        aspectRatio: "3 / 4",
+                        overflow: "hidden",
+                        background: `linear-gradient(180deg, ${el?.glow ?? A_PAL.surface}, ${A_PAL.surfaceStrong})`,
+                      }}
+                    >
+                      <img
+                        src={tallPortrait(name)}
+                        alt={name}
+                        style={{
+                          position: "absolute",
+                          top: "2%",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          height: "158%",
+                          width: "auto",
+                          maxWidth: "none",
+                          filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          padding: "14px 6px 6px",
+                          background:
+                            "linear-gradient(180deg, transparent, rgba(255,255,255,0.9))",
+                          ...aStyles.mono,
+                          fontSize: 9,
+                          letterSpacing: 1,
+                          color: A_PAL.ink,
+                          textAlign: "center",
+                        }}
+                      >
+                        {name}
+                      </div>
+                    </div>
+                  );
+                })}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    ...aStyles.mono,
+                    fontSize: 10,
+                    letterSpacing: 1.5,
+                    color: A_PAL.ink,
+                    background: "rgba(255,255,255,0.82)",
+                    padding: "4px 9px",
+                    borderRadius: 4,
+                  }}
+                >
+                  № {String(team.rank).padStart(2, "0")} · {team.element.toUpperCase()}
+                </div>
               </div>
               <div style={{ ...aStyles.display, fontSize: 36, lineHeight: 1.05 }}>
                 {team.team.map((n, i) => (

@@ -127,6 +127,8 @@ export function AtelierConvene() {
         >
           {banners.map((b, i) => {
             const active = i === sel;
+            const pityCol = aPityColor(b.currentPity5);
+            const pityPct = Math.min((b.currentPity5 / HARD_PITY) * 100, 100);
             return (
               <div
                 key={b.cardPoolType}
@@ -136,8 +138,13 @@ export function AtelierConvene() {
                   padding: "16px 20px",
                   borderRadius: 14,
                   cursor: "pointer",
-                  background: active ? A_PAL.surfaceStrong : A_PAL.surface,
-                  border: `1px solid ${active ? A_PAL.ink : A_PAL.border}`,
+                  position: "relative",
+                  overflow: "hidden",
+                  background: active
+                    ? `linear-gradient(180deg, ${pityCol}12, rgba(255,255,255,0.62)), ${A_PAL.surfaceStrong}`
+                    : A_PAL.surface,
+                  border: `1px solid ${active ? pityCol : A_PAL.border}`,
+                  boxShadow: active ? `0 16px 34px ${pityCol}18` : "none",
                 }}
               >
                 <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textMute, letterSpacing: 1.5 }}>
@@ -147,13 +154,17 @@ export function AtelierConvene() {
                   {b.name}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 8 }}>
-                  <div style={{ ...aStyles.display, fontSize: 32, color: active ? aPityColor(b.currentPity5) : A_PAL.ink }}>
+                  <div style={{ ...aStyles.display, fontSize: 32, color: active ? pityCol : A_PAL.ink }}>
                     {b.currentPity5}
                     <span style={{ ...aStyles.mono, fontSize: 11, color: A_PAL.textMute }}> pity</span>
                   </div>
                   <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textMute }}>
                     {b.fiveStarCount}×5★ · {b.total}p
                   </div>
+                </div>
+                <div style={{ position: "relative", height: 5, marginTop: 14, borderRadius: 999, overflow: "hidden", background: "rgba(60,70,100,0.10)" }}>
+                  <div style={{ width: `${pityPct}%`, height: "100%", borderRadius: 999, background: pityCol }} />
+                  <div style={{ position: "absolute", left: `${(SOFT_PITY / HARD_PITY) * 100}%`, top: -3, bottom: -3, width: 1, background: A_GOLD, opacity: 0.85 }} />
                 </div>
               </div>
             );

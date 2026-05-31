@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePulls } from "@/lib/use-pulls";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import {
@@ -88,7 +88,7 @@ export function ConsoleConvene() {
             ◢ MODULE / CONVENE_HISTORY
           </div>
           <div style={{ ...kStyles.display, fontSize: isMobile ? 30 : 38, letterSpacing: 0 }}>
-            Convene History &nbsp;<span style={{ color: K_PAL.cyan }}>//</span>&nbsp;{" "}
+            Convene History &nbsp;<span style={{ color: K_PAL.cyan }}>{"//"}</span>&nbsp;{" "}
             <span style={{ color: K_PAL.textDim, fontSize: isMobile ? 18 : 22 }}>
               pulls={summary.totalPulls}
             </span>
@@ -132,11 +132,19 @@ export function ConsoleConvene() {
         >
           {banners.map((b, i) => {
             const active = i === sel;
+            const pityCol = pityColor(b.currentPity5);
+            const pityPct = Math.min((b.currentPity5 / HARD_PITY) * 100, 100);
             return (
               <KPanel
                 key={b.cardPoolType}
-                accent={active ? K_PAL.magenta : K_PAL.border}
-                style={{ padding: 14, cursor: "pointer", flex: isMobile ? "0 0 230px" : undefined }}
+                accent={active ? pityCol : K_PAL.border}
+                style={{
+                  padding: 14,
+                  cursor: "pointer",
+                  flex: isMobile ? "0 0 230px" : undefined,
+                  background: active ? K_PAL.panelStrong : K_PAL.panel,
+                  boxShadow: active ? `0 0 24px ${pityCol}18 inset, 0 0 22px rgba(0,0,0,0.28)` : "none",
+                }}
                 label={`POOL.${String(b.cardPoolType).padStart(2, "0")}`}
                 code={`${b.total}p`}
               >
@@ -145,12 +153,16 @@ export function ConsoleConvene() {
                     {b.name}
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 8 }}>
-                    <div style={{ ...kStyles.mono, fontSize: 26, color: active ? K_PAL.amber : K_PAL.text, letterSpacing: -1 }}>
+                    <div style={{ ...kStyles.mono, fontSize: 26, color: active ? pityCol : K_PAL.text, letterSpacing: 0 }}>
                       {b.currentPity5}
                     </div>
                     <div style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textMute, letterSpacing: 1.5 }}>
                       PITY · {b.fiveStarCount}×5★
                     </div>
+                  </div>
+                  <div style={{ position: "relative", height: 4, marginTop: 12, background: "rgba(120,220,255,0.08)", overflow: "hidden" }}>
+                    <div style={{ width: `${pityPct}%`, height: "100%", background: pityCol, boxShadow: `0 0 10px ${pityCol}80` }} />
+                    <div style={{ position: "absolute", left: `${(SOFT_PITY / HARD_PITY) * 100}%`, top: -3, bottom: -3, width: 1, background: K_PAL.amber, opacity: 0.85 }} />
                   </div>
                 </div>
               </KPanel>
@@ -195,7 +207,7 @@ export function ConsoleConvene() {
                       {f.pity}
                     </div>
                     {/* portrait / glyph */}
-                    <PullAvatar name={f.name} isReso={isReso} color={col} />
+                    <PullAvatar key={`${f.name}-${f.time}-${f.pity}`} name={f.name} isReso={isReso} color={col} />
                     {/* name + meta */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, color: K_PAL.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -251,8 +263,6 @@ export function ConsoleConvene() {
 /** 5★ avatar: resonator portrait, falling back to an initial; weapons get a glyph. */
 function PullAvatar({ name, isReso, color }: { name: string; isReso: boolean; color: string }) {
   const [broken, setBroken] = useState(false);
-  // Reset the broken flag when the row's name changes (list re-renders on banner switch).
-  useEffect(() => setBroken(false), [name]);
 
   return (
     <div
@@ -288,7 +298,7 @@ function KpiTile({ label, value, sub, accent }: { label: string; value: string; 
   return (
     <KPanel accent={accent} style={{ padding: 14 }}>
       <div style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textMute, letterSpacing: 2, marginBottom: 6 }}>{label}</div>
-      <div style={{ ...kStyles.mono, fontSize: 26, color: accent, letterSpacing: -1, textShadow: `0 0 10px ${accent}30` }}>{value}</div>
+      <div style={{ ...kStyles.mono, fontSize: 26, color: accent, letterSpacing: 0, textShadow: `0 0 10px ${accent}30` }}>{value}</div>
       {sub && <div style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textDim, letterSpacing: 1, marginTop: 3 }}>{sub}</div>}
     </KPanel>
   );

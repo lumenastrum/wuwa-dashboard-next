@@ -19,7 +19,7 @@ export const A_PAL = {
 const display: CSSProperties = {
   fontFamily: "var(--font-instrument), 'Cormorant Garamond', serif",
   fontWeight: 400,
-  letterSpacing: "-0.015em",
+  letterSpacing: 0,
 };
 
 const mono: CSSProperties = {
