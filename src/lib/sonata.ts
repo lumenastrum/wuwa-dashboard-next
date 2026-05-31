@@ -26,8 +26,8 @@ export function parseEchoSets(echoSet: string | null | undefined): SonataPiece[]
     .filter((s) => s.name.length > 0);
 }
 
-// Sonata-effect icon path, mirroring the weapons convention: spaces -> underscores.
-// Drop files into public/sonatas/, e.g. Crown_of_Valor.webp. Optional asset — the
+// Sonata-effect icon path: spaces -> underscores. Files live in public/sonatas/,
+// e.g. Crown_of_Valor.webp (transparent wiki emblems). Optional asset — the
 // <SonataIcons> renderer hides any icon whose file is missing, so callers degrade
 // to text-only gracefully until the art exists.
 export function sonataIcon(name: string): string {
