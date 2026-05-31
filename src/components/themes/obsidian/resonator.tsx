@@ -14,6 +14,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
+import { SonataIcons } from "@/components/sonata-icons";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OStatBar } from "./primitives";
 
@@ -453,7 +454,10 @@ export function ObsidianResonator({ name }: { name: string }) {
                   >
                     ECHO SET
                   </div>
-                  <div style={{ fontSize: 14, marginTop: 2 }}>{r.echoSet}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                    <SonataIcons set={r.echoSet} size={22} badgeBg={O_PAL.accent} badgeColor="#0a0d14" />
+                    <span style={{ fontSize: 14 }}>{r.echoSet}</span>
+                  </div>
                 </div>
               </div>
             </div>

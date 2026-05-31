@@ -10,6 +10,7 @@ import { useTheme } from "@/lib/theme-context";
 import { useEditMode } from "@/lib/edit-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
+import { SonataIcons } from "@/components/sonata-icons";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { EchoCost, EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, statusOf, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
@@ -819,18 +820,20 @@ export function ConsoleResonator({ name }: { name: string }) {
                   >
                     ▸ ECHO SET
                   </div>
-                  <div
-                    style={{
-                      ...kStyles.display,
-                      fontSize: 16,
-                      color: K_PAL.text,
-                      marginTop: 6,
-                    }}
-                  >
-                    <EditableField
-                      value={r.echoSet}
-                      onCommit={(v) => setResonatorField("echoSet", v)}
+                  <div style={{ marginTop: 6 }}>
+                    <SonataIcons
+                      set={r.echoSet}
+                      size={20}
+                      badgeBg={K_PAL.panelStrong}
+                      badgeColor={K_PAL.text}
+                      style={{ marginBottom: 6 }}
                     />
+                    <div style={{ ...kStyles.display, fontSize: 16, color: K_PAL.text }}>
+                      <EditableField
+                        value={r.echoSet}
+                        onCommit={(v) => setResonatorField("echoSet", v)}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

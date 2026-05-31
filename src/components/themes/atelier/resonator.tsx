@@ -13,6 +13,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { AuditStat, Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
+import { SonataIcons } from "@/components/sonata-icons";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
 
@@ -576,7 +577,10 @@ export function AtelierResonator({ name }: { name: string }) {
                     >
                       ECHO SET
                     </div>
-                    <div style={{ fontSize: 14, color: A_PAL.ink, marginTop: 2 }}>{r.echoSet}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                      <SonataIcons set={r.echoSet} size={22} badgeBg={A_PAL.ink} badgeColor="#fff" />
+                      <span style={{ fontSize: 14, color: A_PAL.ink }}>{r.echoSet}</span>
+                    </div>
                   </div>
                 </div>
               </div>
