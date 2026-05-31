@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
-import { portrait, tallPortrait } from "@/lib/portraits";
+import { portrait, tallPortrait, teamPortraitFrame } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill } from "./primitives";
@@ -218,6 +218,7 @@ export function ObsidianTeams() {
               {team.team.map((name) => {
                 const rr = rosterByName[name];
                 const el = rr ? ELEMENTS[rr.element] : null;
+                const fr = teamPortraitFrame(name);
                 return (
                   <div
                     key={name}
@@ -233,10 +234,10 @@ export function ObsidianTeams() {
                       alt={name}
                       style={{
                         position: "absolute",
-                        top: "2%",
-                        left: "50%",
+                        top: `${fr.top}%`,
+                        left: `${fr.left}%`,
                         transform: "translateX(-50%)",
-                        height: "158%",
+                        height: `${fr.height}%`,
                         width: "auto",
                         maxWidth: "none",
                         filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,

@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
-import { elementIcon, portrait, tallPortrait } from "@/lib/portraits";
+import { elementIcon, portrait, tallPortrait, teamPortraitFrame } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
@@ -202,6 +202,7 @@ export function AtelierTeams() {
                 {team.team.map((name) => {
                   const rr = rosterByName[name];
                   const el = rr ? ELEMENTS[rr.element] : null;
+                  const fr = teamPortraitFrame(name);
                   return (
                     <div
                       key={name}
@@ -217,10 +218,10 @@ export function AtelierTeams() {
                         alt={name}
                         style={{
                           position: "absolute",
-                          top: "2%",
-                          left: "50%",
+                          top: `${fr.top}%`,
+                          left: `${fr.left}%`,
                           transform: "translateX(-50%)",
-                          height: "158%",
+                          height: `${fr.height}%`,
                           width: "auto",
                           maxWidth: "none",
                           filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
