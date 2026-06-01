@@ -65,7 +65,7 @@ export const SPINE_PORTRAITS: Record<string, SpinePortraitConfig> = {
   Phoebe:      { bundle: "Portraits_Feibi",      animation: "idle", viewport: { x: -614, y: 692, ...BUST_ZOOM } }, // DIAL
   Phrolova:    { bundle: "Portraits_Fuluoluo",   animation: "idle", viewport: { x: -614, y: 692, ...BUST_ZOOM } }, // default — gorgeous as-is
   Roccia:      { bundle: "Portraits_Luokeke",    animation: "idle", viewport: { x: -614, y: 507, ...BUST_ZOOM } }, // up10
-  Rover:       { bundle: "Portraits_Female1",    animation: "idle", viewport: { x: -337, y: 850, width: 1275, height: 1700 } }, // female · full-body scene splash; face-bust INSPECTOR-ESTIMATED (not in any comp — live-dial when added)
+  Nyx:         { bundle: "Portraits_Female1",    animation: "idle", viewport: { x: -529, y: 850, width: 1275, height: 1700 } }, // FemRover (Andres's, named "Nyx") · full-body scene splash; face-bust right15 (live-dialed perfect-center against the Team #12 cell)
   Shorekeeper: { bundle: "Portraits_Shouanren",  animation: "idle", viewport: { x: -545, y: 785, width: 1247, height: 1663 } }, // 守岸人 · zoom-in 10% (center-locked)
   Verina:      { bundle: "Portraits_Weilinai",   animation: "idle", viewport: { x: -311, y: 275, width: 862, height: 1150 } }, // 维里奈 · full-body standing; face-bust INSPECTOR-ESTIMATED (not in any comp — live-dial when added)
   Zani:        { bundle: "Portraits_Zanni1",     animation: "idle", viewport: { x: -463, y: 2927, width: 1247, height: 1663 } }, // Skin1 full-body standing; face-bust, right10 up5 zoom-in10 (center-locked)
