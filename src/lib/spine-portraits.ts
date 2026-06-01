@@ -21,12 +21,30 @@ export interface SpinePortraitConfig {
   viewport?: SpineViewport;
 }
 
+/** The golden bust zoom — the viewport SIZE that frames a head→chest crop at
+ *  the cell's 3:4 aspect (ratio 0.75). Standardized across characters so every
+ *  portrait reads at the same scale; only x/y (per-character centering) varies.
+ *  Tuned live on Aimisi (2026-05-31). Bigger = more zoomed out. */
+export const BUST_ZOOM = { width: 1386, height: 1848 } as const;
+
 export const SPINE_PORTRAITS: Record<string, SpinePortraitConfig> = {
   Aemeath: {
     bundle: "Portraits_Aimisi",
     animation: "idle",
     // full bounds ~ x[-1315..3024] y[-3903..2510]; frame head→chest, face-centered
-    viewport: { x: -200, y: 1000, width: 1200, height: 1600 },
+    viewport: { x: -614, y: 692, ...BUST_ZOOM },
+  },
+  Lynae: {
+    bundle: "Portraits_Linnai",
+    animation: "idle",
+    // dialed live against the Teams cell
+    viewport: { x: -614, y: 600, ...BUST_ZOOM },
+  },
+  Mornye: {
+    bundle: "Portraits_Moning",
+    animation: "idle",
+    // fit the Aemeath standard as-is — no per-character dial needed
+    viewport: { x: -614, y: 692, ...BUST_ZOOM },
   },
 };
 
