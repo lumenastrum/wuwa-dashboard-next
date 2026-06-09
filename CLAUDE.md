@@ -43,6 +43,8 @@ Full context: **read `README.md`**. This file is the carry-on.
 - **Don't** add `width: 100%` to tall-portrait `<img>` — Tailwind v4 preflight already sets `max-width: 100%`, which fights the explicit `height: 105%` and squishes the portrait. The fix `width: auto; maxWidth: "none"` is already inline on every tall-portrait; preserve it.
 - **Don't** treat the bundled `public/data.json` as the source of truth — it's the seed, only read once if the Supabase row is missing.
 - **Couch-Clio runs commands natively.** Don't write instructions as "tell Andres to run X" if she can just run X herself.
+- **Spine atlas pages are WebP, not PNG** (2026-06-09: 116MB → 28MB). When carving a new bundle, convert each texture page with `cwebp -q 90 -alpha_q 100 -m 6 page.png -o page.webp`, point the `.atlas` page line at the `.webp`, and don't commit the PNG. spine-player loads pages as plain images, so the format is transparent to it.
+- **`<SpinePortrait>` wants a `fallback`** — pass the static bust `<img>` so the cell shows it during the skel/atlas fetch and degrades to it if WebGL/loading fails (it's an underlay, auto-hidden once the live skeleton paints). Players also lazy-init via IntersectionObserver, and the `viewport` prop is compared by value (inline literals won't churn the player).
 
 ## File map quick reference
 
