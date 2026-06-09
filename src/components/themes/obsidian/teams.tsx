@@ -223,6 +223,22 @@ export function ObsidianTeams() {
                 const el = rr ? ELEMENTS[rr.element] : null;
                 const fr = teamPortraitFrame(name);
                 const sp = spinePortraitOf(name);
+                const staticBust = (
+                  <img
+                    src={tallPortrait(name)}
+                    alt={name}
+                    style={{
+                      position: "absolute",
+                      top: `${fr.top}%`,
+                      left: `${fr.left}%`,
+                      transform: "translateX(-50%)",
+                      height: `${fr.height}%`,
+                      width: "auto",
+                      maxWidth: "none",
+                      filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
+                    }}
+                  />
+                );
                 return (
                   <div
                     key={name}
@@ -234,7 +250,9 @@ export function ObsidianTeams() {
                     }}
                   >
                     {sp ? (
-                      // live formation portrait — the spine viewport frames the bust
+                      // live formation portrait — the spine viewport frames the
+                      // bust; the static bust underlays it (visible during the
+                      // fetch, kept if WebGL/loading fails)
                       <div
                         style={{
                           position: "absolute",
@@ -246,24 +264,12 @@ export function ObsidianTeams() {
                           bundle={sp.bundle}
                           animation={sp.animation}
                           viewport={sp.viewport}
+                          fallback={staticBust}
                           height="100%"
                         />
                       </div>
                     ) : (
-                      <img
-                        src={tallPortrait(name)}
-                        alt={name}
-                        style={{
-                          position: "absolute",
-                          top: `${fr.top}%`,
-                          left: `${fr.left}%`,
-                          transform: "translateX(-50%)",
-                          height: `${fr.height}%`,
-                          width: "auto",
-                          maxWidth: "none",
-                          filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
-                        }}
-                      />
+                      staticBust
                     )}
                     <div
                       style={{

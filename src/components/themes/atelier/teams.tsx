@@ -207,6 +207,22 @@ export function AtelierTeams() {
                   const el = rr ? ELEMENTS[rr.element] : null;
                   const fr = teamPortraitFrame(name);
                   const sp = spinePortraitOf(name);
+                  const staticBust = (
+                    <img
+                      src={tallPortrait(name)}
+                      alt={name}
+                      style={{
+                        position: "absolute",
+                        top: `${fr.top}%`,
+                        left: `${fr.left}%`,
+                        transform: "translateX(-50%)",
+                        height: `${fr.height}%`,
+                        width: "auto",
+                        maxWidth: "none",
+                        filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
+                      }}
+                    />
+                  );
                   return (
                     <div
                       key={name}
@@ -218,7 +234,9 @@ export function AtelierTeams() {
                       }}
                     >
                       {sp ? (
-                        // live formation portrait — the spine viewport frames the bust
+                        // live formation portrait — the spine viewport frames the
+                        // bust; the static bust underlays it (visible during the
+                        // fetch, kept if WebGL/loading fails)
                         <div
                           style={{
                             position: "absolute",
@@ -230,24 +248,12 @@ export function AtelierTeams() {
                             bundle={sp.bundle}
                             animation={sp.animation}
                             viewport={sp.viewport}
+                            fallback={staticBust}
                             height="100%"
                           />
                         </div>
                       ) : (
-                        <img
-                          src={tallPortrait(name)}
-                          alt={name}
-                          style={{
-                            position: "absolute",
-                            top: `${fr.top}%`,
-                            left: `${fr.left}%`,
-                            transform: "translateX(-50%)",
-                            height: `${fr.height}%`,
-                            width: "auto",
-                            maxWidth: "none",
-                            filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
-                          }}
-                        />
+                        staticBust
                       )}
                       <div
                         style={{
