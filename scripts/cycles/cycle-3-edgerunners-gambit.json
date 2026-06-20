@@ -1,0 +1,86 @@
+{
+  "id": 3,
+  "date": "2026-06-20",
+  "label": "The Edgerunners Gambit",
+  "target": 58000,
+  "teamTarget": 6,
+  "dayOne": true,
+  "totalPoints": 58871,
+  "teamsOver5k": 7,
+  "teams": [
+    {
+      "order": 1,
+      "members": ["Lucy", "Rebecca", "Mornye"],
+      "buff": "Hack/Tune Break Enhancement",
+      "score": 7029,
+      "rating": "",
+      "notes": "EDGERUNNERS DEBUT. Lucy S1 + Rebecca S0 opener. Nearly doubled Changli softener floor (4,037 → 7,029 = +74%). Matrix Swarm R1 killed, Fleurdelys R1 to 24.8%. The gambit's first domino."
+    },
+    {
+      "order": 2,
+      "members": ["Augusta", "Iuno", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 7227,
+      "rating": "B",
+      "notes": "Pivoted ahead of Zani — Sigillum Spectro resistance walled Spectro Beta. Augusta's Heavy ATK carved through. Fleurdelys R1 cleaned, Sigillum R1 killed, Reactor Husk R1 to 44.48%. Personal best Endstate score (prev: 6,677)."
+    },
+    {
+      "order": 3,
+      "members": ["Zani", "Phoebe", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 5692,
+      "rating": "A",
+      "notes": "Reset after Sigillum wall. Redeployed post-Augusta with resistance cleared. Reactor Husk R1 cleaned, Matrix Mimic R1 to 19.41%. Personal best (prev: 5,507). Potato growth arc: 5,363 → 5,507 → 5,692."
+    },
+    {
+      "order": 4,
+      "members": ["Carlotta", "Lynae", "Mornye"],
+      "buff": "Hack/Tune Break Enhancement",
+      "score": 7473,
+      "rating": "S",
+      "notes": "SK oopsie — both vigor burned on Augusta + Zani. Mornye subbed in. Tune Strain synergy with Hack/Tune Break buff nearly compensated (8,008 → 7,473 = -535pts / -6.7%). Matrix Mimic R1 cleaned, pushed into R2 Matrix Swarm to 4.3%."
+    },
+    {
+      "order": 5,
+      "members": ["Phrolova", "Cantarella", "Roccia"],
+      "buff": "Echo Skill Enhancement",
+      "score": 5519,
+      "rating": "SS",
+      "notes": "R2 scaling hit — down from 7,876 in C2. Inherited scaled bosses from Carlotta's R2 push. Matrix Swarm R2 cleaned, Fleurdelys R2 to 23.32%. Cantarella's CR fix still printing, three months running."
+    },
+    {
+      "order": 6,
+      "members": ["Aemeath", "Denia", "Lupa"],
+      "buff": "Negative Debuff Enhancement",
+      "score": 10776,
+      "rating": "SSS",
+      "notes": "Zero sustain comp Endstate debut. Pivoted ahead of Cartethyia — Fleurdelys is Aero resistant, Aemeath doesn't care. Fleurdelys R2 cleaned, Sigillum R2 killed, Reactor Husk R2 to 65.19%. Down from 14,844/12,553 but those had Mornye sustain. Pure violence, no apologies."
+    },
+    {
+      "order": 7,
+      "members": ["Cartethyia", "Ciaccona", "Chisa"],
+      "buff": "Negative Debuff Enhancement",
+      "score": 11161,
+      "rating": "CROWNED",
+      "notes": "CHISA CAME HOME. The entire Edgerunners Gambit existed to free Chisa for this team. Reactor Husk R2 cleaned, Matrix Mimic R2 to 32.97%. Three cycles, three crowns/SSS — the sweet potato doesn't miss."
+    },
+    {
+      "order": 8,
+      "members": ["Jinhsi", "Zhezhi", "Verina"],
+      "buff": "General Enhancement",
+      "score": 3994,
+      "rating": "CROWNED",
+      "notes": "THE MAGISTRATE DELIVERS. 3/3 cycles. 3,421 → 3,646 → 3,994 — improved every cycle. Matrix Mimic R2 cleaned, pushed into R3 Matrix Swarm (95.01%). The closer arc is mythology now."
+    }
+  ],
+  "lessons": [
+    "Edgerunners > Changli softener — Lucy/Rebecca/Mornye at 7,029 nearly doubled the old 4,037 floor. Changli is benched. New opener established.",
+    "Resistance pivot is non-negotiable — Sigillum walled Zani (Spectro), Fleurdelys walled Cartethyia (Aero). Mid-run reordering saved thousands of points both times.",
+    "SK vigor planning FIRST — burning both SK vigor on Augusta + Zani left Carlotta without CR stability. Cost ~535 points. Plan healer vigor allocation before deployment.",
+    "Mornye + Tune Break buff is a legitimate sub for SK — the Tune Strain synergy with Hack/Tune Break Enhancement nearly compensated for lost CR floor. Keep this in the toolbox.",
+    "Triple Pink Danger is Endstate-viable — 10,776 SSS with zero sustain. The no-healer gamble works when Aemeath's kill speed outpaces the damage intake. R2 scaling is the limit.",
+    "Zani reset trick — if a team hits a resistance wall, reset and redeploy after another team clears the wall. The reshuffle lesson from C2 now has a specific tactic: wall-clear-then-redeploy.",
+    "Jinhsi closer arc: 3/3 — it's mythology — she improves every cycle and has never missed the number. Don't overthink the closer slot. Trust the Magistrate.",
+    "Chisa allocation is the keystone — the entire Edgerunners Gambit was a Chisa-freeing operation. Wherever Chisa goes, plan the rest of the roster around her. She's the domino that moves everything."
+  ]
+}

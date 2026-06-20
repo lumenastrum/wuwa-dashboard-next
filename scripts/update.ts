@@ -30,6 +30,8 @@
  *   npm run update -- help
  */
 
+import { promises as fs } from "fs";
+import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import {
   blankEchoes,
@@ -61,6 +63,9 @@ const PROFILE_KEY = "andres-wuwa";
 
 const STATUSES = ["green", "yellow", "red", "neutral"];
 const WEAPON_TYPES = ["Sword", "Pistols", "Broadblade", "Gauntlets", "Rectifier"];
+const ELEMENTS = ["Fusion", "Glacio", "Electro", "Spectro", "Havoc", "Aero"];
+const ROLES = ["Main DPS", "Sub-DPS", "Support"];
+const SEQUENCES = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 
 type AnyRecord = Record<string, unknown>;
 interface Data {
@@ -146,6 +151,36 @@ function findEchoBuild(data: Data, name: string): EchoBuild {
   return b;
 }
 
+// A fresh audit stub for a new resonator: the universal CRIT-DPS stat rows,
+// all blank + neutral. `stat`/`statopt`/`statstatus` fill them in afterward.
+function blankAuditRow(name: string): Data["audit"][number] {
+  return {
+    name,
+    buildType: "",
+    stats: [
+      { label: "ATK", current: "", optimal: "", _status: "neutral" },
+      { label: "CR", current: "", optimal: "", unit: "%", _status: "neutral" },
+      { label: "CD", current: "", optimal: "", unit: "%", _status: "neutral" },
+      { label: "ER", current: "", optimal: "", unit: "%", _status: "neutral" },
+    ],
+    notes: "",
+    priorityStatus: "neutral",
+    _calcPriority: "neutral",
+  };
+}
+
+// Add a new resonator + its audit stub to a dashboard blob, then top up the
+// derived stores (echo build + signature weapon) and the count. Runs against
+// BOTH the live Supabase blob and the public/data.json seed so they stay in
+// the lockstep the roster already keeps.
+function applyNewResonator(d: Data, resonator: AnyRecord, audit: Data["audit"][number]) {
+  d.resonators.push(resonator);
+  d.audit.push(audit);
+  ensureEchoBuilds(d);
+  ensureSigWeapons(d);
+  (d.meta as AnyRecord).totalResonators = d.resonators.length;
+}
+
 function parseFloatOrThrow(v: string, label = "value") {
   const n = parseFloat(v);
   if (Number.isNaN(n)) throw new Error(`Expected number for ${label}, got "${v}"`);
@@ -181,6 +216,8 @@ const HELP = `WuWa dashboard CLI · profile ${PROFILE_KEY}
 usage: npm run update -- <command> <args>
 
 resonator:
+  addresonator <name> <element> <weaponType> <role> [seq] [level]
+                                        create a new resonator (+ blank audit/echo/sig stubs; syncs data.json)
   stat <name> <statLabel> <value>       set audit stat current value
   statopt <name> <statLabel> <text>     set stat optimal range
   statstatus <name> <statLabel> <st>    set stat _status (${STATUSES.join("|")})
@@ -221,8 +258,9 @@ benchmark:
   deaths <rank> <int>
 
 cycle:
+  addcycle --file <cycle.json>             append a whole new cycle (teams + lessons; totals/over5k derive)
   cycle <id> team <order> score <int>
-  cycle <id> team <order> rating <""|S|SS|SSS|CROWNED>
+  cycle <id> team <order> rating <""|B|A|S|SS|SSS|CROWNED>
   cycle <id> team <order> buff <text>
   cycle <id> team <order> notes <text>
   cycle <id> team <order> members <"A,B,C">     comma-separated names
@@ -417,6 +455,46 @@ async function main() {
       console.log(`added signature weapon "${name}" (${type ?? "?"} · ${wearerParts.join(" ") || "no wearer"}) — fill it with: sigweapon "${name}" passive "..."`);
       break;
     }
+    case "addresonator": {
+      const [name, element, weaponType, role, sequenceArg, levelArg] = rest;
+      const usage =
+        `usage: addresonator <name> <element> <weaponType> <role> [sequence=S0] [level=0]\n` +
+        `  element:    ${ELEMENTS.join(" | ")}\n` +
+        `  weaponType: ${WEAPON_TYPES.join(" | ")}\n` +
+        `  role:       ${ROLES.join(" | ")}\n` +
+        `  e.g. addresonator Lucy Fusion Pistols "Main DPS" S0 90`;
+      if (!name || !element || !weaponType || !role) throw new Error(usage);
+      if (!ELEMENTS.includes(element)) throw new Error(`element must be one of: ${ELEMENTS.join(", ")} (got "${element}")`);
+      if (!WEAPON_TYPES.includes(weaponType)) throw new Error(`weaponType must be one of: ${WEAPON_TYPES.join(", ")} (got "${weaponType}")`);
+      if (!ROLES.includes(role)) throw new Error(`role must be one of: ${ROLES.join(", ")} (got "${role}")`);
+      const sequence = sequenceArg ?? "S0";
+      if (!SEQUENCES.includes(sequence)) throw new Error(`sequence must be one of: ${SEQUENCES.join(", ")} (got "${sequence}")`);
+      const level = levelArg !== undefined ? parseIntOrThrow(levelArg, "level") : 0;
+      if (data.resonators.some((r) => r.name === name)) throw new Error(`Resonator "${name}" already exists`);
+
+      const resonator: AnyRecord = {
+        name, element, weaponType, role, sequence,
+        weapon: "", weaponRank: "", echoSet: "", level, notes: "",
+      };
+      // Live Supabase blob — saved by the upsert at the end of main().
+      applyNewResonator(data, resonator, blankAuditRow(name));
+      console.log(`added resonator "${name}" (${element} · ${weaponType} · ${role} · ${sequence} · Lv${level}) → now ${data.resonators.length} resonators`);
+
+      // public/data.json seed — generateStaticParams() reads it at build time,
+      // so the new /r/<name>/ page only emits on GH Pages if the seed lists it.
+      const seedPath = path.join(process.cwd(), "public", "data.json");
+      const seed = JSON.parse(await fs.readFile(seedPath, "utf-8")) as Data;
+      if (seed.resonators.some((r) => r.name === name)) {
+        console.log(`  (public/data.json already had "${name}", left as-is)`);
+      } else {
+        applyNewResonator(seed, structuredClone(resonator), blankAuditRow(name));
+        // Match the existing file: 2-space indent, CRLF, no trailing newline.
+        await fs.writeFile(seedPath, JSON.stringify(seed, null, 2).replace(/\n/g, "\r\n"), "utf-8");
+        console.log(`  ✓ synced public/data.json — rebuild + push to emit /r/${name}/ on prod`);
+      }
+      console.log(`  next: npm run update -- stat ${name} ATK "..." · build ${name} "CRIT DPS" · echoslot ${name} 1 main "Crit DMG" 44`);
+      break;
+    }
     case "echoslot": {
       const [name, slotArg, ...slotRest] = rest;
       if (!name) throw new Error(`usage: echoslot <name> <1-5|show> ...`);
@@ -587,6 +665,93 @@ async function main() {
       if (!cycle) throw new Error(`No cycle with id ${cycleId}`);
       cycle.totalPoints = parseIntOrThrow(value, "totalPoints");
       console.log(`cycle ${cycleId} totalPoints → ${cycle.totalPoints}`);
+      break;
+    }
+    case "addcycle": {
+      const fileIdx = rest.indexOf("--file");
+      const filePath = fileIdx !== -1 ? rest[fileIdx + 1] : undefined;
+      if (!filePath) {
+        throw new Error(
+          `usage: addcycle --file <path-to-cycle.json>\n` +
+            `  JSON: { id?, date, label, target, teamTarget, dayOne, teams[], lessons[] }\n` +
+            `  team: { order?, members[]|"A,B,C", buff, score, rating?, over5k?, notes }\n` +
+            `  id auto-assigns to max+1; totalPoints / teamsOver5k / over5k derive from scores (>=5000)`,
+        );
+      }
+      const raw = JSON.parse(await fs.readFile(path.resolve(filePath), "utf-8")) as AnyRecord;
+      const cycles = data.endstateMatrix.cycles;
+      const id =
+        raw.id != null
+          ? parseIntOrThrow(String(raw.id), "cycle id")
+          : cycles.reduce((m, c) => Math.max(m, c.id), 0) + 1;
+      if (cycles.some((c) => c.id === id)) {
+        throw new Error(`Cycle id ${id} already exists — omit "id" to auto-assign, or pick a free one`);
+      }
+      if (!raw.label) throw new Error(`cycle JSON needs a "label"`);
+      if (!raw.date) throw new Error(`cycle JSON needs a "date" (YYYY-MM-DD)`);
+      if (!Array.isArray(raw.teams) || raw.teams.length === 0) {
+        throw new Error(`cycle JSON needs a non-empty "teams" array`);
+      }
+
+      const VALID_RATINGS = ["", "B", "A", "S", "SS", "SSS", "CROWNED"];
+      const teams = (raw.teams as AnyRecord[]).map((t, i) => {
+        const order = t.order != null ? parseIntOrThrow(String(t.order), "team order") : i + 1;
+        const score = parseIntOrThrow(String(t.score ?? 0), `team ${order} score`);
+        let rating = String(t.rating ?? "").trim();
+        if (rating === "—" || rating === "-") rating = ""; // em-dash / dash both mean "no rating"
+        if (!VALID_RATINGS.includes(rating)) {
+          throw new Error(
+            `team ${order} rating "${rating}" invalid — use one of: ${VALID_RATINGS.filter(Boolean).join(", ")} (or empty)`,
+          );
+        }
+        const members = Array.isArray(t.members)
+          ? (t.members as unknown[]).map((m) => String(m).trim()).filter(Boolean)
+          : String(t.members ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+        return {
+          order,
+          members,
+          buff: String(t.buff ?? ""),
+          score,
+          rating,
+          over5k: typeof t.over5k === "boolean" ? t.over5k : score >= 5000,
+          notes: String(t.notes ?? ""),
+        };
+      });
+
+      const totalPoints = teams.reduce((acc, t) => acc + t.score, 0);
+      const teamsOver5k = teams.filter((t) => t.over5k).length;
+      if (raw.totalPoints != null && Number(raw.totalPoints) !== totalPoints) {
+        console.warn(`  ⚠ file totalPoints ${raw.totalPoints} ≠ sum of scores ${totalPoints} — using computed ${totalPoints}`);
+      }
+      if (raw.teamsOver5k != null && Number(raw.teamsOver5k) !== teamsOver5k) {
+        console.warn(`  ⚠ file teamsOver5k ${raw.teamsOver5k} ≠ computed ${teamsOver5k} — using computed ${teamsOver5k}`);
+      }
+
+      const cycle = {
+        id,
+        date: String(raw.date),
+        label: String(raw.label),
+        totalPoints,
+        target: parseIntOrThrow(String(raw.target ?? 0), "target"),
+        teamsOver5k,
+        teamTarget: parseIntOrThrow(String(raw.teamTarget ?? 0), "teamTarget"),
+        dayOne: Boolean(raw.dayOne),
+        teams,
+        lessons: Array.isArray(raw.lessons) ? (raw.lessons as unknown[]).map(String) : [],
+      };
+      cycles.push(cycle);
+      cycles.sort((a, b) => a.id - b.id);
+      console.log(
+        `added cycle ${id} "${cycle.label}" (${cycle.date}) — ${teams.length} teams · ` +
+          `${totalPoints.toLocaleString()} pts / ${cycle.target.toLocaleString()} target · ` +
+          `${teamsOver5k}/${cycle.teamTarget} over 5k${cycle.dayOne ? " · day-one" : ""}`,
+      );
+      for (const t of teams) {
+        console.log(
+          `  #${t.order} ${t.members.join(" / ")} — ${t.score.toLocaleString()}` +
+            `${t.rating ? ` · ${t.rating}` : ""}${t.over5k ? " · 5K+" : ""} · ${t.buff}`,
+        );
+      }
       break;
     }
     case "action": {
