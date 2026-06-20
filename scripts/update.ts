@@ -248,7 +248,7 @@ resonator rating (read-only, Optimizer weighting):
 
 signature weapon (by weapon name, not resonator):
   sigweapon <weapon> <field> <value>    field: ${Object.keys(SIGWEAPON_FIELDS).join("|")}
-  addsigweapon <weapon> <type> <wearer> create a new blank weapon entry
+  addsigweapon <weapon> <type> <wearer> create a new blank weapon entry (auto-links wearer.weapon if unset)
     e.g. sigweapon "Ages of Harvest" passive "On cast, ATK +12%..."
          sigweapon "Ages of Harvest" synergy "Doubles Jinhsi's Incandescence ramp"
          sigweapon "Ages of Harvest" mainstat "Crit DMG"
@@ -439,12 +439,13 @@ async function main() {
     case "addsigweapon": {
       const [name, type, ...wearerParts] = rest;
       if (!name) throw new Error(`usage: addsigweapon <weapon> <type> <wearer>`);
+      const wearer = wearerParts.join(" ");
       const list = ensureSigWeapons(data);
       if (list.some((x) => x.name === name)) throw new Error(`Signature weapon "${name}" already exists`);
       list.push({
         name,
         type: type ?? "",
-        wearer: wearerParts.join(" "),
+        wearer,
         baseAtk: "",
         mainStat: "",
         mainStatValue: "",
@@ -452,7 +453,25 @@ async function main() {
         passive: "",
         synergy: "",
       });
-      console.log(`added signature weapon "${name}" (${type ?? "?"} · ${wearerParts.join(" ") || "no wearer"}) — fill it with: sigweapon "${name}" passive "..."`);
+      // Auto-link the wearer's resonator at this weapon. The render resolves a sig via
+      // `resonator.weapon === sigWeapon.name` (signatureWeaponOf), so a weapon entry with
+      // no matching resonator.weapon renders nothing AND has no image. Set it at creation,
+      // but only when the slot is empty so an existing link is never clobbered.
+      let linkNote = "";
+      if (wearer) {
+        const r = data.resonators.find((x) => x.name === wearer);
+        if (!r) linkNote = ` (no resonator "${wearer}" to link — set it later with: weapon "${wearer}" "${name}")`;
+        else if (!r.weapon) {
+          r.weapon = name;
+          linkNote = ` — linked ${wearer}.weapon → "${name}"`;
+        } else if (r.weapon !== name) {
+          linkNote = ` (${wearer} already wields "${r.weapon as string}", left as-is — re-point with: weapon "${wearer}" "${name}")`;
+        } else {
+          linkNote = ` (${wearer} already linked)`;
+        }
+      }
+      console.log(`added signature weapon "${name}" (${type ?? "?"} · ${wearer || "no wearer"})${linkNote}`);
+      console.log(`  fill it: sigweapon "${name}" passive "..."`);
       break;
     }
     case "addresonator": {
