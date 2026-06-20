@@ -2,7 +2,7 @@
   "meta": {
     "title": "Andres's WuWa Dashboard",
     "updated": "2026-05-23",
-    "totalResonators": 20,
+    "totalResonators": 22,
     "maxLevel": 90
   },
   "resonators": [
@@ -244,6 +244,30 @@
       "weaponRank": "R1",
       "echoSet": "Rejuvenating Glow 5/5",
       "level": 90,
+      "notes": ""
+    },
+    {
+      "name": "Lucy",
+      "element": "Spectro",
+      "weaponType": "Pistols",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "",
+      "weaponRank": "",
+      "echoSet": "",
+      "level": 0,
+      "notes": ""
+    },
+    {
+      "name": "Rebecca",
+      "element": "Electro",
+      "weaponType": "Pistols",
+      "role": "Sub-DPS",
+      "sequence": "S0",
+      "weapon": "",
+      "weaponRank": "",
+      "echoSet": "",
+      "level": 0,
       "notes": ""
     }
   ],
@@ -1083,6 +1107,78 @@
       "notes": "BOTH BUFF CAPS MAXED",
       "priorityStatus": "green",
       "_calcPriority": "green"
+    },
+    {
+      "name": "Lucy",
+      "buildType": "",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "",
+          "optimal": "",
+          "_status": "neutral"
+        },
+        {
+          "label": "CR",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "CD",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "ER",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        }
+      ],
+      "notes": "",
+      "priorityStatus": "neutral",
+      "_calcPriority": "neutral"
+    },
+    {
+      "name": "Rebecca",
+      "buildType": "",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "",
+          "optimal": "",
+          "_status": "neutral"
+        },
+        {
+          "label": "CR",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "CD",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "ER",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        }
+      ],
+      "notes": "",
+      "priorityStatus": "neutral",
+      "_calcPriority": "neutral"
     }
   ],
   "benchmarks": [
@@ -1404,21 +1500,21 @@
   "actionItems": [
     {
       "task": "Augusta CR Substats",
-      "detail": "DONE \u2014 CR 53.3% \u2192 83.4% (3/29 farming session)",
+      "detail": "DONE — CR 53.3% → 83.4% (3/29 farming session)",
       "status": "green"
     },
     {
       "task": "Augusta CD recovery",
-      "detail": "CD dropped 264.2% \u2192 227.2% during CR fix \u2014 target 230%+",
+      "detail": "CD dropped 264.2% → 227.2% during CR fix — target 230%+",
       "status": "yellow"
     },
     {
       "task": "Cantarella ATK tuning",
-      "detail": "ATK 1,977 \u2014 23 short of 2,000 floor. Minor.",
+      "detail": "ATK 1,977 — 23 short of 2,000 floor. Minor.",
       "status": "green"
     },
     {
-      "task": "Roccia weapon Lv86\u219290",
+      "task": "Roccia weapon Lv86→90",
       "detail": "Free stats upgrade",
       "status": "yellow"
     },
@@ -1429,36 +1525,36 @@
     },
     {
       "task": "Jinhsi ER substats",
-      "detail": "Minor (108.4% \u2192 115%+)",
+      "detail": "Minor (108.4% → 115%+)",
       "status": "green"
     },
     {
       "task": "Denia ER substats",
-      "detail": "DONE \u2014 120.0% \u2192 129.2% (5/23 farming session)",
+      "detail": "DONE — 120.0% → 129.2% (5/23 farming session)",
       "status": "green"
     },
     {
       "task": "Denia ATK tuning",
-      "detail": "DONE \u2014 ATK 1,971 \u2192 2,026 (5/23 farming session)",
+      "detail": "DONE — ATK 1,971 → 2,026 (5/23 farming session)",
       "status": "green"
     },
     {
       "task": "Denia Skill levels",
-      "detail": "Resonance Skill 7\u219210, Normal Attack 6\u219210 when mats allow",
+      "detail": "Resonance Skill 7→10, Normal Attack 6→10 when mats allow",
       "status": "yellow"
     }
   ],
   "keyFindings": [
     "Sub-DPS with real personal damage > dedicated buff bots. Zhezhi went 0-2 against replacements.",
-    "Tightest spread: Phoebe/Nyx/Chisa \u2014 2 seconds. Most reliable: Augusta/Iuno/Shorekeeper \u2014 3 seconds.",
-    "Resistance tax: Havoc team (uphill) 2:21.7 avg. Cartethyia (also uphill) 0:43.0 avg \u2014 raw power overcomes.",
-    "Aemeath support diff: with Changli/Lupa 1:16.0 avg vs with Lynae/Mornye 0:37.3 avg \u2014 39 seconds faster.",
-    "3/29 Echo farming session: 7 resonators improved. Augusta CR fixed (red \u2192 green). Cantarella/Phoebe redistributed. Aemeath CD +17.4%. Zero red priorities remain.",
+    "Tightest spread: Phoebe/Nyx/Chisa — 2 seconds. Most reliable: Augusta/Iuno/Shorekeeper — 3 seconds.",
+    "Resistance tax: Havoc team (uphill) 2:21.7 avg. Cartethyia (also uphill) 0:43.0 avg — raw power overcomes.",
+    "Aemeath support diff: with Changli/Lupa 1:16.0 avg vs with Lynae/Mornye 0:37.3 avg — 39 seconds faster.",
+    "3/29 Echo farming session: 7 resonators improved. Augusta CR fixed (red → green). Cantarella/Phoebe redistributed. Aemeath CD +17.4%. Zero red priorities remain.",
     "5/23 Denia vs Lynae: Lynae S2 Amplification buffs (multiplicative) beat Denia's Fusion DMG Bonus (additive into saturated pool) for single-target. Heavenfall Edict: 1.04M (Lynae) vs 615k (Denia).",
     "5/23 Multiplier bucket theory: Denia stacks same bucket as Aemeath S3's Fusion DMG. Lynae S2 multiplies across buckets (All-DMG Amplification). Different math architecture = different per-hit ceilings.",
     "5/23 Content-specific queens: Fusion Burst team scored 4340 vs Legacy 2980 in Whimpering Wastes with Fusion Burst stage buff. Lynae bosses, Denia endgame scoring. Both earn their slot.",
-    "5/23 Rotation optimization: Aemeath combo path (Intro\u2192Echo\u2192Ult1\u2192Mech B4\u2192Seraphic\u2192Aemeath B4\u2192Seraphic\u2192Charged II\u2192Finale) + buff window alignment improved Denia team from 1:14 to 0:33.",
-    "5/23 Triple Pink Danger (Lupa\u2192Denia\u2192Aemeath): 0:53 no-healer speedrun. Optimal slot order based on outro buff type analysis (Lupa Deepen=multiplicative, Denia Bonus=additive, Aemeath=finisher).",
+    "5/23 Rotation optimization: Aemeath combo path (Intro→Echo→Ult1→Mech B4→Seraphic→Aemeath B4→Seraphic→Charged II→Finale) + buff window alignment improved Denia team from 1:14 to 0:33.",
+    "5/23 Triple Pink Danger (Lupa→Denia→Aemeath): 0:53 no-healer speedrun. Optimal slot order based on outro buff type analysis (Lupa Deepen=multiplicative, Denia Bonus=additive, Aemeath=finisher).",
     "5/23 Whimpering Wastes SS 7220 new record. Denia team scored 4340 on second half after S2 upgrade + rotation fix. 72% improvement from first attempt."
   ],
   "endstateMatrix": {
@@ -1497,7 +1593,7 @@
             "score": 5487,
             "rating": "",
             "over5k": true,
-            "notes": "First 5k clear \u2014 CR fix paying dividends"
+            "notes": "First 5k clear — CR fix paying dividends"
           },
           {
             "order": 3,
@@ -1536,7 +1632,7 @@
             "score": 5363,
             "rating": "",
             "over5k": true,
-            "notes": "SK depleted \u2014 Rover improvised. Potato + Protagonist"
+            "notes": "SK depleted — Rover improvised. Potato + Protagonist"
           },
           {
             "order": 6,
@@ -1549,7 +1645,7 @@
             "score": 14844,
             "rating": "SSS",
             "over5k": true,
-            "notes": "QUEEN. \"Roger! Sending Clio\u2014 I mean, Aemeath\""
+            "notes": "QUEEN. \"Roger! Sending Clio— I mean, Aemeath\""
           },
           {
             "order": 7,
@@ -1580,7 +1676,7 @@
         ],
         "lessons": [
           "Lead with weakest teams, save queens for hardest stages",
-          "SK vigor management is critical \u2014 improvise with Rover when depleted",
+          "SK vigor management is critical — improvise with Rover when depleted",
           "Augusta: red priority to 6,677 in one farming session",
           "Jinhsi closer energy: budget team, clutch results"
         ]
@@ -1606,7 +1702,7 @@
             "score": 4037,
             "rating": "",
             "over5k": false,
-            "notes": "Softener \u2014 consistent floor"
+            "notes": "Softener — consistent floor"
           },
           {
             "order": 2,
@@ -1632,7 +1728,7 @@
             "score": 5389,
             "rating": "",
             "over5k": true,
-            "notes": "Lost SK to reshuffle \u2014 Verina stepped in"
+            "notes": "Lost SK to reshuffle — Verina stepped in"
           },
           {
             "order": 4,
@@ -1645,7 +1741,7 @@
             "score": 8008,
             "rating": "SS",
             "over5k": true,
-            "notes": "Lynae replaces Zhezhi \u2014 multiplicative math proved out"
+            "notes": "Lynae replaces Zhezhi — multiplicative math proved out"
           },
           {
             "order": 5,
@@ -1684,7 +1780,7 @@
             "score": 12553,
             "rating": "CROWNED",
             "over5k": true,
-            "notes": "Chisa locked \u2014 Mornye sub \u2014 still crowned"
+            "notes": "Chisa locked — Mornye sub — still crowned"
           },
           {
             "order": 8,
@@ -1697,15 +1793,15 @@
             "score": 3646,
             "rating": "",
             "over5k": false,
-            "notes": "THE CLOSER RETURNS. 2/2 cycles \u2014 canon"
+            "notes": "THE CLOSER RETURNS. 2/2 cycles — canon"
           }
         ],
         "lessons": [
-          "Chisa and Roccia are NOT support class \u2014 single use only!",
-          "Verina IS support class \u2014 2 uses, saved us twice",
-          "Denia ripple: frees Lynae \u2192 upgrades Carlotta (7,336 \u2192 8,008)",
+          "Chisa and Roccia are NOT support class — single use only!",
+          "Verina IS support class — 2 uses, saved us twice",
+          "Denia ripple: frees Lynae → upgrades Carlotta (7,336 → 8,008)",
           "Plan Chisa allocation FIRST next cycle",
-          "Jinhsi closer arc: 2/2 cycles \u2014 it's canon now",
+          "Jinhsi closer arc: 2/2 cycles — it's canon now",
           "Reshuffle mid-run saved the 6-team threshold"
         ]
       }
@@ -1931,6 +2027,1532 @@
       "passiveName": "",
       "passive": "",
       "synergy": ""
+    }
+  ],
+  "echoBuilds": [
+    {
+      "resonator": "Aemeath",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Fusion DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Carlotta",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Glacio DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Cartethyia",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "HP%": 1,
+        "HP": 0.7,
+        "Crit Rate": 0.9,
+        "Crit DMG": 0.9,
+        "Energy Regen": 0.4
+      }
+    },
+    {
+      "resonator": "Phrolova",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Havoc DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Augusta",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Electro DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Jinhsi",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Spectro DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Changli",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Fusion DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Zani",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Spectro DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Iuno",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Aero DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Lynae",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Spectro DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Cantarella",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Havoc DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Phoebe",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Spectro DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Ciaccona",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Aero DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Lupa",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Fusion DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Denia",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.8,
+        "Energy Regen": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "ATK": 0.2,
+        "Fusion DMG": 0.8
+      }
+    },
+    {
+      "resonator": "Zhezhi",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 1,
+        "ATK%": 0.6,
+        "Crit Rate": 0.5,
+        "Crit DMG": 0.5,
+        "HP%": 0.3
+      }
+    },
+    {
+      "resonator": "Mornye",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 0.8,
+        "HP%": 0.7,
+        "DEF%": 0.5,
+        "Crit Rate": 0.4
+      }
+    },
+    {
+      "resonator": "Chisa",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "Crit DMG": 1,
+        "ATK%": 0.9,
+        "Resonance Skill DMG": 0.6,
+        "Resonance Liberation DMG": 0.6,
+        "Basic Attack DMG": 0.5,
+        "Heavy Attack DMG": 0.5,
+        "Energy Regen": 0.3,
+        "ATK": 0.2,
+        "Havoc DMG": 0.9
+      }
+    },
+    {
+      "resonator": "Roccia",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Crit Rate": 1,
+        "ATK%": 0.8,
+        "Crit DMG": 0.7,
+        "Energy Regen": 0.5
+      }
+    },
+    {
+      "resonator": "Shorekeeper",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 1,
+        "HP%": 0.8,
+        "HP": 0.5,
+        "Crit Rate": 0.4,
+        "Crit DMG": 0.4
+      }
+    },
+    {
+      "resonator": "Lucy",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 0.8,
+        "HP%": 0.7,
+        "DEF%": 0.5,
+        "Crit Rate": 0.4
+      }
+    },
+    {
+      "resonator": "Rebecca",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 0.8,
+        "HP%": 0.7,
+        "DEF%": 0.5,
+        "Crit Rate": 0.4
+      }
     }
   ]
 }
