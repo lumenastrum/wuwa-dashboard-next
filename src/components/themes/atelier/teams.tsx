@@ -4,12 +4,11 @@
 import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
-import { elementIcon, portrait, tallPortrait, teamPortraitFrame } from "@/lib/portraits";
+import { elementIcon, portrait } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
-import { SpinePortrait } from "@/components/spine-portrait";
-import { spinePortraitOf } from "@/lib/spine-portraits";
+import { CoverPortrait } from "@/components/cover-portrait";
 
 export function AtelierTeams() {
   const { raw, roster, rosterByName } = useData();
@@ -205,24 +204,6 @@ export function AtelierTeams() {
                 {team.team.map((name) => {
                   const rr = rosterByName[name];
                   const el = rr ? ELEMENTS[rr.element] : null;
-                  const fr = teamPortraitFrame(name);
-                  const sp = spinePortraitOf(name);
-                  const staticBust = (
-                    <img
-                      src={tallPortrait(name)}
-                      alt={name}
-                      style={{
-                        position: "absolute",
-                        top: `${fr.top}%`,
-                        left: `${fr.left}%`,
-                        transform: "translateX(-50%)",
-                        height: `${fr.height}%`,
-                        width: "auto",
-                        maxWidth: "none",
-                        filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
-                      }}
-                    />
-                  );
                   return (
                     <div
                       key={name}
@@ -233,28 +214,10 @@ export function AtelierTeams() {
                         background: `linear-gradient(180deg, ${el?.glow ?? A_PAL.surface}, ${A_PAL.surfaceStrong})`,
                       }}
                     >
-                      {sp ? (
-                        // live formation portrait — the spine viewport frames the
-                        // bust; the static bust underlays it (visible during the
-                        // fetch, kept if WebGL/loading fails)
-                        <div
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            filter: "drop-shadow(0 10px 20px rgba(60,70,100,0.25))",
-                          }}
-                        >
-                          <SpinePortrait
-                            bundle={sp.bundle}
-                            animation={sp.animation}
-                            viewport={sp.viewport}
-                            fallback={staticBust}
-                            height="100%"
-                          />
-                        </div>
-                      ) : (
-                        staticBust
-                      )}
+                      <CoverPortrait
+                        name={name}
+                        filter="drop-shadow(0 10px 20px rgba(60,70,100,0.25))"
+                      />
                       <div
                         style={{
                           position: "absolute",

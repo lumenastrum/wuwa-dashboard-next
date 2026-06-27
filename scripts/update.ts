@@ -21,6 +21,9 @@
  *   npm run update -- bench 1 best 0:31
  *   npm run update -- bench 1 notes "New PB 2026-05-30"
  *   npm run update -- deaths 1 0
+ *   npm run update -- addbench "Lucy,Rebecca,Shorekeeper" 0:48 worst=0:55 notes="Edgerunner debut"
+ *   npm run update -- benchmove 8 up
+ *   npm run update -- benchsort best
  *   npm run update -- cycle 2 team 7 score 13500
  *   npm run update -- cycle 2 team 7 rating CROWNED
  *   npm run update -- cycle 2 team 7 notes "carry by Aemeath"
@@ -54,6 +57,7 @@ import type {
 } from "../src/lib/types";
 import { rateResonator } from "../src/lib/resonator-rating";
 import { deriveStatStatus } from "../src/lib/stat-audit";
+import { durationToSec } from "../src/lib/duration";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -211,6 +215,42 @@ function parseIntOrThrow(v: string, label = "value") {
   return n;
 }
 
+// --- Benchmarks -----------------------------------------------------------
+// Clear times are "M:SS" (decimals allowed on averages, e.g. "0:37.3").
+const TIME_RE = /^\d+:[0-5]\d(\.\d+)?$/;
+function assertTime(v: string, label = "time") {
+  if (!TIME_RE.test(v)) {
+    throw new Error(`${label} must be M:SS (e.g. 0:48 or 1:23.5) — got "${v}"`);
+  }
+  return v;
+}
+
+// Invariant: a benchmark's rank === its position in the array (1-based). The
+// three theme renders key off both array order AND b.rank, so keep them locked.
+// Call after every add / move / sort / remove.
+function renumberBenchmarks(data: Data) {
+  data.benchmarks.forEach((b, i) => {
+    b.rank = i + 1;
+  });
+}
+
+// "Fusion+Spectro" — the unique elements of the lineup, in member order.
+// Members not yet in the roster are skipped (with a warning) so a benchmark can
+// reference a freshly-released resonator before its roster row lands.
+function deriveBenchElement(data: Data, team: string[]): string {
+  const seen: string[] = [];
+  for (const name of team) {
+    const r = data.resonators.find((x) => x.name === name);
+    if (!r) {
+      console.warn(`  ⚠ "${name}" not in roster — element auto-derive skips it (portrait falls back to bust)`);
+      continue;
+    }
+    const el = r.element as string;
+    if (el && !seen.includes(el)) seen.push(el);
+  }
+  return seen.join("+");
+}
+
 const HELP = `WuWa dashboard CLI · profile ${PROFILE_KEY}
 
 usage: npm run update -- <command> <args>
@@ -254,8 +294,13 @@ signature weapon (by weapon name, not resonator):
          sigweapon "Ages of Harvest" mainstat "Crit DMG"
 
 benchmark:
+  addbench <team> <best> [avg= worst= spread= deaths= element= notes= pos=]
+                                        add a new team (team="A,B,C"; inserts by best time)
   bench <rank> <best|worst|average|spread|notes|element> <value>
   deaths <rank> <int>
+  benchmove <rank> <up|down|top|bottom|N> reorder a team manually
+  benchsort [best|average|worst]          re-rank ALL teams by clear time (fastest first)
+  rmbench <rank>                          remove a team
 
 cycle:
   addcycle --file <cycle.json>             append a whole new cycle (teams + lessons; totals/over5k derive)
@@ -271,10 +316,17 @@ misc:
   action <idx> <task|detail|status> <value>
   finding <idx> <text>
   list                                    print summary
-  help                                    this message`;
+  help                                    this message
+
+global flags:
+  --dry                                   preview the result without saving (any command)`;
 
 async function main() {
-  const argv = process.argv.slice(2);
+  // `--dry` previews the result without saving (reads live data, skips the
+  // upsert). Stripped before positional parsing so it can sit anywhere.
+  const rawArgv = process.argv.slice(2);
+  const dry = rawArgv.includes("--dry");
+  const argv = rawArgv.filter((a) => a !== "--dry");
   if (argv.length === 0 || argv[0] === "help" || argv[0] === "--help") {
     console.log(HELP);
     return;
@@ -641,6 +693,133 @@ async function main() {
       console.log(`bench #${rank} deaths: ${b.deaths}`);
       break;
     }
+    case "addbench": {
+      const [teamStr, bestArg, ...kvs] = rest;
+      const usage =
+        `usage: addbench <team> <best> [key=value ...]\n` +
+        `  team:  comma-separated resonator names, e.g. "Lucy,Rebecca,Shorekeeper"\n` +
+        `  best:  headline clear time, M:SS (e.g. 0:48)\n` +
+        `  keys:  avg= worst= spread= deaths= element= notes= pos=<N|end>\n` +
+        `  defaults: avg/worst=best · spread auto from worst-best · deaths=0 ·\n` +
+        `            element auto from team · inserts at the best-time-sorted slot (override with pos=)\n` +
+        `  e.g. addbench "Lucy,Rebecca,Shorekeeper" 0:48 worst=0:55 deaths=0 notes="Edgerunner debut"`;
+      if (!teamStr || !bestArg) throw new Error(usage);
+      const team = teamStr.split(",").map((s) => s.trim()).filter(Boolean);
+      if (team.length === 0) throw new Error(`team is empty\n${usage}`);
+      assertTime(bestArg, "best");
+
+      // trailing key=value options (order-independent)
+      const opts: Record<string, string> = {};
+      for (const kv of kvs) {
+        const eq = kv.indexOf("=");
+        if (eq === -1) throw new Error(`option "${kv}" must be key=value\n${usage}`);
+        opts[kv.slice(0, eq).trim().toLowerCase()] = kv.slice(eq + 1).trim();
+      }
+      const KNOWN_OPTS = ["avg", "average", "worst", "spread", "deaths", "element", "notes", "pos", "rank"];
+      for (const k of Object.keys(opts)) {
+        if (!KNOWN_OPTS.includes(k)) throw new Error(`unknown option "${k}". Valid: ${KNOWN_OPTS.join(", ")}`);
+      }
+
+      const best = bestArg;
+      const average = opts.avg ?? opts.average ?? best;
+      assertTime(average, "avg");
+      const worst = opts.worst ?? best;
+      assertTime(worst, "worst");
+      let spread = opts.spread;
+      if (!spread) {
+        const d = Math.max(0, Math.round(durationToSec(worst) - durationToSec(best)));
+        spread = `${d}s`;
+      }
+      const deaths = opts.deaths != null ? parseIntOrThrow(opts.deaths, "deaths") : 0;
+      const element = opts.element ?? deriveBenchElement(data, team);
+      const notes = opts.notes ?? "";
+
+      const dup = data.benchmarks.find(
+        (b) => Array.isArray(b.team) && (b.team as string[]).join("|") === team.join("|"),
+      );
+      if (dup) console.warn(`  ⚠ a benchmark with this exact lineup already exists (#${dup.rank}) — adding anyway`);
+
+      const bench: AnyRecord = { rank: 0, team, element, best, worst, average, spread, deaths, notes };
+
+      // default: insert at the best-time-sorted slot (fastest on top); pos=end
+      // appends; pos=<N> inserts before rank N. Curated order is preserved —
+      // only the new row is placed; nothing else moves. Re-sort with benchsort.
+      const bestSec = durationToSec(best);
+      const posOpt = opts.pos ?? opts.rank;
+      let idx: number;
+      if (posOpt === "end") {
+        idx = data.benchmarks.length;
+      } else if (posOpt != null) {
+        idx = Math.min(Math.max(parseIntOrThrow(posOpt, "pos") - 1, 0), data.benchmarks.length);
+      } else {
+        idx = data.benchmarks.findIndex((b) => durationToSec(b.best as string) > bestSec);
+        if (idx === -1) idx = data.benchmarks.length;
+      }
+      data.benchmarks.splice(idx, 0, bench);
+      renumberBenchmarks(data);
+
+      console.log(
+        `added benchmark #${bench.rank} [${element || "?"}] ${team.join(" / ")} — ` +
+          `best ${best} · avg ${average} · worst ${worst} · spread ${spread} · ${deaths === 0 ? "CLEAN" : "D" + deaths}`,
+      );
+      console.log(
+        `  tweak it: bench ${bench.rank} best <M:SS> · deaths ${bench.rank} <n> · ` +
+          `benchmove ${bench.rank} <up|down|top|bottom|N> · benchsort`,
+      );
+      break;
+    }
+    case "benchmove": {
+      const [rankStr, dest] = rest;
+      if (!rankStr || !dest) throw new Error(`usage: benchmove <rank> <up|down|top|bottom|N>`);
+      const rank = parseIntOrThrow(rankStr, "rank");
+      const from = data.benchmarks.findIndex((b) => b.rank === rank);
+      if (from === -1) throw new Error(`No benchmark with rank #${rank}`);
+      const [b] = data.benchmarks.splice(from, 1);
+      const n = data.benchmarks.length; // length AFTER removal
+      let to: number;
+      if (dest === "up") to = Math.max(0, from - 1);
+      else if (dest === "down") to = Math.min(n, from + 1);
+      else if (dest === "top") to = 0;
+      else if (dest === "bottom") to = n;
+      else to = Math.min(Math.max(parseIntOrThrow(dest, "destination rank") - 1, 0), n);
+      data.benchmarks.splice(to, 0, b);
+      renumberBenchmarks(data);
+      console.log(`moved "${(b.team as string[]).join(" / ")}" → now rank #${b.rank}`);
+      break;
+    }
+    case "benchsort": {
+      const field = (rest[0] ?? "best").toLowerCase();
+      if (!["best", "average", "worst"].includes(field)) {
+        throw new Error(`benchsort field must be one of: best, average, worst (got "${field}")`);
+      }
+      // sort ascending by the chosen time, tie-broken best → average → worst
+      const key = (b: AnyRecord) => [
+        durationToSec(b[field] as string),
+        durationToSec(b.best as string),
+        durationToSec(b.average as string),
+        durationToSec(b.worst as string),
+      ];
+      data.benchmarks.sort((a, c) => {
+        const ka = key(a), kc = key(c);
+        for (let i = 0; i < ka.length; i++) if (ka[i] !== kc[i]) return ka[i] - kc[i];
+        return 0;
+      });
+      renumberBenchmarks(data);
+      console.log(`re-ranked ${data.benchmarks.length} benchmarks by ${field} time (fastest first):`);
+      for (const b of data.benchmarks) console.log(`  #${b.rank} ${(b.team as string[]).join(" / ")} — ${b.best}`);
+      break;
+    }
+    case "rmbench": {
+      const rankStr = rest[0];
+      if (!rankStr) throw new Error(`usage: rmbench <rank>`);
+      const rank = parseIntOrThrow(rankStr, "rank");
+      const idx = data.benchmarks.findIndex((b) => b.rank === rank);
+      if (idx === -1) throw new Error(`No benchmark with rank #${rank}`);
+      const [b] = data.benchmarks.splice(idx, 1);
+      renumberBenchmarks(data);
+      console.log(`removed benchmark "${(b.team as string[]).join(" / ")}" (was #${rank}) — ${data.benchmarks.length} remain`);
+      break;
+    }
     case "cycle": {
       const [cycleIdStr, sub, ...subRest] = rest;
       const cycleId = parseIntOrThrow(cycleIdStr, "cycleId");
@@ -807,6 +986,10 @@ async function main() {
   if (!mutated) return;
 
   data.meta.updated = new Date().toISOString().slice(0, 10);
+  if (dry) {
+    console.log(`\n[--dry] computed result NOT saved to Supabase.`);
+    return;
+  }
   const { error: saveError } = await supabase
     .from(SUPABASE_TABLE)
     .upsert(

@@ -5,12 +5,11 @@ import { useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
-import { portrait, tallPortrait, teamPortraitFrame } from "@/lib/portraits";
+import { portrait } from "@/lib/portraits";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill } from "./primitives";
-import { SpinePortrait } from "@/components/spine-portrait";
-import { spinePortraitOf } from "@/lib/spine-portraits";
+import { CoverPortrait } from "@/components/cover-portrait";
 
 export function ObsidianTeams() {
   const { raw, roster, rosterByName } = useData();
@@ -19,7 +18,9 @@ export function ObsidianTeams() {
   const [sel, setSel] = useState(0);
   const team = raw.benchmarks[sel];
   const meta = raw.benchmarkMeta;
-  const minSec = durationToSec(raw.benchmarks[0].best);
+  // fastest clear across the whole board — normalizes the bar widths. Computed
+  // from all rows (not benchmarks[0]) so manual reorders can't break the scale.
+  const minSec = Math.min(...raw.benchmarks.map((b) => durationToSec(b.best)));
 
   return (
     <div style={oStyles.shell}>
@@ -221,24 +222,6 @@ export function ObsidianTeams() {
               {team.team.map((name) => {
                 const rr = rosterByName[name];
                 const el = rr ? ELEMENTS[rr.element] : null;
-                const fr = teamPortraitFrame(name);
-                const sp = spinePortraitOf(name);
-                const staticBust = (
-                  <img
-                    src={tallPortrait(name)}
-                    alt={name}
-                    style={{
-                      position: "absolute",
-                      top: `${fr.top}%`,
-                      left: `${fr.left}%`,
-                      transform: "translateX(-50%)",
-                      height: `${fr.height}%`,
-                      width: "auto",
-                      maxWidth: "none",
-                      filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
-                    }}
-                  />
-                );
                 return (
                   <div
                     key={name}
@@ -249,28 +232,10 @@ export function ObsidianTeams() {
                       background: `linear-gradient(180deg, ${el?.glow ?? O_PAL.surface}, rgba(10,13,20,0.85))`,
                     }}
                   >
-                    {sp ? (
-                      // live formation portrait — the spine viewport frames the
-                      // bust; the static bust underlays it (visible during the
-                      // fetch, kept if WebGL/loading fails)
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          filter: `drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`,
-                        }}
-                      >
-                        <SpinePortrait
-                          bundle={sp.bundle}
-                          animation={sp.animation}
-                          viewport={sp.viewport}
-                          fallback={staticBust}
-                          height="100%"
-                        />
-                      </div>
-                    ) : (
-                      staticBust
-                    )}
+                    <CoverPortrait
+                      name={name}
+                      filter={`drop-shadow(0 12px 24px ${el?.glow ?? "rgba(0,0,0,0.4)"})`}
+                    />
                     <div
                       style={{
                         position: "absolute",
