@@ -9,7 +9,7 @@ import {
   luckLabel,
   pityHistogram,
 } from "@/lib/convene-analytics";
-import { HARD_PITY, SOFT_PITY } from "@/lib/convene-types";
+import { HARD_PITY, is5050Pool, SOFT_PITY } from "@/lib/convene-types";
 import { portrait } from "@/lib/portraits";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
@@ -123,7 +123,7 @@ export function ConsoleConvene() {
         <div
           style={{
             display: isMobile ? "flex" : "grid",
-            gridTemplateColumns: `repeat(${banners.length}, 1fr)`,
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
             gap: 12,
             marginBottom: 14,
             overflowX: isMobile ? "auto" : "visible",
@@ -329,7 +329,7 @@ function BannerStatsPanel({ banner }: { banner: BannerStats }) {
       <StatRow label="LONGEST DRY" value={`${banner.longestDry} pulls`} />
       <StatRow label="4★ COUNT" value={String(banner.fourStarCount)} />
       <StatRow label="TOTAL / ASTRITE" value={`${banner.total} · ${banner.astrite.toLocaleString()}`} />
-      {banner.cardPoolType === 1 && (
+      {is5050Pool(banner.cardPoolType) && (
         <>
           <StatRow
             label="50/50 WIN RATE"

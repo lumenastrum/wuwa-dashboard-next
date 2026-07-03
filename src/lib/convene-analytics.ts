@@ -7,9 +7,10 @@
  * the API newest-first; we reverse to chronological (oldest-first) and walk
  * forward counting pulls between 5★ (and 4★) hits.
  *
- * 50/50 (Featured Resonator / type 1 only): a 5★ resonator NOT in the standard
- * pool is a featured WIN; one that IS in the standard pool is a LOSS. After a
- * loss the next 5★ is guaranteed featured (not counted as a coinflip).
+ * 50/50 (coinflip banners — Featured Resonator type 1 + Collab Resonator
+ * type 10, see `is5050Pool`): a 5★ resonator NOT in the standard pool is a
+ * featured WIN; one that IS in the standard pool is a LOSS. After a loss the
+ * next 5★ is guaranteed featured (not counted as a coinflip).
  */
 
 import {
@@ -17,6 +18,7 @@ import {
   BANNERS,
   type ConveneRecord,
   type ConveneStore,
+  is5050Pool,
   STANDARD_5STAR_RESONATORS,
 } from "./convene-types";
 
@@ -79,7 +81,7 @@ export function computeBannerStats(
 ): BannerStats {
   const chrono = chronological(records);
   const name = BANNERS[cardPoolType] ?? `Banner ${cardPoolType}`;
-  const is5050Banner = cardPoolType === 1;
+  const is5050Banner = is5050Pool(cardPoolType);
 
   const fiveStars: FiveStarPull[] = [];
   let sinceFive = 0;

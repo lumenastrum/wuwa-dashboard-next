@@ -31,12 +31,24 @@ export const BANNERS: Record<number, string> = {
   5: "Beginner Convene",
   6: "Beginner's Choice",
   7: "Giveback Convene",
+  // Collab convenes (first seen: Edgerunners, 2026-06). Own pools, own pity,
+  // and the game issues a SEPARATE record_id for them — see convene-sync.ts.
+  10: "Collab Resonator",
+  11: "Collab Weapon",
 };
 
 /** The banner types we surface as primary tiles (the ones that actually matter). */
 export const PRIMARY_BANNERS: number[] = [1, 2, 3, 4];
 
-export type CardPoolType = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type CardPoolType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 10 | 11;
+
+/**
+ * Banners with a featured-vs-standard coinflip. The collab resonator banner
+ * (10) has one too — standard 5★s can steal the pull (verified: a Calcharo
+ * landed on the Edgerunners banner).
+ */
+export const is5050Pool = (cardPoolType: number): boolean =>
+  cardPoolType === 1 || cardPoolType === 10;
 
 /**
  * The five permanent 5★ resonators in the standard pool. On the Featured

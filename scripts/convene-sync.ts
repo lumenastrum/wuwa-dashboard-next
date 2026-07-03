@@ -45,6 +45,12 @@ const LOG_RELPATHS = [
 const URL_RE =
   /https?:\/\/aki-gm-resources(?:-oversea)?\.aki-game\.(?:net|com)\/aki\/gacha\/index\.html#\/record\?[^\s"'\\]+/g;
 
+/**
+ * Pools to sync: the 7 permanent banners + the collab pools (10 = resonator,
+ * 11 = weapon; first seen with the Edgerunners collab, 2026-06).
+ */
+const POOL_TYPES = [1, 2, 3, 4, 5, 6, 7, 10, 11];
+
 const BANNER_DELAY_MS = 300;
 
 interface ConveneParams {
@@ -64,25 +70,58 @@ function arg(flag: string): string | undefined {
 }
 const hasFlag = (flag: string) => process.argv.includes(flag);
 
-/** Scan the candidate log files; return the last URL from the most-recently-written one. */
-function findUrlInLogs(gameDir: string): string | null {
-  let best: { mtime: number; url: string } | null = null;
+/**
+ * Kuro XOR-obfuscates Client.log since ~2.x: bytes with an odd low nibble are
+ * XOR'd with 0xA5, the rest with 0xEF. (Scheme from wuwatracker's import.ps1.)
+ */
+function xorDecodeLog(bytes: Buffer): string {
+  const out = Buffer.allocUnsafe(bytes.length);
+  for (let i = 0; i < bytes.length; i++) {
+    const b = bytes[i];
+    out[i] = (b & 0x0f) % 2 === 1 ? b ^ 0xa5 : b ^ 0xef;
+  }
+  return out.toString("utf8");
+}
+
+/**
+ * Scan the candidate log files; return ALL convene URLs found, freshest first
+ * (newer file wins; within a file, later occurrence wins).
+ *
+ * Why all of them: each convene page the game opens logs its own URL, and
+ * collab pools get a SEPARATE record_id from the main banners. The credentials
+ * are not symmetric — the main record_id cannot query collab pools (API code
+ * -1), while a collab record_id happens to query everything. So the sync
+ * gathers every credential set and falls back per pool.
+ */
+function findUrlsInLogs(gameDir: string): string[] {
+  const found: { mtime: number; idx: number; url: string }[] = [];
   for (const rel of LOG_RELPATHS) {
     const full = join(gameDir, rel);
     if (!existsSync(full)) continue;
-    let text: string;
+    let bytes: Buffer;
     try {
-      text = readFileSync(full, "utf8");
+      bytes = readFileSync(full);
     } catch {
       continue;
     }
-    const matches = text.match(URL_RE);
+    let matches = bytes.toString("utf8").match(URL_RE);
+    if (!matches || matches.length === 0) {
+      matches = xorDecodeLog(bytes).match(URL_RE);
+    }
     if (!matches || matches.length === 0) continue;
     const mtime = statSync(full).mtimeMs;
-    const url = matches[matches.length - 1]; // last = freshest within the file
-    if (!best || mtime > best.mtime) best = { mtime, url };
+    matches.forEach((url, idx) => found.push({ mtime, idx, url }));
   }
-  return best?.url ?? null;
+  found.sort((a, b) => b.mtime - a.mtime || b.idx - a.idx);
+  const seen = new Set<string>();
+  const urls: string[] = [];
+  for (const f of found) {
+    if (!seen.has(f.url)) {
+      seen.add(f.url);
+      urls.push(f.url);
+    }
+  }
+  return urls;
 }
 
 function parseUrl(url: string): ConveneParams {
@@ -158,24 +197,41 @@ async function main() {
   const gameDir = arg("--game") ?? process.env.WUWA_GAME_PATH ?? DEFAULT_GAME_DIR;
   const dry = hasFlag("--dry");
 
-  // 1. Resolve the convene URL.
-  let url = arg("--url");
-  if (!url) {
-    console.log(`• Searching logs under: ${gameDir}`);
-    url = findUrlInLogs(gameDir) ?? undefined;
-    if (!url) {
-      console.error(
-        "✕ No convene URL found in the logs.\n" +
-          "  → Launch Wuthering Waves, open Convene History in-game, then re-run.\n" +
-          "  → Or paste it manually: npm run convene -- --url \"https://…\"",
-      );
-      process.exit(1);
-    }
-    console.log("✓ Found convene URL in logs.");
+  // 1. Resolve the convene URL(s). A manual --url goes first; the log scan
+  //    still runs behind it so collab-pool credentials (separate record_id —
+  //    see findUrlsInLogs) are picked up either way.
+  const manualUrl = arg("--url");
+  console.log(`• Searching logs under: ${gameDir}`);
+  const urls = [...(manualUrl ? [manualUrl] : []), ...findUrlsInLogs(gameDir)];
+  if (urls.length === 0) {
+    console.error(
+      "✕ No convene URL found in the logs.\n" +
+        "  → Launch Wuthering Waves, open Convene History in-game, then re-run.\n" +
+        "  → Or paste it manually: npm run convene -- --url \"https://…\"",
+    );
+    process.exit(1);
   }
 
-  const p = parseUrl(url);
-  console.log(`• player ${p.playerId} · server ${p.serverId} · ${p.apiBase}`);
+  // Dedupe credential sets by record_id (each page-open logs the same URL
+  // repeatedly, sometimes with trailing punctuation the regex can't shed).
+  const creds: ConveneParams[] = [];
+  for (const u of urls) {
+    try {
+      const c = parseUrl(u);
+      if (!creds.some((x) => x.recordId === c.recordId)) creds.push(c);
+    } catch {
+      // malformed/truncated log line — skip
+    }
+  }
+  if (creds.length === 0) {
+    console.error("✕ Found URL(s) but none parsed cleanly. Re-open Convene History in-game.");
+    process.exit(1);
+  }
+
+  const p = creds[0];
+  console.log(
+    `✓ ${creds.length} credential set(s) in logs · player ${p.playerId} · server ${p.serverId} · ${p.apiBase}`,
+  );
 
   // 2. Load existing store (so a failed banner keeps its old data).
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -190,13 +246,27 @@ async function main() {
     if (row?.data) store = row.data as ConveneStore;
   }
 
-  // 3. Fetch all 7 banners; archival-merge per banner on success. The fresh
+  // 3. Fetch every pool; archival-merge per banner on success. The fresh
   //    API window is authoritative for its range; older records we've already
   //    captured are preserved so the archive outlives Kuro's rolling retention.
+  //    Each pool tries every credential set (freshest first) — collab pools
+  //    only answer to their own record_id.
   const errors: string[] = [];
-  for (let type = 1; type <= 7; type++) {
-    try {
-      const fresh = await fetchBanner(p, type);
+  for (const type of POOL_TYPES) {
+    let fresh: ConveneRecord[] | null = null;
+    let lastErr = "";
+    for (const c of creds) {
+      try {
+        fresh = await fetchBanner(c, type);
+        break;
+      } catch (e) {
+        lastErr = (e as Error).message;
+      }
+    }
+    if (fresh === null) {
+      errors.push(`Banner ${type} (${BANNERS[type]}): ${lastErr}`);
+      console.log(`  [${type}] ${BANNERS[type].padEnd(20)}   FAILED — kept previous`);
+    } else {
       const existing = store.banners[String(type)] ?? [];
       const { merged, windowCount, archivedCount } = mergeWindow(existing, fresh);
       store.banners[String(type)] = merged;
@@ -204,11 +274,8 @@ async function main() {
       console.log(
         `  [${type}] ${BANNERS[type].padEnd(20)} ${String(windowCount).padStart(5)} in window${archNote}`,
       );
-    } catch (e) {
-      errors.push(`Banner ${type} (${BANNERS[type]}): ${(e as Error).message}`);
-      console.log(`  [${type}] ${BANNERS[type].padEnd(20)}   FAILED — kept previous`);
     }
-    if (type < 7) await sleep(BANNER_DELAY_MS);
+    await sleep(BANNER_DELAY_MS);
   }
 
   store.playerId = p.playerId;

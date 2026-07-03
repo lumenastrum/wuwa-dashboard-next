@@ -5,7 +5,7 @@ import { useState, type ReactNode } from "react";
 import { usePulls } from "@/lib/use-pulls";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { type BannerStats, luckLabel, pityHistogram } from "@/lib/convene-analytics";
-import { HARD_PITY, SOFT_PITY } from "@/lib/convene-types";
+import { HARD_PITY, is5050Pool, SOFT_PITY } from "@/lib/convene-types";
 import { portrait } from "@/lib/portraits";
 import { A_PAL, aStyles } from "./styles";
 import { ACard } from "./primitives";
@@ -118,7 +118,7 @@ export function AtelierConvene() {
         <div
           style={{
             display: isMobile ? "flex" : "grid",
-            gridTemplateColumns: `repeat(${banners.length}, 1fr)`,
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
             gap: 12,
             marginBottom: 28,
             overflowX: isMobile ? "auto" : "visible",
@@ -392,7 +392,7 @@ function ABannerStats({ banner }: { banner: BannerStats }) {
       />
       <AConvStatRow label="Longest dry streak" value={`${banner.longestDry}`} />
       <AConvStatRow label="Four-stars" value={String(banner.fourStarCount)} />
-      {banner.cardPoolType === 1 ? (
+      {is5050Pool(banner.cardPoolType) ? (
         <AConvStatRow
           label="Next five-star"
           value={banner.nextGuaranteed ? "Guaranteed" : "50/50"}
