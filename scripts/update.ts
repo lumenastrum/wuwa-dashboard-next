@@ -275,13 +275,21 @@ echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
   echoslot <name> <1-5> main <stat> [value]       set a slot's main stat
   echoslot <name> <1-5> sub <1-5> <stat> <value>  set a substat (stat + roll value)
   echoslot <name> <1-5> cost <1|3|4>              set one slot's cost
+  echoslot <name> <1-5> echo <species>            set the echo species (drives the monster portrait)
+  echoslot <name> <1-5> sonata <set>              set the slot's sonata set (drives the per-slot set icon)
   echoslot <name> spread <4-4-1-1-1>              set the whole cost spread at once
   echoslot <name> show                            print build + stat grade
   echoweight <name> <stat> <0..1>                 tune one audit weight
   echoweight <name> reset                         re-seed weights from buildType
     e.g. echoslot Aemeath 1 main "Crit DMG" 44
          echoslot Aemeath 1 sub 1 "Crit Rate" 9.3
+         echoslot Aemeath 1 echo "Inferno Rider"
+         echoslot Aemeath 1 sonata "Trailblazing Star"
          echoweight Aemeath "Resonance Liberation DMG" 0.8
+
+forte (tree investment; levels 1-10, nodes = unlocked side bonus nodes):
+  forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=8]
+    e.g. forte Aemeath 10 10 10 10 10
 
 resonator rating (read-only, Optimizer weighting):
   rating <name>                                   echo+stats+sig+seq → one grade
@@ -579,7 +587,8 @@ async function main() {
           const ev = scoreEcho(e, build.weights as StatWeights);
           const subs = e.substats.filter((s) => s.stat).map((s) => `${s.stat} ${s.value}`).join(", ") || "—";
           const grade = ev.score !== null ? `${ev.grade} (${Math.round(ev.score)})` : "—";
-          console.log(`  [${e.cost}c] slot ${i + 1}: ${e.mainStat || "—"} ${e.mainValue || ""} · subs: ${subs} · ${grade}${ev.deadStats.length ? ` · dead: ${ev.deadStats.join(", ")}` : ""}`);
+          const identity = e.name ? ` ${e.name}${e.sonata ? ` · ${e.sonata}` : ""} ·` : e.sonata ? ` ${e.sonata} ·` : "";
+          console.log(`  [${e.cost}c] slot ${i + 1}:${identity} ${e.mainStat || "—"} ${e.mainValue || ""} · subs: ${subs} · ${grade}${ev.deadStats.length ? ` · dead: ${ev.deadStats.join(", ")}` : ""}`);
         });
         mutated = false;
         return;
@@ -645,9 +654,53 @@ async function main() {
           note = " · cleared now-invalid main stat";
         }
         console.log(`${name} slot ${slot} cost: ${echo.cost}${note}`);
+      } else if (kind === "echo") {
+        // Species name drives the monster-portrait icon on the echo card.
+        // Unknown names warn (future patch species) but still save. "-" clears.
+        const species = kindRest.join(" ").trim();
+        if (!species) throw new Error(`usage: echoslot ${name} ${slot} echo <species name | ->`);
+        if (species === "-") {
+          delete echo.name;
+          console.log(`${name} slot ${slot} echo: cleared`);
+          break;
+        }
+        echo.name = species;
+        const iconMap = JSON.parse(
+          await fs.readFile(path.join(process.cwd(), "src", "lib", "echo-icons.json"), "utf-8"),
+        ) as Record<string, string>;
+        const known = iconMap[species];
+        console.log(`${name} slot ${slot} echo: ${species}${known ? ` (icon ${known})` : " — ⚠ no icon mapped for this name; check spelling vs src/lib/echo-icons.json"}`);
+      } else if (kind === "sonata") {
+        const set = kindRest.join(" ").trim();
+        if (!set) throw new Error(`usage: echoslot ${name} ${slot} sonata <set name | ->`);
+        if (set === "-") {
+          delete echo.sonata;
+          console.log(`${name} slot ${slot} sonata: cleared`);
+          break;
+        }
+        echo.sonata = set;
+        const iconFile = path.join(process.cwd(), "public", "sonatas", `${set.replace(/\s+/g, "_")}.webp`);
+        const hasIcon = await fs.access(iconFile).then(() => true, () => false);
+        console.log(`${name} slot ${slot} sonata: ${set}${hasIcon ? "" : " — ⚠ no icon at public/sonatas/" + path.basename(iconFile)}`);
       } else {
-        throw new Error(`usage: echoslot ${name} ${slot} <main|sub|cost> ...`);
+        throw new Error(`usage: echoslot ${name} ${slot} <main|sub|cost|echo|sonata> ...`);
       }
+      break;
+    }
+    case "forte": {
+      // forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=8]
+      const [name, ...lv] = rest;
+      if (!name || lv.length < 5) throw new Error(`usage: forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes 0-8]`);
+      const r = findResonator(data, name);
+      const [basic, skill, circuit, liberation, intro] = lv.slice(0, 5).map((v, i) => {
+        const n = parseIntOrThrow(v, ["basic", "skill", "circuit", "liberation", "intro"][i]);
+        if (n < 1 || n > 10) throw new Error(`forte levels are 1-10 (${["basic", "skill", "circuit", "liberation", "intro"][i]} got ${n})`);
+        return n;
+      });
+      const nodes = lv[5] !== undefined ? parseIntOrThrow(lv[5], "nodes") : 8;
+      if (nodes < 0 || nodes > 8) throw new Error(`nodes must be 0-8 (got ${nodes})`);
+      r.forte = { basic, skill, circuit, liberation, intro, nodes };
+      console.log(`${name} forte: basic ${basic} · skill ${skill} · circuit ${circuit} · lib ${liberation} · intro ${intro} · ${nodes}/8 nodes`);
       break;
     }
     case "echoweight": {

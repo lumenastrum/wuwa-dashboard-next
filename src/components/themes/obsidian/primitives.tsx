@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import { ELEMENTS, STATUS_HEX } from "@/lib/elements";
 import { elementIcon, weaponTypeIcon } from "@/lib/portraits";
+import { statIcon } from "@/lib/game-icons";
 import type { AuditStat, ElementName, Status, WeaponType } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 
@@ -112,10 +113,22 @@ export function OStatBar({ stat }: { stat: AuditStat }) {
   const pct = Math.min(100, (num / ceiling) * 100);
   const minPct = stat.min ? Math.min(100, (stat.min / ceiling) * 100) : 0;
   const maxPct = stat.max ? Math.min(100, (stat.max / ceiling) * 100) : 0;
+  const glyph = statIcon(stat.label);
   return (
     <div style={{ marginBottom: 14 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <div style={{ ...oStyles.mono, fontSize: 11, letterSpacing: 1.5, color: O_PAL.textDim }}>{stat.label}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          {glyph && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={glyph}
+              alt=""
+              style={{ width: 15, height: 15, opacity: 0.85 }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          )}
+          <div style={{ ...oStyles.mono, fontSize: 11, letterSpacing: 1.5, color: O_PAL.textDim }}>{stat.label}</div>
+        </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
           <div style={{ ...oStyles.display, fontSize: 22, color: STATUS_HEX[stat._status] ?? O_PAL.text }}>
             {stat.current}

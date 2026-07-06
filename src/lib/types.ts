@@ -26,6 +26,18 @@ export interface Resonator {
   echoSet: string;
   level: number;
   notes: string;
+  forte?: ResonatorForte;        // optional — render nothing when absent
+}
+
+// Forte tree investment: the five skill levels (1-10) plus how many of the
+// eight side stat-bonus nodes are unlocked (endgame default 8).
+export interface ResonatorForte {
+  basic: number;
+  skill: number;
+  circuit: number;
+  liberation: number;
+  intro: number;
+  nodes: number;                 // 0-8 unlocked bonus nodes
 }
 
 export type StatLabel = "ATK" | "HP" | "DEF" | "CR" | "CD" | "ER" | "Team CR" | "Team CD";
@@ -148,6 +160,7 @@ export interface EchoSubstat {
 export interface Echo {
   cost: EchoCost;
   name?: string;                 // optional echo name (e.g. "Inferno Rider")
+  sonata?: string;               // optional per-slot set name (e.g. "Trailblazing Star")
   mainStat: EchoMainStatLabel | "";
   mainValue: number;
   substats: EchoSubstat[];       // up to 5

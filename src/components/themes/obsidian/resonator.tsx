@@ -3,7 +3,8 @@
 
 import Link from "next/link";
 import { useData, rosterIndexOf, rosterNeighborsOf, teamsFeaturingOf, cycleAppearancesOf, getResonatorOrFirstOf, signatureWeaponOf, echoBuildOf } from "@/lib/data-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ObsidianFlexCard } from "./flex-card";
 import { ELEMENTS } from "@/lib/elements";
 import { elementIcon, fiveStarIcon, portrait, tallPortrait, weaponTypeIcon } from "@/lib/portraits";
 import { STATUS_HEX } from "@/lib/elements";
@@ -15,6 +16,9 @@ import type { Status } from "@/lib/types";
 import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { SonataIcons } from "@/components/sonata-icons";
+import { sonataIcon } from "@/lib/sonata";
+import { echoIcon, statIcon, statAbbrev, elementBadge, FORTE_SLOTS, forteIcon, forteIconFallback } from "@/lib/game-icons";
+import type { Echo, Resonator, WeaponType, Sequence } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OStatBar } from "./primitives";
 
@@ -29,7 +33,7 @@ function oQualityStatus(q: number): Status {
 
 // Jewel grade medallion — serif glyph in a hairline-bordered tile. `hero` is the
 // Resonator Rating size, `md` the echo-build header, `sm` the per-echo chip.
-function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; status: Status; score: number | null; size?: "sm" | "md" | "hero" }) {
+export function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; status: Status; score: number | null; size?: "sm" | "md" | "hero" }) {
   const glow = O_PRESTIGE_HEX[grade];
   const hex = glow ?? STATUS_HEX[status];
   const sparkle = grade === "✦";
@@ -72,6 +76,263 @@ function OGrade({ grade, status, score, size = "sm" }: { grade: EchoGrade; statu
   );
 }
 
+// S0-S6 as a jewel chain — six diamond nodes, lit up to the owned sequence.
+export function OSequenceChain({ sequence }: { sequence: Sequence }) {
+  const owned = parseInt(sequence.slice(1), 10) || 0;
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
+      <span style={{ ...oStyles.mono, fontSize: 13, color: owned === 6 ? O_PAL.accent : O_PAL.text }}>{sequence}</span>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+        {[1, 2, 3, 4, 5, 6].map((n) => {
+          const lit = n <= owned;
+          return (
+            <span
+              key={n}
+              style={{
+                width: 7,
+                height: 7,
+                transform: "rotate(45deg)",
+                borderRadius: 1.5,
+                background: lit ? O_PAL.accent : "transparent",
+                border: `1px solid ${lit ? O_PAL.accent : O_PAL.borderStrong}`,
+                boxShadow: lit ? `0 0 6px ${O_PAL.accent}80` : "none",
+              }}
+            />
+          );
+        })}
+      </span>
+    </span>
+  );
+}
+
+// One forte skill disc: ripped in-game glyph in a hairline ring, gold at LV.10.
+// A missing icon file hides itself and the slot label carries the meaning.
+export function OForteDisc({ r, slot, label, level }: { r: Resonator; slot: (typeof FORTE_SLOTS)[number]["key"]; label: string; level: number }) {
+  const maxed = level >= 10;
+  const ringHex = maxed ? O_PAL.accent : O_PAL.borderStrong;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, minWidth: 0 }}>
+      <div
+        style={{
+          width: 54,
+          height: 54,
+          borderRadius: 999,
+          border: `1px solid ${ringHex}`,
+          background: maxed ? "rgba(233,212,155,0.08)" : O_PAL.surface,
+          boxShadow: maxed ? `0 0 14px ${O_PAL.accent}40, inset 0 0 10px ${O_PAL.accent}14` : "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={forteIcon(r.name, slot)}
+          alt={label}
+          style={{ width: 32, height: 32, opacity: 0.95 }}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            const fb = forteIconFallback(slot, r.weaponType as WeaponType);
+            if (fb && !img.src.endsWith(fb)) img.src = fb;
+            else img.style.display = "none";
+          }}
+        />
+      </div>
+      <div style={{ ...oStyles.mono, fontSize: 11, color: maxed ? O_PAL.accent : O_PAL.text, letterSpacing: 0.5 }}>
+        LV.{level}
+      </div>
+      <div style={{ ...oStyles.mono, fontSize: 8, color: O_PAL.textMute, letterSpacing: 1.2, textAlign: "center" }}>{label}</div>
+    </div>
+  );
+}
+
+// One echo card: monster-portrait band (cost badge + set icon), stamped grade,
+// main stat with its in-game glyph, then quality-graded substat rows.
+export function OEchoCard({
+  echo, ev, el,
+}: {
+  echo: Echo;
+  ev: ReturnType<typeof scoreEcho>;
+  el: { hex: string; glow: string };
+}) {
+  const face = echoIcon(echo.name);
+  const mainGlyph = statIcon(echo.mainStat);
+  return (
+    <div
+      style={{
+        borderRadius: 12,
+        border: `1px solid ${O_PAL.border}`,
+        background: O_PAL.surface,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        minWidth: 0,
+      }}
+    >
+      {/* portrait band */}
+      <div
+        style={{
+          position: "relative",
+          height: 86,
+          background: `linear-gradient(160deg, ${el.glow}, rgba(10,13,20,0.2) 70%)`,
+          flexShrink: 0,
+        }}
+      >
+        {face ? (
+          <img
+            src={face}
+            alt={echo.name ?? ""}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 18%" }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        ) : (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ...oStyles.display,
+              fontSize: 44,
+              color: "rgba(255,255,255,0.10)",
+            }}
+          >
+            {echo.cost}
+          </div>
+        )}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(10,13,20,0.9))" }} />
+        <div
+          style={{
+            position: "absolute",
+            top: 7,
+            left: 8,
+            padding: "2px 7px",
+            borderRadius: 6,
+            background: "rgba(0,0,0,0.55)",
+            border: `1px solid ${O_PAL.border}`,
+            ...oStyles.mono,
+            fontSize: 10,
+            color: O_PAL.accent,
+            letterSpacing: 1,
+          }}
+        >
+          {echo.cost}C
+        </div>
+        {echo.sonata && (
+          <img
+            src={sonataIcon(echo.sonata)}
+            alt={echo.sonata}
+            title={echo.sonata}
+            style={{
+              position: "absolute",
+              top: 6,
+              right: 7,
+              width: 22,
+              height: 22,
+              borderRadius: 999,
+              background: "rgba(0,0,0,0.55)",
+              padding: 2,
+            }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        )}
+        <div style={{ position: "absolute", right: 7, bottom: -13 }}>
+          <OGrade grade={ev.grade} status={ev.status} score={null} size="sm" />
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: 9,
+            bottom: 5,
+            right: 40,
+            ...oStyles.display,
+            fontSize: 15,
+            lineHeight: 1.1,
+            color: echo.name ? O_PAL.text : O_PAL.textMute,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {echo.name || "— echo not set —"}
+        </div>
+      </div>
+      {/* main stat */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
+          padding: "12px 10px 9px",
+          borderBottom: `1px solid ${O_PAL.border}`,
+        }}
+      >
+        {mainGlyph && (
+          <img src={mainGlyph} alt="" style={{ width: 16, height: 16, opacity: 0.9 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+        )}
+        <span style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textDim, letterSpacing: 0.5, flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {statAbbrev(echo.mainStat) || "—"}
+        </span>
+        <span style={{ ...oStyles.display, fontSize: 19, color: O_PAL.accent, lineHeight: 1 }}>
+          {echo.mainValue || ""}
+          {echo.mainStat && isPercentStat(echo.mainStat) ? "%" : ""}
+        </span>
+      </div>
+      {/* substats */}
+      <div style={{ padding: "7px 10px 10px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {echo.substats.map((sub, j) => {
+          if (!sub.stat) return null;
+          const sv = ev.substatVerdicts[j];
+          const dead = sv?.dead;
+          const qhex = dead ? O_PAL.textMute : STATUS_HEX[oQualityStatus(sv?.quality ?? 0)];
+          const glyph = statIcon(sub.stat);
+          return (
+            <div key={j} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 4, height: 4, borderRadius: 999, background: qhex, flexShrink: 0 }} />
+              {glyph ? (
+                <img
+                  src={glyph}
+                  alt=""
+                  style={{ width: 12, height: 12, opacity: dead ? 0.35 : 0.75, flexShrink: 0 }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+              ) : (
+                <span style={{ width: 12, flexShrink: 0 }} />
+              )}
+              <span
+                style={{
+                  ...oStyles.mono,
+                  fontSize: 9.5,
+                  color: dead ? O_PAL.textMute : O_PAL.textDim,
+                  textDecoration: dead ? "line-through" : "none",
+                  flex: 1,
+                  minWidth: 0,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {statAbbrev(sub.stat)}
+              </span>
+              <span
+                style={{
+                  ...oStyles.mono,
+                  fontSize: 10.5,
+                  color: dead ? O_PAL.textMute : qhex,
+                  textDecoration: dead ? "line-through" : "none",
+                }}
+              >
+                {sub.value}
+                {isPercentStat(sub.stat) ? "%" : ""}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function ObsidianResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
   const { isMobile, isTablet } = useDashboardViewport();
@@ -99,6 +360,7 @@ export function ObsidianResonator({ name }: { name: string }) {
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
   const { prev, next } = rosterNeighborsOf(roster, r.name);
   const { setLastResonator } = useTheme();
+  const [flexOpen, setFlexOpen] = useState(false);
 
   useEffect(() => {
     setLastResonator(r.name);
@@ -119,6 +381,24 @@ export function ObsidianResonator({ name }: { name: string }) {
             roster → № {String(idx + 1).padStart(2, "0")} / {roster.length}
           </div>
           <div style={{ flex: isMobile ? "0 0 auto" : 1 }} />
+          {!isMobile && (
+            <button
+              onClick={() => setFlexOpen(true)}
+              style={{
+                ...oStyles.mono,
+                fontSize: 11,
+                padding: "5px 14px",
+                borderRadius: 999,
+                border: `1px solid ${O_PAL.accent}55`,
+                background: "rgba(233,212,155,0.07)",
+                color: O_PAL.accent,
+                letterSpacing: 1,
+                cursor: "pointer",
+              }}
+            >
+              ✦ FLEX CARD
+            </button>
+          )}
           <Link
             href={`/r/${encodeURIComponent(prev.name)}`}
             style={{
@@ -177,7 +457,12 @@ export function ObsidianResonator({ name }: { name: string }) {
                   backdropFilter: "blur(8px)",
                 }}
               >
-                <img src={elementIcon(r.element)} alt="" style={{ width: isMobile ? 28 : 36, height: isMobile ? 28 : 36 }} />
+                <img
+                  src={elementBadge(r.element)}
+                  alt={r.element}
+                  style={{ width: isMobile ? 44 : 60, height: isMobile ? 44 : 60 }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = elementIcon(r.element); }}
+                />
               </div>
               <img
                 src={tallPortrait(r.name)}
@@ -268,7 +553,7 @@ export function ObsidianResonator({ name }: { name: string }) {
                         style={{ width: 18, height: 18 }}
                       />
                     )}
-                    {v}
+                    {k === "Sequence" ? <OSequenceChain sequence={r.sequence} /> : v}
                   </div>
                 </div>
               ))}
@@ -493,6 +778,22 @@ export function ObsidianResonator({ name }: { name: string }) {
               </div>
             )}
 
+            {r.forte && (
+              <OCard style={{ marginTop: 24 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 18 }}>
+                  <div style={{ ...oStyles.display, fontSize: 24 }}>Forte</div>
+                  <div style={{ ...oStyles.mono, fontSize: 9, color: r.forte.nodes >= 8 ? O_PAL.accent : O_PAL.textMute, letterSpacing: 1 }}>
+                    {r.forte.nodes}/8 BONUS NODES
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: isMobile ? 6 : 12 }}>
+                  {FORTE_SLOTS.map(({ key, label }) => (
+                    <OForteDisc key={key} r={r} slot={key} label={label} level={r.forte![key]} />
+                  ))}
+                </div>
+              </OCard>
+            )}
+
             {echoVerdict && echoVerdict.score != null && gradedEchoes.length > 0 && (
               <OCard style={{ marginTop: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
@@ -507,72 +808,17 @@ export function ObsidianResonator({ name }: { name: string }) {
                     <div style={{ fontSize: 13, color: O_PAL.textDim, marginTop: 3, fontStyle: "italic" }}>{echoVerdict.headline}</div>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(auto-fill, minmax(150px, 1fr))"
+                      : "repeat(auto-fill, minmax(160px, 1fr))",
+                    gap: 10,
+                  }}
+                >
                   {gradedEchoes.map(({ echo, ev }, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: isMobile ? "36px 1fr 34px" : "44px 150px 1fr 40px",
-                        gap: 14,
-                        alignItems: "center",
-                        padding: "12px 0",
-                        borderTop: i > 0 ? `1px solid ${O_PAL.border}` : "none",
-                      }}
-                    >
-                      <div style={{ textAlign: "center" }}>
-                        <div style={{ ...oStyles.display, fontSize: 26, lineHeight: 1, color: O_PAL.accent }}>{echo.cost}</div>
-                        <div style={{ ...oStyles.mono, fontSize: 8, color: O_PAL.textMute, letterSpacing: 1 }}>COST</div>
-                      </div>
-                      {!isMobile && (
-                        <div>
-                          <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1 }}>MAIN</div>
-                          <div style={{ fontSize: 13, marginTop: 1 }}>{echo.mainStat || "—"}</div>
-                          <div style={{ ...oStyles.mono, fontSize: 10, color: O_PAL.textDim }}>
-                            {echo.mainValue || ""}
-                            {echo.mainStat && isPercentStat(echo.mainStat) ? "%" : ""}
-                          </div>
-                        </div>
-                      )}
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {echo.substats.map((sub, j) => {
-                          if (!sub.stat) return null;
-                          const sv = ev.substatVerdicts[j];
-                          const dead = sv?.dead;
-                          const qhex = dead ? O_PAL.textMute : STATUS_HEX[oQualityStatus(sv?.quality ?? 0)];
-                          return (
-                            <div
-                              key={j}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "4px 9px",
-                                borderRadius: 999,
-                                background: "rgba(255,255,255,0.03)",
-                                border: `1px solid ${O_PAL.border}`,
-                              }}
-                            >
-                              <span style={{ width: 5, height: 5, borderRadius: 999, background: qhex }} />
-                              <span
-                                style={{
-                                  ...oStyles.mono,
-                                  fontSize: 10,
-                                  color: dead ? O_PAL.textMute : O_PAL.text,
-                                  textDecoration: dead ? "line-through" : "none",
-                                }}
-                              >
-                                {sub.stat} {sub.value}
-                                {isPercentStat(sub.stat) ? "%" : ""}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <OGrade grade={ev.grade} status={ev.status} score={null} size="sm" />
-                      </div>
-                    </div>
+                    <OEchoCard key={i} echo={echo} ev={ev} el={el} />
                   ))}
                 </div>
                 <div style={{ ...oStyles.mono, fontSize: 9, color: O_PAL.textMute, letterSpacing: 1, marginTop: 14 }}>
@@ -705,6 +951,16 @@ export function ObsidianResonator({ name }: { name: string }) {
           </div>
         </div>
       </div>
+      {flexOpen && (
+        <ObsidianFlexCard
+          r={r}
+          sw={sw}
+          echoBuild={echoBuild}
+          rating={rating}
+          stats={r.audit?.stats ?? []}
+          onClose={() => setFlexOpen(false)}
+        />
+      )}
     </div>
   );
 }
