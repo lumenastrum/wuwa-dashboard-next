@@ -9,6 +9,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { serviceKey } from "./service-key";
 import { mkdirSync, writeFileSync } from "fs";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
@@ -30,7 +31,7 @@ interface Stub {
 }
 
 async function main() {
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, serviceKey());
 
   const { data: row, error } = await supabase
     .from(SUPABASE_TABLE)

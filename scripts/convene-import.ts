@@ -24,6 +24,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { serviceKey } from "./service-key";
 import { readFileSync } from "node:fs";
 import {
   BANNERS,
@@ -244,7 +245,7 @@ async function main() {
   console.log(`• Parsed ${totalIncoming} records from ${file}`);
 
   // Load current archive.
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, serviceKey());
   let store: ConveneStore = emptyStore();
   const { data: row, error } = await supabase
     .from(SUPABASE_TABLE)

@@ -8,7 +8,7 @@ Full context: **read `README.md`**. This file is the carry-on.
 
 - **Next.js 16** (App Router, Turbopack, React 19) — read `node_modules/next/dist/docs/` before assuming API shapes from training data. `params` is a Promise; use `use(params)` in client components.
 - **Tailwind v4** with CSS-first `@theme` in `globals.css`. Theme palettes live as JS const objects in `components/themes/<name>/styles.ts`, not as Tailwind classes.
-- **Supabase** Postgres (`dashboard_profiles` table, JSONB column, profile key `andres-wuwa`). Anon key in client by design. CHECK constraint on profile column was dropped — arbitrary keys are fine now.
+- **Supabase** Postgres (`dashboard_profiles` table, JSONB column, profile key `andres-wuwa`). Anon key in client by design — but **read-only since the 2026-07-07 RLS lockdown**: writes require the owner's session (`authenticated` role; public signups disabled). Browser edit mode gates on sign-in via `<AuthGate>` (`src/components/auth-gate.tsx`, wired into `edit-context.tsx`) — one sign-in per browser, supabase-js persists the session. CLI scripts use the **service key** from the gitignored `.env` (`scripts/service-key.ts`). CHECK constraint on profile column was dropped — arbitrary keys are fine now.
 - **Three themes** (Obsidian / Atelier / Console) each in `components/themes/<name>/`. Same data, different chrome. Edit mode is **Console only** — don't wire `<EditableField>` into the other two.
 
 ## Common tasks

@@ -36,6 +36,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
+import { serviceKey } from "./service-key";
 import {
   blankEchoes,
   defaultWeightsFor,
@@ -340,7 +341,7 @@ async function main() {
     return;
   }
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, serviceKey());
   const { data: row, error } = await supabase
     .from(SUPABASE_TABLE)
     .select("data")

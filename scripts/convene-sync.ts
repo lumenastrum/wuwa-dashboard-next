@@ -17,6 +17,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { serviceKey } from "./service-key";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import {
@@ -234,7 +235,7 @@ async function main() {
   );
 
   // 2. Load existing store (so a failed banner keeps its old data).
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, serviceKey());
   let store: ConveneStore = emptyStore();
   if (!dry) {
     const { data: row, error } = await supabase
