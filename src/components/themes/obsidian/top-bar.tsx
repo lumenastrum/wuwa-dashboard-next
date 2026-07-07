@@ -205,7 +205,7 @@ export function ObsidianTopBar() {
           }}
         >
           <div style={{ width: 6, height: 6, borderRadius: 999, background: "#5fe1b3" }} />
-          Andres
+          A.
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Wuthering Waves · Roster Atelier",
-  description: "Andres's resonator roster, audits, benchmarks, and endstate cycles.",
+  description: "A.'s resonator roster, audits, benchmarks, and endstate cycles.",
 };
 
 // viewport-fit=cover so env(safe-area-inset-*) resolves on notched devices.
