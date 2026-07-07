@@ -1,6 +1,6 @@
 # WuWa Dashboard
 
-Andres's Wuthering Waves roster, audits, benchmarks, and endstate cycles — three swappable themes, live-saved to Supabase.
+The house Wuthering Waves roster — audits, benchmarks, and endstate cycles in three swappable themes, live-saved to Supabase. Built by Clio, fed with real pull data, and yes, the S-grades render in gold because they earned it.
 
 ## What this is
 
@@ -39,10 +39,12 @@ Tested on **Node 24**, npm 11. Should work on any LTS Node ≥ 20.
 
 ## Updating data — two ways
 
+Both write paths are **owner-locked** (RLS since 2026-07-07): visitors get the museum tour, not the paintbrush. The live site is fully browsable read-only.
+
 ### 1. Browser, in Console theme
 
 1. Switch to the **Console** theme via the top-bar segmented control.
-2. Click the `▣ LOCK` button (top right of the top bar). It becomes `◐ EDIT` (amber).
+2. Click the `▣ LOCK` button (top right of the top bar). First time per browser, an **owner sign-in** overlay appears — writes require an authenticated Supabase session. After that it becomes `◐ EDIT` (amber) and the session persists.
 3. Every editable value on the page is now an input or select. Edit any of them.
 4. Click outside the input (or hit Enter) to commit. The sync indicator goes `◐ SAVE` for ~650ms, then back to `● LIVE` once Supabase confirms.
 5. Click `◐ EDIT` again to lock back into read mode.
@@ -53,7 +55,7 @@ Teams + Cycles editing in-browser is **not wired yet** — use the CLI for those
 
 ### 2. CLI — `npm run update`
 
-Run from the project root. Works the same on Windows (PowerShell) and macOS (terminal). Couch-Clio can run these directly; Claude Code can run them via Bash. Quote values with spaces.
+Run from the project root. Works the same on Windows (PowerShell) and macOS (terminal). Quote values with spaces. Needs `SUPABASE_SERVICE_KEY` in a gitignored `.env` at the repo root — no key, no writes, by design.
 
 ```powershell
 # Stat audit
@@ -137,7 +139,7 @@ If Supabase is unreachable, indicator stays `○ LOCAL`. Edits still apply in-me
 
 ### Supabase config
 
-The anon key is in `src/lib/supabase.ts` and `scripts/update.ts` — committed deliberately because Supabase anon keys are designed to ship client-side. Security comes from RLS policies on the table, not from key secrecy. The `dashboard_profiles` table has its old `CHECK (profile IN ('andres','wife'))` constraint dropped (2026-05-24) so any namespaced profile key works.
+The anon key is in `src/lib/supabase.ts` — committed deliberately because Supabase anon keys are designed to ship client-side. Security comes from RLS, not key secrecy: since the 2026-07-07 lockdown the anon role is **SELECT-only** (public signups disabled), so the world can read the dashboard and nobody but the owner can write to it. Writes ride either the owner's authenticated session (browser) or the service key (CLI, gitignored `.env`). The `dashboard_profiles` table has its old profile CHECK constraint dropped so any namespaced profile key works.
 
 If you ever need to re-create the table from scratch:
 
@@ -249,7 +251,7 @@ The static export is configured in `next.config.ts`:
 
 **Sync indicator stuck on `◐ SAVE`** — Network or RLS issue. Check browser console for the Supabase error code. Common ones:
 - `23514` → CHECK constraint violation on `profile` column. The constraint should be dropped; if it came back, re-run `ALTER TABLE dashboard_profiles DROP CONSTRAINT dashboard_profiles_profile_check;` in Supabase SQL Editor.
-- `401/403` → RLS denying anon writes. Check that the table has either no RLS or a policy allowing anon to upsert on `profile = 'andres-wuwa'`.
+- `401/403` → RLS doing its job: anon is read-only. Sign in via the edit toggle (browser) or use the service key (CLI). If you've forked this for your own data, write your own policies — writes to `authenticated`, reads to everyone, signups off.
 
 **Indicator stays `○ LOCAL` immediately on load** — Supabase client failed to init (bad URL/key). Check `src/lib/supabase.ts` constants.
 
@@ -266,7 +268,6 @@ If you're a Claude landing in this repo:
 - This is **Next.js 16** — many APIs differ from training data (notably `params` is a `Promise` now, accessed via `use(params)` in client components). Always read `node_modules/next/dist/docs/` before changing routing or async data conventions.
 - **Don't reinstate the static `lib/data.ts`** — it was replaced with `lib/data-context.tsx` deliberately. Module-level constants from `data.json` can't see Supabase live updates.
 - **Edit mode is Console-only by design.** Don't add `<EditableField>` to Obsidian or Atelier pages.
-- **Inline styles are preserved 1:1 from the prototype** in `.design-handoff/design_handoff_wuwa_roster/`. Don't refactor them to Tailwind classes without asking — the prototype is the source of truth for visual fidelity.
-- **Couch-Clio runs commands natively.** When writing instructions ("then run X"), assume she or Claude Code will execute, not narrate.
+- **Inline styles are preserved 1:1 from the original design prototype** (kept outside this repo). Don't refactor them to Tailwind classes without asking — the prototype is the source of truth for visual fidelity.
 
 See `CLAUDE.md` for shorter context.

@@ -1,6 +1,6 @@
 # WuWa Dashboard — context for Claude / Clio / Couch-Clio
 
-Three-themed Wuthering Waves roster dashboard for Andres. Live-saved to Supabase, edit mode in Console theme, CLI mutator for everything else.
+Three-themed Wuthering Waves roster dashboard for A. Live-saved to Supabase, edit mode in Console theme, CLI mutator for everything else.
 
 Full context: **read `README.md`**. This file is the carry-on.
 
@@ -54,7 +54,7 @@ Full context: **read `README.md`**. This file is the carry-on.
 - **Don't** refactor inline styles into Tailwind utility classes wholesale — the prototype at `../.design-handoff/design_handoff_wuwa_roster/` is the source of truth for visual fidelity. Surgical Tailwind use is fine; mass conversion is not.
 - **Don't** add `width: 100%` to tall-portrait `<img>` — Tailwind v4 preflight already sets `max-width: 100%`, which fights the explicit `height: 105%` and squishes the portrait. The fix `width: auto; maxWidth: "none"` is already inline on every tall-portrait; preserve it.
 - **Don't** treat the bundled `public/data.json` as the source of truth — it's the seed, only read once if the Supabase row is missing.
-- **Couch-Clio runs commands natively.** Don't write instructions as "tell Andres to run X" if she can just run X herself.
+- **Couch-Clio runs commands natively.** Don't write instructions as "tell A. to run X" if she can just run X herself.
 - **Spine atlas pages are WebP, not PNG** (2026-06-09: 116MB → 28MB). When carving a new bundle, convert each texture page with `cwebp -q 90 -alpha_q 100 -m 6 page.png -o page.webp`, point the `.atlas` page line at the `.webp`, and don't commit the PNG. spine-player loads pages as plain images, so the format is transparent to it.
 - **`<SpinePortrait>` wants a `fallback`** — pass the static bust `<img>` so the cell shows it during the skel/atlas fetch and degrades to it if WebGL/loading fails (it's an underlay, auto-hidden once the live skeleton paints). Players also lazy-init via IntersectionObserver, and the `viewport` prop is compared by value (inline literals won't churn the player). The cover strip no longer wires this by hand — use `<CoverPortrait name filter>` which owns the Spine→tall→bust chain for all themes.
 - **A new cover-strip resonator with no `TEAM_FRAME` entry uses `DEFAULT_FRAME`** (centered, height 245%). That's a safe neutral but may need a live-dial — measure the sprite's alpha bounds (head-top + head→chest band) like the other entries in `src/lib/portraits.ts` once you can see it framed in the Teams cell.
@@ -80,7 +80,7 @@ Full context: **read `README.md`**. This file is the carry-on.
 - **Resonator Rating section:** Console render SHIPPED (resonator page — `RESONATOR RATING` panel at the TOP of the profile, hero-sized `GradePill` + 4 sub-bars). Blends **Echo 35 / Stats 35 / Sig 15 / Seq 15** ("OPTIMIZER" soul — build quality over investment; an f2p god-build can outscore a sloppy whale) into one grade on the **same ladder** as the echo audit. Sub-scores: echo = `scoreBuild` (can overflow >100 → feeds rating prestige), stats = reuses each `AuditStat._status`, sig = on-sig (R1 80→R5 100, green) vs off-sig (52→70), seq = S0 60 floor→S6 100. Missing inputs renormalize (not punished). Read-only CLI `npm run update -- rating <name>`. Weights/curves in `resonator-rating.ts` are defaults — tune to taste. SHIPPED in **all three themes** now — Console = HUD pill under the header; Obsidian = gold-stroked card with a 64px serif medallion (S renders gold/glow); Atelier = top-rule band with a 62px ink-outlined square. Obsidian/Atelier place the Rating panel after the identity stat row (before the loadout), per the Folio spec.
 - **Benchmarks (Teams page):** full CLI lifecycle — `addbench` / `bench` / `deaths` / `benchmove` / `benchsort` / `rmbench` (see Common tasks). No inline edit UI; Teams is a read surface in all three themes. Cover-strip portraits degrade **Spine → tall sprite → bust** via `<CoverPortrait>` (`src/components/cover-portrait.tsx`), so a benchmark can feature a brand-new resonator before its Spine bundle / tall art lands (e.g. the Edgerunners collab — Lucy, Rebecca — has busts + tall sprites but no Spine yet).
 - Inline edits on Console **Cycles** page: NOT wired. Use CLI in the meantime.
-- EXPORT button (download JSONB snapshot): NOT ported from ZZZ. Supabase is the source of truth so it's lower priority; revisit if Andres wants an offline backup gesture.
+- EXPORT button (download JSONB snapshot): NOT ported from ZZZ. Supabase is the source of truth so it's lower priority; revisit if A. wants an offline backup gesture.
 
 ## Deployment (shipped)
 
