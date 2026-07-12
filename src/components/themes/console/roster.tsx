@@ -10,6 +10,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName } from "@/lib/types";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
+import { resonatorPath } from "@/lib/route-name";
 
 const FILTERS: (ElementName | "All")[] = ["All", "Fusion", "Glacio", "Electro", "Spectro", "Havoc", "Aero"];
 
@@ -164,7 +165,7 @@ export function ConsoleRoster() {
               return (
                 <Link
                   key={r.name}
-                  href={`/r/${encodeURIComponent(r.name)}`}
+                  href={resonatorPath(r.name)}
                   style={{
                     position: "relative",
                     padding: 12,

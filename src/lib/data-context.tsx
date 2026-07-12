@@ -17,6 +17,7 @@ import {
 import { BASE_PATH } from "./base-path";
 import type { DashboardData, EchoBuild, Resonator, RosterEntry, SignatureWeapon } from "./types";
 import { blankEchoes, defaultWeightsFor } from "./echo-audit";
+import { routeName } from "./route-name";
 
 export type SyncStatus = "loading" | "live" | "saving" | "local" | "error";
 
@@ -300,6 +301,12 @@ export function getResonatorOrFirstOf(
   roster: RosterEntry[],
   name: string | undefined,
 ): RosterEntry {
-  if (name && rosterByName[name]) return rosterByName[name];
+  if (name) {
+    if (rosterByName[name]) return rosterByName[name];
+    // Route params strip Windows-reserved characters (see route-name.ts), so a
+    // param may not literally equal the display name it stands for.
+    const byRoute = roster.find((r) => routeName(r.name) === routeName(name));
+    if (byRoute) return byRoute;
+  }
   return roster[0];
 }

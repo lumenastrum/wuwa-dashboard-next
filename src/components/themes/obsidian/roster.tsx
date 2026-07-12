@@ -12,6 +12,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName, RosterEntry } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OElementPill, OKpi, OStatusDot } from "./primitives";
+import { resonatorPath } from "@/lib/route-name";
 
 const FILTERS: (ElementName | "All")[] = ["All", "Fusion", "Glacio", "Electro", "Spectro", "Havoc", "Aero"];
 
@@ -19,7 +20,7 @@ function ORosterTile({ r }: { r: RosterEntry }) {
   const el = ELEMENTS[r.element];
   return (
     <Link
-      href={`/r/${encodeURIComponent(r.name)}`}
+      href={resonatorPath(r.name)}
       style={{
         borderRadius: 12,
         overflow: "hidden",
@@ -197,7 +198,7 @@ function OFeaturedHero({ r }: { r: RosterEntry }) {
         )}
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap" }}>
           <Link
-            href={`/r/${encodeURIComponent(r.name)}`}
+            href={resonatorPath(r.name)}
             style={{
               padding: "8px 16px",
               borderRadius: 999,

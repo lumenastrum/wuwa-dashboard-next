@@ -18,6 +18,7 @@ import { rateResonator } from "@/lib/resonator-rating";
 import { deriveStatStatus } from "@/lib/stat-audit";
 import { K_PAL, kStyles } from "./styles";
 import { KPanel, KScanlines } from "./primitives";
+import { resonatorPath } from "@/lib/route-name";
 
 const SEQUENCES: readonly Sequence[] = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 const STATUSES: readonly Status[] = ["green", "yellow", "red", "neutral"];
@@ -253,7 +254,7 @@ export function ConsoleResonator({ name }: { name: string }) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Link
-              href={`/r/${encodeURIComponent(prev.name)}`}
+              href={resonatorPath(prev.name)}
               style={{
                 ...kStyles.mono,
                 fontSize: 10,
@@ -267,7 +268,7 @@ export function ConsoleResonator({ name }: { name: string }) {
               ← {prev.name.toUpperCase()}
             </Link>
             <Link
-              href={`/r/${encodeURIComponent(next.name)}`}
+              href={resonatorPath(next.name)}
               style={{
                 ...kStyles.mono,
                 fontSize: 10,

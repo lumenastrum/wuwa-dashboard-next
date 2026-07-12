@@ -2,7 +2,7 @@
   "meta": {
     "title": "A.'s WuWa Dashboard",
     "updated": "2026-05-23",
-    "totalResonators": 22,
+    "totalResonators": 23,
     "maxLevel": 90
   },
   "resonators": [
@@ -263,6 +263,18 @@
       "element": "Electro",
       "weaponType": "Pistols",
       "role": "Sub-DPS",
+      "sequence": "S0",
+      "weapon": "",
+      "weaponRank": "",
+      "echoSet": "",
+      "level": 0,
+      "notes": ""
+    },
+    {
+      "name": "Yangyang: Xuanling",
+      "element": "Havoc",
+      "weaponType": "Sword",
+      "role": "Main DPS",
       "sequence": "S0",
       "weapon": "",
       "weaponRank": "",
@@ -1146,6 +1158,42 @@
     },
     {
       "name": "Rebecca",
+      "buildType": "",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "",
+          "optimal": "",
+          "_status": "neutral"
+        },
+        {
+          "label": "CR",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "CD",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "ER",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        }
+      ],
+      "notes": "",
+      "priorityStatus": "neutral",
+      "_calcPriority": "neutral"
+    },
+    {
+      "name": "Yangyang: Xuanling",
       "buildType": "",
       "stats": [
         {
@@ -3490,6 +3538,72 @@
     },
     {
       "resonator": "Rebecca",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 0.8,
+        "HP%": 0.7,
+        "DEF%": 0.5,
+        "Crit Rate": 0.4
+      }
+    },
+    {
+      "resonator": "Yangyang: Xuanling",
       "echoes": [
         {
           "cost": 4,

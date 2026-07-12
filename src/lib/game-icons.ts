@@ -1,5 +1,6 @@
 import { BASE_PATH } from "./base-path";
 import type { ElementName, WeaponType } from "./types";
+import { routeName } from "./route-name";
 import echoIconMap from "./echo-icons.json";
 
 // Helpers for the ripped in-game assets under public/game/ (see wuwa-extract).
@@ -87,7 +88,8 @@ const FORTE_SLOT_FILES: Record<ForteSlot, string> = {
 };
 
 export function forteIcon(resonator: string, slot: ForteSlot): string {
-  return `${BASE_PATH}/game/forte/${resonator.toLowerCase()}/${FORTE_SLOT_FILES[slot]}.webp`;
+  // routeName strips Windows-illegal filename chars (the ":" in "Yangyang: Xuanling")
+  return `${BASE_PATH}/game/forte/${routeName(resonator).toLowerCase()}/${FORTE_SLOT_FILES[slot]}.webp`;
 }
 
 /** Second-chance icon when the per-char file is missing; null = just hide. */

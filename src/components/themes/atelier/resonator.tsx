@@ -16,6 +16,7 @@ import { rateResonator } from "@/lib/resonator-rating";
 import { SonataIcons } from "@/components/sonata-icons";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
+import { resonatorPath } from "@/lib/route-name";
 
 // Legible-on-light grade hues. The shared STATUS greens/golds wash out on the
 // paper background, so the editorial theme keeps the grade MEANING but restyles
@@ -199,7 +200,7 @@ export function AtelierResonator({ name }: { name: string }) {
             </div>
             <div style={{ flex: isMobile ? "0 0 auto" : 1 }} />
             <Link
-              href={`/r/${encodeURIComponent(prev.name)}`}
+              href={resonatorPath(prev.name)}
               style={{
                 ...aStyles.mono,
                 fontSize: 11,
@@ -213,7 +214,7 @@ export function AtelierResonator({ name }: { name: string }) {
               ← {prev.name}
             </Link>
             <Link
-              href={`/r/${encodeURIComponent(next.name)}`}
+              href={resonatorPath(next.name)}
               style={{
                 ...aStyles.mono,
                 fontSize: 11,

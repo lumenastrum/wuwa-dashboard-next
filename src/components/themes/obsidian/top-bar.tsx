@@ -7,6 +7,7 @@ import { useData } from "@/lib/data-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { PageId } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
+import { resonatorPath } from "@/lib/route-name";
 
 const SYNC_LABEL: Record<string, { dot: string; text: string; color: string }> = {
   live:    { dot: "●", text: "LIVE",    color: "#5fe1b3" },
@@ -103,7 +104,7 @@ export function ObsidianTopBar() {
           }}
         >
           {NAV.map((n) => {
-            const href = n.id === "resonator" ? `/r/${encodeURIComponent(lastResonator)}` : n.href;
+            const href = n.id === "resonator" ? resonatorPath(lastResonator) : n.href;
             const isActive = active === n.id;
             return (
               <Link

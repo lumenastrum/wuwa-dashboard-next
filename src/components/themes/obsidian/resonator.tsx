@@ -21,6 +21,7 @@ import { echoIcon, statIcon, statAbbrev, elementBadge, FORTE_SLOTS, forteIcon, f
 import type { Echo, Resonator, WeaponType, Sequence } from "@/lib/types";
 import { O_PAL, oStyles } from "./styles";
 import { OCard, OStatBar } from "./primitives";
+import { resonatorPath } from "@/lib/route-name";
 
 // Prestige tiers earn their own glow on the dark canvas: S gold, SSS violet,
 // ✦ a pink→gold gradient glyph. Everything below S rides the shared Status hue.
@@ -400,7 +401,7 @@ export function ObsidianResonator({ name }: { name: string }) {
             </button>
           )}
           <Link
-            href={`/r/${encodeURIComponent(prev.name)}`}
+            href={resonatorPath(prev.name)}
             style={{
               ...oStyles.mono,
               fontSize: 11,
@@ -414,7 +415,7 @@ export function ObsidianResonator({ name }: { name: string }) {
             ← {prev.name}
           </Link>
           <Link
-            href={`/r/${encodeURIComponent(next.name)}`}
+            href={resonatorPath(next.name)}
             style={{
               ...oStyles.mono,
               fontSize: 11,

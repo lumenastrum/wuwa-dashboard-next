@@ -8,6 +8,7 @@ import { portrait } from "@/lib/portraits";
 import { STATUS_HEX } from "@/lib/elements";
 import type { Status } from "@/lib/types";
 import { A_PAL, aStyles } from "./styles";
+import { resonatorPath } from "@/lib/route-name";
 
 export function ACard({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
@@ -81,7 +82,7 @@ export function ARosterStrip({ activeName }: { activeName: string }) {
         return (
           <Link
             key={r.name}
-            href={`/r/${encodeURIComponent(r.name)}`}
+            href={resonatorPath(r.name)}
             style={{ position: "relative", padding: 2, display: "block" }}
           >
             <div

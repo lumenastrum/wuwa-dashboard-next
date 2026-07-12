@@ -13,10 +13,12 @@ const PORTRAIT_OVERRIDES: Record<string, string> = {
   Encore: "encore.png",
   Nyx: "rover_spectro.png",
   Sanhua: "rover_spectro.png",
+  "Yangyang: Xuanling": "xuanling.png",
 };
 
 const TALL_OVERRIDES: Record<string, string> = {
   Rover: "Rover_1.webp",
+  "Yangyang: Xuanling": "Xuanling_Full_Sprite.webp",
 };
 
 export function portrait(name: string): string {
