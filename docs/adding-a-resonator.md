@@ -157,7 +157,7 @@ What to rip (paths found in step 2's db_role probe):
 |---|---|---|
 | Bust portrait | `Image/IconRoleHead256/T_IconRoleHead256_<idx>_UI` | `public/portraits/<safe>.png` @256 PNG |
 | Tall sprite | `Image/IconRolePile/T_IconRole_Pile_<Codename>_UI` | `public/tall-portraits/<Safe>_Full_Sprite.webp` (floor alpha <8 → 0: BC7 junk pixels ride at alpha 1–4) |
-| Weapon | `Image/IconWeapon732/T_IconWeapon732_<id>_UI` | `public/weapons/Weapon_<Name>.webp` |
+| Weapon | `Image/IconWeapon732/T_IconWeapon732_<id>_UI` | `public/weapons/Weapon_<Name>.webp` — **alpha-bbox crop + centered square pad → 256×256** (the raw icon is ~40% empty canvas; shipped raw it renders as a tiny distant weapon on the card) |
 | Sonata icon | path in `db_phantom.db` `phantomfettergroup` blob (Id = PhantomFetter number) | `public/sonatas/<Set_Name>.webp` @64 |
 | Echo heads | `Image/IconMonsterHead732/T_IconMonsterHead732_<id>_UI` | `public/game/echoes/<id>.webp` @256 |
 | Forte icons | `texdir` the `Atlas/SkillIcon/SkillIcon<CodeName>/` atlas + `props` the TPI asset → `crop_lgui_sprites.py` | `public/game/forte/<safe-lower>/` @128 (B1→b1, Y→y, C1→c1, QTE→intro) |
