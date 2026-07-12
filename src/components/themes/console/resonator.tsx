@@ -11,8 +11,10 @@ import { useEditMode } from "@/lib/edit-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { EditableField } from "@/components/editable-field";
 import { SonataIcons } from "@/components/sonata-icons";
+import { sonataIcon } from "@/lib/sonata";
+import { echoIcon, statIcon, FORTE_SLOTS, forteIcon, forteIconFallback } from "@/lib/game-icons";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
-import type { EchoCost, EchoMainStatLabel, EchoSubstatLabel, Sequence, Status } from "@/lib/types";
+import type { EchoCost, EchoMainStatLabel, EchoSubstatLabel, Sequence, Status, WeaponType } from "@/lib/types";
 import { scoreBuild, scoreEcho, statusOf, MAIN_STAT_POOLS, SUBSTAT_POOL, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { deriveStatStatus } from "@/lib/stat-audit";
@@ -86,6 +88,57 @@ function RatingSubBar({ label, score, weight }: { label: string; score: number |
       <div style={{ height: 4, background: "#ffffff14", borderRadius: 2, marginTop: 4, overflow: "hidden" }}>
         <div style={{ height: "100%", width: `${fill}%`, background: hex }} />
       </div>
+    </div>
+  );
+}
+
+// One forte skill tile: ripped in-game glyph in a HUD frame with a segmented
+// 10-tick level bar — amber chrome + glow at LV.10. A missing per-char icon
+// falls back to the shared per-weapon glyph, then hides (label still carries
+// the meaning).
+function KForteCell({ name, weaponType, slot, label, level }: {
+  name: string;
+  weaponType: WeaponType;
+  slot: (typeof FORTE_SLOTS)[number]["key"];
+  label: string;
+  level: number;
+}) {
+  const maxed = level >= 10;
+  const hex = maxed ? K_PAL.amber : K_PAL.cyan;
+  return (
+    <div
+      style={{
+        padding: "10px 6px 8px",
+        background: "rgba(0,0,0,0.3)",
+        border: `1px solid ${maxed ? `${K_PAL.amber}66` : K_PAL.border}`,
+        boxShadow: maxed ? `0 0 12px ${K_PAL.amber}22` : "none",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 6,
+        minWidth: 0,
+      }}
+    >
+      <img
+        src={forteIcon(name, slot)}
+        alt={label}
+        style={{ width: 30, height: 30, opacity: 0.95 }}
+        onError={(e) => {
+          const img = e.target as HTMLImageElement;
+          const fb = forteIconFallback(slot, weaponType);
+          if (fb && !img.src.endsWith(fb)) img.src = fb;
+          else img.style.display = "none";
+        }}
+      />
+      <div style={{ ...kStyles.mono, fontSize: 11, color: maxed ? K_PAL.amber : K_PAL.text, letterSpacing: 0.5 }}>
+        LV.{level}
+      </div>
+      <div style={{ display: "flex", gap: 1, width: "100%" }}>
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} style={{ flex: 1, height: 3, background: i < level ? hex : "rgba(120,220,255,0.08)" }} />
+        ))}
+      </div>
+      <div style={{ ...kStyles.mono, fontSize: 7.5, color: K_PAL.textMute, letterSpacing: 1, textAlign: "center" }}>{label}</div>
     </div>
   );
 }
@@ -840,6 +893,41 @@ export function ConsoleResonator({ name }: { name: string }) {
               </div>
             </KPanel>
 
+            {r.forte && (
+              <KPanel label="FORTE_TREE" code="FORTE.001" accent={el.hex}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(5, 1fr)",
+                    gap: isMobile ? 4 : 8,
+                  }}
+                >
+                  {FORTE_SLOTS.map(({ key, label }) => (
+                    <KForteCell
+                      key={key}
+                      name={r.name}
+                      weaponType={r.weaponType as WeaponType}
+                      slot={key}
+                      label={label}
+                      level={r.forte![key]}
+                    />
+                  ))}
+                </div>
+                <div
+                  style={{
+                    ...kStyles.mono,
+                    fontSize: 9,
+                    color: r.forte.nodes >= 8 ? K_PAL.amber : K_PAL.textMute,
+                    letterSpacing: 1.5,
+                    marginTop: 10,
+                    textAlign: "right",
+                  }}
+                >
+                  BONUS NODES {r.forte.nodes}/8 · set via CLI: npm run update -- forte
+                </div>
+              </KPanel>
+            )}
+
             {echoBuild && echoVerdict && (
               <KPanel label="ECHO AUDIT" code="ECHO.001" accent={el.hex}>
                 {/* overall stat grade */}
@@ -858,6 +946,8 @@ export function ConsoleResonator({ name }: { name: string }) {
                     const ev = scoreEcho(echo, echoBuild.weights);
                     const mainPool: readonly string[] = ["", ...MAIN_STAT_POOLS[echo.cost]];
                     const subPool: readonly string[] = ["", ...SUBSTAT_POOL];
+                    const face = echoIcon(echo.name);
+                    const mainGlyph = statIcon(echo.mainStat);
                     return (
                       <div
                         key={i}
@@ -867,6 +957,57 @@ export function ConsoleResonator({ name }: { name: string }) {
                           border: `1px solid ${K_PAL.border}`,
                         }}
                       >
+                        {/* species band — monster portrait + per-slot sonata icon.
+                            Species/sonata are CLI-set (echoslot echo|sonata), so the
+                            band is a read-only visual even in edit mode. */}
+                        {echo.name && (
+                          <div
+                            style={{
+                              position: "relative",
+                              height: 64,
+                              margin: "-12px -12px 10px",
+                              background: `linear-gradient(160deg, ${el.hex}30, rgba(0,0,0,0.5) 70%)`,
+                              borderBottom: `1px solid ${K_PAL.border}`,
+                              overflow: "hidden",
+                            }}
+                          >
+                            {face && (
+                              <img
+                                src={face}
+                                alt={echo.name}
+                                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 18%" }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                              />
+                            )}
+                            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(7,11,18,0.92))" }} />
+                            {echo.sonata && (
+                              <img
+                                src={sonataIcon(echo.sonata)}
+                                alt={echo.sonata}
+                                title={echo.sonata}
+                                style={{ position: "absolute", top: 5, right: 6, width: 20, height: 20, borderRadius: 999, background: "rgba(0,0,0,0.55)", padding: 2 }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                              />
+                            )}
+                            <div
+                              style={{
+                                position: "absolute",
+                                left: 10,
+                                bottom: 5,
+                                right: 32,
+                                ...kStyles.mono,
+                                fontSize: 10,
+                                letterSpacing: 1.5,
+                                color: K_PAL.text,
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {echo.name.toUpperCase()}
+                            </div>
+                          </div>
+                        )}
                         {/* cost badge (editable spread) + per-echo grade */}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                           <EditableField
@@ -883,6 +1024,14 @@ export function ConsoleResonator({ name }: { name: string }) {
                         {/* main stat */}
                         <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 8 }}>
                           <span style={{ ...kStyles.mono, fontSize: 9, color: K_PAL.textDim, letterSpacing: 1, minWidth: 32 }}>MAIN</span>
+                          {mainGlyph && (
+                            <img
+                              src={mainGlyph}
+                              alt=""
+                              style={{ width: 13, height: 13, opacity: 0.85, flexShrink: 0 }}
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                            />
+                          )}
                           <EditableField
                             value={echo.mainStat}
                             onCommit={(v) => setEchoMain(i, "mainStat", v)}
@@ -909,8 +1058,19 @@ export function ConsoleResonator({ name }: { name: string }) {
                         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                           {echo.substats.map((sub, j) => {
                             const sv = ev.substatVerdicts[j];
+                            const subGlyph = statIcon(sub.stat);
                             return (
                               <div key={j} style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                {subGlyph ? (
+                                  <img
+                                    src={subGlyph}
+                                    alt=""
+                                    style={{ width: 12, height: 12, opacity: sv?.dead ? 0.35 : 0.75, flexShrink: 0 }}
+                                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                                  />
+                                ) : (
+                                  <span style={{ width: 12, flexShrink: 0 }} />
+                                )}
                                 <EditableField
                                   value={sub.stat}
                                   onCommit={(v) => setEchoSub(i, j, "stat", v)}

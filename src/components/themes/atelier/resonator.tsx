@@ -10,10 +10,12 @@ import { useTheme } from "@/lib/theme-context";
 import { WeaponImg } from "@/components/weapon-img";
 import { highlightStats } from "@/lib/highlight";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
-import type { AuditStat, Status } from "@/lib/types";
+import type { AuditStat, Status, WeaponType } from "@/lib/types";
 import { scoreBuild, scoreEcho, isPercentStat, type EchoGrade } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { SonataIcons } from "@/components/sonata-icons";
+import { sonataIcon } from "@/lib/sonata";
+import { echoIcon, statIcon, FORTE_SLOTS, forteIcon, forteIconFallback } from "@/lib/game-icons";
 import { A_PAL, aStyles } from "./styles";
 import { APill, ARosterStrip } from "./primitives";
 import { resonatorPath } from "@/lib/route-name";
@@ -35,6 +37,54 @@ function aGradeHex(grade: EchoGrade, status: Status): string {
 // roll-quality 0..1 → a status tier for the substat dot color.
 function aQualityStatus(q: number): Status {
   return q >= 0.66 ? "green" : q >= 0.33 ? "yellow" : "red";
+}
+
+// The ripped in-game glyphs are white-on-transparent (drawn for the game's dark
+// UI) — brightness(0) presses them into ink so they survive the paper canvas.
+const A_INK_GLYPH = "brightness(0)";
+
+// One forte skill medallion: the inked glyph in a hairline ring, gold at LV.10.
+// A missing per-char icon falls back to the shared per-weapon glyph, then hides.
+function AForteMedallion({ name, weaponType, slot, label, level }: {
+  name: string;
+  weaponType: WeaponType;
+  slot: (typeof FORTE_SLOTS)[number]["key"];
+  label: string;
+  level: number;
+}) {
+  const maxed = level >= 10;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, minWidth: 0 }}>
+      <div
+        style={{
+          width: 56,
+          height: 56,
+          borderRadius: 999,
+          border: `1px solid ${maxed ? A_GOLD : A_PAL.borderStrong}`,
+          background: maxed ? `${A_GOLD}14` : A_PAL.surfaceStrong,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={forteIcon(name, slot)}
+          alt={label}
+          style={{ width: 30, height: 30, filter: A_INK_GLYPH, opacity: 0.75 }}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            const fb = forteIconFallback(slot, weaponType);
+            if (fb && !img.src.endsWith(fb)) img.src = fb;
+            else img.style.display = "none";
+          }}
+        />
+      </div>
+      <div style={{ ...aStyles.mono, fontSize: 11, color: maxed ? A_GOLD : A_PAL.textDim, letterSpacing: 0.5 }}>
+        LV.{level}
+      </div>
+      <div style={{ ...aStyles.mono, fontSize: 8, color: A_PAL.textMute, letterSpacing: 1.2, textAlign: "center" }}>{label}</div>
+    </div>
+  );
 }
 
 // Ink-outlined grade square with a serif glyph. Prestige tiers swap the ink
@@ -605,6 +655,46 @@ export function AtelierResonator({ name }: { name: string }) {
                 </div>
               )}
 
+              {r.forte && (
+                <div style={{ marginTop: 26 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                      marginBottom: 14,
+                    }}
+                  >
+                    <div style={{ ...aStyles.display, fontSize: 28 }}>Forte</div>
+                    <div style={{ ...aStyles.mono, fontSize: 9, color: r.forte.nodes >= 8 ? A_GOLD : A_PAL.textMute, letterSpacing: 1 }}>
+                      {r.forte.nodes}/8 BONUS NODES
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(5, 1fr)",
+                      gap: isMobile ? 8 : 14,
+                      padding: "18px 14px",
+                      borderRadius: 12,
+                      background: A_PAL.surfaceStrong,
+                      border: `1px solid ${A_PAL.border}`,
+                    }}
+                  >
+                    {FORTE_SLOTS.map(({ key, label }) => (
+                      <AForteMedallion
+                        key={key}
+                        name={r.name}
+                        weaponType={r.weaponType as WeaponType}
+                        slot={key}
+                        label={label}
+                        level={r.forte![key]}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {echoVerdict && echoVerdict.score != null && gradedEchoes.length > 0 && (
                 <div style={{ marginTop: 26 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
@@ -619,26 +709,96 @@ export function AtelierResonator({ name }: { name: string }) {
                       <div style={{ fontSize: 13, color: A_PAL.textDim, marginTop: 2, fontStyle: "italic" }}>{echoVerdict.headline}</div>
                     </div>
                   </div>
-                  {gradedEchoes.map(({ echo, ev }, i) => (
+                  {gradedEchoes.map(({ echo, ev }, i) => {
+                    const face = echoIcon(echo.name);
+                    const mainGlyph = statIcon(echo.mainStat);
+                    return (
                     <div
                       key={i}
                       style={{
                         display: "grid",
-                        gridTemplateColumns: isMobile ? "36px 1fr 32px" : "40px 140px 1fr 36px",
-                        gap: 14,
+                        gridTemplateColumns: isMobile ? "40px 36px 1fr 32px" : "44px 40px 160px 1fr 36px",
+                        gap: isMobile ? 10 : 14,
                         alignItems: "center",
                         padding: "12px 0",
                         borderTop: `1px solid ${A_PAL.border}`,
                       }}
                     >
+                      {/* species plate — monster portrait, sonata icon pressed into the corner */}
+                      <div style={{ position: "relative", width: 40, height: 40 }} title={echo.name || undefined}>
+                        <div
+                          style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 8,
+                            overflow: "hidden",
+                            background: A_PAL.surface,
+                            border: `1px solid ${A_PAL.border}`,
+                          }}
+                        >
+                          {face && (
+                            <img
+                              src={face}
+                              alt={echo.name ?? ""}
+                              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%" }}
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                            />
+                          )}
+                        </div>
+                        {echo.sonata && (
+                          <img
+                            src={sonataIcon(echo.sonata)}
+                            alt={echo.sonata}
+                            title={echo.sonata}
+                            style={{
+                              position: "absolute",
+                              right: -5,
+                              bottom: -5,
+                              width: 18,
+                              height: 18,
+                              borderRadius: 999,
+                              background: "#fff",
+                              border: `1px solid ${A_PAL.border}`,
+                              padding: 2,
+                            }}
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                          />
+                        )}
+                      </div>
                       <div style={{ textAlign: "center" }}>
                         <div style={{ ...aStyles.display, fontSize: 28, lineHeight: 1, color: A_PAL.ink }}>{echo.cost}</div>
                         <div style={{ ...aStyles.mono, fontSize: 8, color: A_PAL.textMute, letterSpacing: 1 }}>COST</div>
                       </div>
                       {!isMobile && (
-                        <div>
+                        <div style={{ minWidth: 0 }}>
+                          {echo.name && (
+                            <div
+                              style={{
+                                ...aStyles.display,
+                                fontSize: 15,
+                                lineHeight: 1.1,
+                                color: A_PAL.ink,
+                                marginBottom: 3,
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {echo.name}
+                            </div>
+                          )}
                           <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1 }}>MAIN</div>
-                          <div style={{ fontSize: 13, color: A_PAL.ink, marginTop: 1 }}>{echo.mainStat || "—"}</div>
+                          <div style={{ fontSize: 13, color: A_PAL.ink, marginTop: 1, display: "flex", alignItems: "center", gap: 5 }}>
+                            {mainGlyph && (
+                              <img
+                                src={mainGlyph}
+                                alt=""
+                                style={{ width: 12, height: 12, filter: A_INK_GLYPH, opacity: 0.6, flexShrink: 0 }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                              />
+                            )}
+                            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{echo.mainStat || "—"}</span>
+                          </div>
                           <div style={{ ...aStyles.mono, fontSize: 10, color: A_PAL.textDim }}>
                             {echo.mainValue || ""}
                             {echo.mainStat && isPercentStat(echo.mainStat) ? "%" : ""}
@@ -651,6 +811,7 @@ export function AtelierResonator({ name }: { name: string }) {
                           const sv = ev.substatVerdicts[j];
                           const dead = sv?.dead;
                           const qhex = dead ? A_PAL.textMute : A_STATUS[aQualityStatus(sv?.quality ?? 0)];
+                          const subGlyph = statIcon(sub.stat);
                           return (
                             <div
                               key={j}
@@ -665,6 +826,14 @@ export function AtelierResonator({ name }: { name: string }) {
                               }}
                             >
                               <span style={{ width: 5, height: 5, borderRadius: 999, background: qhex }} />
+                              {subGlyph && (
+                                <img
+                                  src={subGlyph}
+                                  alt=""
+                                  style={{ width: 10, height: 10, filter: A_INK_GLYPH, opacity: dead ? 0.25 : 0.55, flexShrink: 0 }}
+                                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                                />
+                              )}
                               <span
                                 style={{
                                   ...aStyles.mono,
@@ -684,7 +853,8 @@ export function AtelierResonator({ name }: { name: string }) {
                         <AGrade grade={ev.grade} status={ev.status} score={null} size="sm" />
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                   <div style={{ ...aStyles.mono, fontSize: 9, color: A_PAL.textMute, letterSpacing: 1, marginTop: 14 }}>
                     STAT GRADE ONLY — SET BONUS NOT SCORED · edit in the Console theme
                   </div>
