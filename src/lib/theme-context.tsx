@@ -4,16 +4,17 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import type { ThemeId } from "./types";
 
 export const THEME_LIST: { id: ThemeId; label: string; sub: string }[] = [
+  { id: "emberline", label: "Emberline", sub: "abyssal teal · ember" },
   { id: "obsidian", label: "Obsidian", sub: "dark · jewel" },
   { id: "atelier",  label: "Atelier",  sub: "editorial · light" },
   { id: "console",  label: "Console",  sub: "holographic · HUD" },
 ];
 
-export const IMPLEMENTED_THEMES: ThemeId[] = ["obsidian", "atelier", "console"];
+export const IMPLEMENTED_THEMES: ThemeId[] = ["emberline", "obsidian", "atelier", "console"];
 
 const THEME_STORAGE_KEY = "wuwa.theme";
 const RESO_STORAGE_KEY  = "wuwa.resonator";
-const DEFAULT_THEME: ThemeId = "obsidian";
+const DEFAULT_THEME: ThemeId = "emberline";
 const DEFAULT_RESONATOR = "Aemeath";
 
 interface ThemeContextValue {
@@ -66,7 +67,7 @@ export const THEME_INIT_SCRIPT = `
 (function() {
   try {
     var t = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});
-    if (t !== 'obsidian' && t !== 'atelier' && t !== 'console') t = ${JSON.stringify(DEFAULT_THEME)};
+    if (t !== 'obsidian' && t !== 'atelier' && t !== 'console' && t !== 'emberline') t = ${JSON.stringify(DEFAULT_THEME)};
     document.documentElement.dataset.theme = t;
   } catch (e) {
     document.documentElement.dataset.theme = ${JSON.stringify(DEFAULT_THEME)};

@@ -5,6 +5,8 @@ import {
   Instrument_Serif,
   Space_Grotesk,
   JetBrains_Mono,
+  Marcellus,
+  Manrope,
 } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/lib/theme-context";
@@ -44,6 +46,19 @@ const jetbrains = JetBrains_Mono({
   weight: ["300", "400", "500"],
 });
 
+// Emberline theme faces: Marcellus (display, 400 only) + Manrope (body).
+const marcellus = Marcellus({
+  variable: "--font-marcellus",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Wuthering Waves · Roster Atelier",
   description: "A.'s resonator roster, audits, benchmarks, and endstate cycles.",
@@ -60,6 +75,8 @@ const fontClassNames = [
   instrument.variable,
   spaceGrotesk.variable,
   jetbrains.variable,
+  marcellus.variable,
+  manrope.variable,
 ].join(" ");
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
