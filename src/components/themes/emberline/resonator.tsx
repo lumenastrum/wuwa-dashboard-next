@@ -12,6 +12,7 @@ import {
   useData,
 } from "@/lib/data-context";
 import { ELEMENTS, type ElementPalette } from "@/lib/elements";
+import { highlightStats } from "@/lib/highlight";
 import { isPercentStat, scoreBuild, scoreEcho } from "@/lib/echo-audit";
 import type { EchoGrade, EchoVerdict } from "@/lib/echo-audit";
 import {
@@ -260,6 +261,7 @@ export function EmberlineResonator({ name }: { name: string }) {
   const { prev, next } = rosterNeighborsOf(roster, r.name);
 
   const sw = signatureWeaponOf(raw, r.weapon);
+  const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const echoBuild = echoBuildOf(raw, r.name);
   const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
   const gradedEchoes = echoBuild
@@ -559,6 +561,57 @@ export function EmberlineResonator({ name }: { name: string }) {
                   </div>
                 )}
               </div>
+
+              {(sw?.baseAtk || sw?.mainStat) && (
+                <div style={{ display: "flex", gap: 28, marginTop: 13 }}>
+                  {sw?.baseAtk && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      <span style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 1.5, color: E_PAL.textMute }}>BASE ATK</span>
+                      <span style={{ ...eStyles.mono, fontSize: 16, color: el.soft }}>{sw.baseAtk}</span>
+                    </div>
+                  )}
+                  {sw?.mainStat && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      <span style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 1.5, color: E_PAL.textMute }}>{sw.mainStat.toUpperCase()}</span>
+                      <span style={{ ...eStyles.mono, fontSize: 16, color: el.soft }}>{sw.mainStatValue || "—"}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              {sw?.passive && (
+                <div
+                  style={{
+                    marginTop: 13,
+                    padding: "11px 13px",
+                    borderRadius: 5,
+                    background: E_PAL.inset,
+                    border: `1px solid ${E_PAL.borderSoft}`,
+                  }}
+                >
+                  <div style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 2, color: E_PAL.textMute }}>PASSIVE</div>
+                  {sw.passiveName && (
+                    <div style={{ ...eStyles.display, fontSize: 16, color: el.soft, marginTop: 3, lineHeight: 1.15 }}>
+                      {sw.passiveName}
+                    </div>
+                  )}
+                  <div style={{ ...eStyles.body, fontSize: 12.5, marginTop: 6, lineHeight: 1.6, color: E_PAL.textDim }}>
+                    {highlightStats(sw.passive, { ...eStyles.mono, color: el.soft, fontWeight: 600 })}
+                  </div>
+                </div>
+              )}
+              {sw?.synergy && (
+                <div style={{ marginTop: 13, borderLeft: `2px solid ${el.hex}`, paddingLeft: 12 }}>
+                  <div style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 2, color: el.soft }}>WHY IT&apos;S CRACKED</div>
+                  <div style={{ ...eStyles.body, fontSize: 12.5, marginTop: 5, lineHeight: 1.6, color: E_PAL.text, fontStyle: "italic" }}>
+                    {highlightStats(sw.synergy, { ...eStyles.mono, color: el.soft, fontWeight: 600, fontStyle: "normal" })}
+                  </div>
+                </div>
+              )}
+              {!swHasDetail && (
+                <div style={{ ...eStyles.mono, marginTop: 12, fontSize: 9, letterSpacing: 1.5, color: E_PAL.textFaint }}>
+                  PASSIVE &amp; SYNERGY NOT DOCUMENTED — `npm run update -- sigweapon`
+                </div>
+              )}
             </>
           )}
         </EPanel>
