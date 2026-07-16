@@ -73,7 +73,7 @@ export function ECard({
   );
 }
 
-// Marcellus section title + gradient hairline flexed to fill + optional slots.
+// Display-face section title + gradient hairline flexed to fill + optional slots.
 export function ESectionTitle({
   title,
   sub,
@@ -137,7 +137,7 @@ export function EStatusDot({ status, size = 6, glow = true }: { status: Status; 
   );
 }
 
-// Portrait face with letter-tile fallback (teal tint + Marcellus initial) for
+// Portrait face with letter-tile fallback (teal tint + display-face initial) for
 // roster members without art (e.g. Sanhua, Nyx in benchmark lineups).
 export function EFace({
   name,

@@ -62,12 +62,13 @@ function ERosterTile({ r }: { r: RosterEntry }) {
             </div>
             <EStatusDot status={r.audit?.priorityStatus ?? "neutral"} glow={false} />
           </div>
-          <EKicker size={9} spacing={0.5} style={{ marginTop: 3 }}>
-            {r.sequence} · {r.role} · Lv{r.level}
+          <EKicker size={8} spacing={0.5} style={{ marginTop: 3 }}>
+            {/* role's replacement char is U+00A0 (nbsp): "Main DPS" must not wrap mid-phrase */}
+            {`${r.sequence} · ${r.role.replace(/ /g, " ")} · Lv${r.level}`}
           </EKicker>
           <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7 }}>
             <img src={elementBadge(r.element)} alt={r.element} style={{ width: 12, height: 12, flexShrink: 0 }} />
-            <span style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1, color: E_PAL.textDim }}>
+            <span style={{ ...eStyles.mono, fontSize: 8, letterSpacing: 0.5, color: E_PAL.textDim }}>
               {(r.element + " · " + r.weaponType).toUpperCase()}
             </span>
           </div>

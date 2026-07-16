@@ -40,17 +40,21 @@ export const E_STATUS: Record<string, string> = {
   neutral: "#8d92a3",
 };
 
+// "Resonance Instrument" stack — Chakra Petch carries the display voice at 500
+// (it has no single-weight identity like Marcellus did; 400 reads too soft on
+// the abyssal ground). Martian Mono is WIDE — fixed-width columns sized for
+// JetBrains need re-measuring when touched.
 const display: CSSProperties = {
-  fontFamily: "var(--font-marcellus), 'Marcellus', serif",
-  fontWeight: 400,
+  fontFamily: "var(--font-chakra), 'Chakra Petch', sans-serif",
+  fontWeight: 500,
 };
 
 const body: CSSProperties = {
-  fontFamily: "var(--font-manrope), 'Manrope', system-ui, sans-serif",
+  fontFamily: "var(--font-familjen), 'Familjen Grotesk', system-ui, sans-serif",
 };
 
 const mono: CSSProperties = {
-  fontFamily: "var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace",
+  fontFamily: "var(--font-martian), 'Martian Mono', ui-monospace, monospace",
 };
 
 const shell: CSSProperties = {

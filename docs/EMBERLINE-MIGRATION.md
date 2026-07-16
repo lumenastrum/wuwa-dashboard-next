@@ -28,10 +28,9 @@ this one unified theme. This doc is the runway for the migration sessions.
    build card, html-to-image PNG export, Chromium-only). Reuses obsidian's
    `OEchoCard`/`OForteDisc`/`OGrade`/`OSequenceChain` — port needs Emberline-styled
    equivalents, not a reskin of the obsidian internals.
-2. **Signature weapon detail** — passive name / passive text / synergy ("why it's
-   cracked") / baseAtk / mainStat from `SignatureWeapon`. Emberline's resonator page
-   shows only the weapon tile + name/rank line. Obsidian's resonator.tsx has the
-   render; `signatureWeaponOf` is already imported in emberline/resonator.tsx.
+2. ~~**Signature weapon detail**~~ **DONE 2026-07-15** (`6951a4c`) — KPI pair +
+   PASSIVE inset tile + WHY IT'S CRACKED behind an element-tinted left rule, in
+   the left Stat Audit panel. Verified live on Fusion (Aemeath) + Havoc (Xuanling).
 3. **Teams-featuring + cycle-appearances panels** (resonator page) — obsidian uses
    `teamsFeaturingOf(raw, name)` / `cycleAppearancesOf(raw, name)`. The Emberline
    tab strip already has a dead TEAMS tab — natural home, or extra overview panels.
@@ -54,8 +53,9 @@ this one unified theme. This doc is the runway for the migration sessions.
    `src/app/*/page.tsx`, `r/[name]/client.tsx`, `components/top-bar.tsx` (drop the
    theme switcher UI), shrink `ThemeId`/`THEME_LIST`/`THEME_INIT_SCRIPT`.
 3. Remove now-unused fonts from `layout.tsx` (Cormorant, Instrument Serif, Space
-   Grotesk, Geist — check nothing else uses them) — keep JetBrains Mono, Marcellus,
-   Manrope.
+   Grotesk, Geist, JetBrains Mono — check nothing else uses them) — keep Chakra
+   Petch, Familjen Grotesk, Martian Mono (Marcellus/Manrope already removed with
+   the 2026-07-15 font swap).
 4. Update `CLAUDE.md` + `README.md` — both say "three-themed" throughout.
 5. Land in the real repo: either merge this fork's branch into
    `wuwa-dashboard-next` or cherry-pick; **local-build before push** (NTFS
@@ -66,6 +66,13 @@ this one unified theme. This doc is the runway for the migration sessions.
 - Palette/typography: `styles.ts` (`E_PAL`, `E_STATUS`, `eStyles`, `goldGlow`).
   Element tint auto-derives from `ELEMENTS[element]` (hex/soft/glow) — the mockup's
   PAGE TINT chips were dropped per spec.
+- **Type stack (swapped 2026-07-15, "Resonance Instrument" — A. picked it from a
+  3-option live specimen):** Chakra Petch 500 (display) + Familjen Grotesk (body)
+  + Martian Mono (HUD/mono). Marcellus/Manrope are gone. Martian is WIDE — dense
+  mono spots run size 8–8.5 / spacing 0.5, and roster-card role strings use a
+  U+00A0 so "Main DPS" wraps at the · boundaries, not mid-phrase. The specimen
+  page (all 3 candidate stacks) is in the session scratchpad:
+  `emberline-type-specimen.html` — regenerate from git history if ever needed.
 - Primitives: `primitives.tsx` — `ECard` (corner diamonds), `ESectionTitle`
   (hairline rule), `EKicker`, `EKpi`, `EFace` (letter-tile fallback), `EStatusDot`,
   `EFooter`, `EShell` (per-page wash override).

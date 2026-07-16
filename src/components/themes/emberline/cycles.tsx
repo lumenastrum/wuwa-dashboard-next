@@ -166,7 +166,7 @@ export function EmberlineCycles() {
             title="The Run"
             size={24}
             sub={<em>{c.label} · {c.totalPoints.toLocaleString()} points</em>}
-            right={<EKicker size={9} spacing={1}>SCALE 0–{SCORE_SCALE.toLocaleString()}</EKicker>}
+            right={<EKicker size={8.5} spacing={0.5} style={{ whiteSpace: "nowrap" }}>SCALE 0–{SCORE_SCALE.toLocaleString()}</EKicker>}
             style={{ marginBottom: 14 }}
           />
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>

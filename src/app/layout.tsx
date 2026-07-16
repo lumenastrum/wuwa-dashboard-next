@@ -5,8 +5,9 @@ import {
   Instrument_Serif,
   Space_Grotesk,
   JetBrains_Mono,
-  Marcellus,
-  Manrope,
+  Chakra_Petch,
+  Familjen_Grotesk,
+  Martian_Mono,
 } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@/lib/theme-context";
@@ -46,17 +47,24 @@ const jetbrains = JetBrains_Mono({
   weight: ["300", "400", "500"],
 });
 
-// Emberline theme faces: Marcellus (display, 400 only) + Manrope (body).
-const marcellus = Marcellus({
-  variable: "--font-marcellus",
+// Emberline theme faces — the "Resonance Instrument" stack (2026-07-15):
+// Chakra Petch (display) + Familjen Grotesk (body) + Martian Mono (HUD).
+const chakraPetch = Chakra_Petch({
+  variable: "--font-chakra",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const familjenGrotesk = Familjen_Grotesk({
+  variable: "--font-familjen",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const martianMono = Martian_Mono({
+  variable: "--font-martian",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -75,8 +83,9 @@ const fontClassNames = [
   instrument.variable,
   spaceGrotesk.variable,
   jetbrains.variable,
-  marcellus.variable,
-  manrope.variable,
+  chakraPetch.variable,
+  familjenGrotesk.variable,
+  martianMono.variable,
 ].join(" ");
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
