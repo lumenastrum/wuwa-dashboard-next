@@ -131,7 +131,9 @@ export function ConsoleCycles() {
               <div style={{ textAlign: "right" }}>RATING</div>
             </div>
             {c.teams.map((t, i) => {
-              const crowned = t.rating === "CROWNED" || t.rating === "SSS";
+              const iridescent = t.rating === "IRIDESCENT";
+              const crowned = iridescent || t.rating === "CROWNED" || t.rating === "SSS";
+              const iridGrad = "linear-gradient(100deg, #ffb3d9, #ffd36e 35%, #9fe8ff 68%, #c9a7ff)";
               const maxScore = 15000;
               const w = (t.score / maxScore) * 100;
               return (
@@ -184,6 +186,9 @@ export function ConsoleCycles() {
                                   objectFit: "cover",
                                   objectPosition: "center 20%",
                                 }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
                               />
                             </div>
                           );
@@ -221,8 +226,9 @@ export function ConsoleCycles() {
                             ...kStyles.mono,
                             fontSize: 10,
                             padding: "2px 6px",
-                            background: crowned ? K_PAL.amber : "rgba(126,224,255,0.1)",
+                            background: iridescent ? iridGrad : crowned ? K_PAL.amber : "rgba(126,224,255,0.1)",
                             color: crowned ? K_PAL.ink : K_PAL.cyan,
+                            boxShadow: iridescent ? "0 0 8px rgba(255,179,217,0.5)" : undefined,
                             letterSpacing: 1.5,
                             display: "inline-block",
                           }}
@@ -243,7 +249,7 @@ export function ConsoleCycles() {
                       style={{
                         width: `${w}%`,
                         height: "100%",
-                        background: crowned ? K_PAL.amber : t.over5k ? K_PAL.cyan : K_PAL.textMute,
+                        background: iridescent ? iridGrad : crowned ? K_PAL.amber : t.over5k ? K_PAL.cyan : K_PAL.textMute,
                       }}
                     />
                   </div>

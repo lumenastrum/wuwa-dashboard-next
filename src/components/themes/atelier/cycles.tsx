@@ -103,7 +103,10 @@ export function AtelierCycles() {
           <div>
             {c.teams.map((t, i) => {
               const w = (t.score / 15000) * 100;
-              const crowned = t.rating === "CROWNED" || t.rating === "SSS";
+              const iridescent = t.rating === "IRIDESCENT";
+              const crowned = iridescent || t.rating === "CROWNED" || t.rating === "SSS";
+              // Deeper stops than the dark themes — legible-on-light hues local to the file.
+              const iridGrad = "linear-gradient(100deg, #d4437e, #b98600 35%, #0f8fb3 68%, #7b4fd6)";
               return (
                 <div
                   key={i}
@@ -145,7 +148,25 @@ export function AtelierCycles() {
                         }}
                       >
                         {t.buff.toUpperCase()}
-                        {t.rating && ` · ${t.rating}`}
+                        {t.rating && (
+                          <>
+                            {" · "}
+                            <span
+                              style={
+                                iridescent
+                                  ? {
+                                      backgroundImage: iridGrad,
+                                      WebkitBackgroundClip: "text",
+                                      backgroundClip: "text",
+                                      color: "transparent",
+                                    }
+                                  : undefined
+                              }
+                            >
+                              {t.rating}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
@@ -166,7 +187,7 @@ export function AtelierCycles() {
                       style={{
                         width: `${w}%`,
                         height: "100%",
-                        background: crowned ? A_PAL.ink : t.over5k ? "#5fe1b3" : A_PAL.textMute,
+                        background: iridescent ? iridGrad : crowned ? A_PAL.ink : t.over5k ? "#5fe1b3" : A_PAL.textMute,
                       }}
                     />
                   </div>

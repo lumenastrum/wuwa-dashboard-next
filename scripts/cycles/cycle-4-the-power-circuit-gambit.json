@@ -1,0 +1,93 @@
+{
+  "id": 4,
+  "date": "2026-07-19",
+  "label": "The Power Circuit Gambit",
+  "target": 58000,
+  "teamTarget": 6,
+  "dayOne": true,
+  "teams": [
+    {
+      "order": 1,
+      "members": ["Yangyang: Xuanling", "Rebecca", "Chisa"],
+      "buff": "Negative Status Enhancement",
+      "score": 8505,
+      "rating": "",
+      "notes": "YANGYANG'S DEBUT. Triple Bane stack (boss +40% Havoc under Bane, +25% negative-status taken, +30% dealt per Bane inflict) — Chisa's bonus vigor made the comp. Matrix Swarm R1 killed, Mourning Aix R1 to 18.36%. New opener record: 7,029 → 8,505 (+21% over Edgerunners C3)."
+    },
+    {
+      "order": 2,
+      "members": ["Augusta", "Iuno", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 6315,
+      "rating": "B",
+      "notes": "DOUBLE KILL. Finished Mourning Aix (18.36% → 0) with the counter-RE modifier feeding her, then deleted ALL of Fleurdelys and chipped Reactor Husk to 83.41%. Score down from C3's 7,227 PB but she cleared 1.8 bosses' worth of HP — the queue is now a full boss ahead of the plan."
+    },
+    {
+      "order": 3,
+      "members": ["Carlotta", "Lynae", "Mornye"],
+      "buff": "Tune Break Enhancement",
+      "score": 6064,
+      "rating": "A",
+      "notes": "Re-dispatched onto Reactor Husk after Augusta's double-kill drift — cleaned it from 83.41% with no negative-status ATK strip (Mornye tanked the full-power Husk), then pushed Matrix Mimic to 61.88%. Tune Rupture +150% carried on a boss she was never drafted for."
+    },
+    {
+      "order": 4,
+      "members": ["Cartethyia", "Ciaccona", "Chisa"],
+      "buff": "Negative Status Enhancement",
+      "score": 14499,
+      "rating": "SS",
+      "notes": "ALL-TIME SINGLE-TEAM RECORD — 14,499, +30% over her own C3 crown (11,161). Chisa's second vigor + Erosion (+25% taken) + Bane rider (+30% dealt) all stacked. Matrix Mimic R1 killed (+1,000 bounty), R2 Matrix Swarm DELETED whole, R2 Mourning Aix chipped to 90.89%. Badge jumped A → SS in one deployment, skipping S entirely."
+    },
+    {
+      "order": 5,
+      "members": ["Aemeath", "Denia", "Lupa"],
+      "buff": "Negative Status Enhancement",
+      "score": 12156,
+      "rating": "CROWNED",
+      "notes": "Zero-sustain PB — 12,156, up from 10,776 in C3 (their no-healer record; 14,844/12,553 ancients had Mornye). Perfect discipline on the wall: R2 Mourning Aix cleaned (90.89% → 0), R2 Fleurdelys pushed to 58.17%, and they STOPPED short of the Husk that walls all three of them. Badge hit CROWNED at team five — three teams still in the hangar."
+    },
+    {
+      "order": 6,
+      "members": ["Phrolova", "Cantarella", "Roccia"],
+      "buff": "Echo Skill Enhancement",
+      "score": 7437,
+      "rating": "CROWNED",
+      "notes": "The buff finally matched the kit — Echo Skill +30% on the pure echo-scaler core. 7,437 vs 5,519 in the same R2-scaled slot last cycle (+35%), a hair under the C2 unscaled 7,876. R2 Fleurdelys cleaned (58.17% → 0), R2 Reactor Husk pushed to 76.96%. Cantarella's CR fix: four months printing."
+    },
+    {
+      "order": 7,
+      "members": ["Zani", "Phoebe", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 5940,
+      "rating": "IRIDESCENT",
+      "notes": "THE IRIDESCENT CROWN — badge tier beyond gold CROWNED, first ever minted, as the total crossed both the 58k reward line AND C3's all-time 58,871 record in one deployment (60,916). SK's second vigor planned this time, not an oopsie. R2 Reactor Husk 76.96% → 12.11%. Potato arc: 5,363 → 5,507 → 5,692 → 5,940. Four cycles, never backwards."
+    },
+    {
+      "order": 8,
+      "members": ["Jinhsi", "Zhezhi", "Mornye"],
+      "buff": "General Enhancement",
+      "score": 3890,
+      "rating": "IRIDESCENT",
+      "notes": "The closer, as is tradition — with Mornye's reserve vigor deployed in Verina's place. R2 Reactor Husk cleaned (12.11% → 0), R2 Matrix Mimic to 79.33%. 3,890 ends the every-cycle-improvement streak (3,421 → 3,646 → 3,994 → 3,890) — first dip ever, against R2-scaled bosses with the Mimic bounty out of reach. 4/4 closes all the same. Planned-roster total 64,806 (+10.1% over C3's record) — before the encore."
+    },
+    {
+      "order": 9,
+      "members": ["Camellya", "Sanhua", "Verina"],
+      "buff": "General Enhancement",
+      "rating": "IRIDESCENT",
+      "score": 3181,
+      "notes": "THE ENCORE CAMEO. Off-ledger legends — none of the three are even in the dashboard roster — strolled in after the record was already broken and pruned R2 Matrix Mimic from 79.33% to 55.69% for fun. 3,181 of pure victory-lap points. Final total: 67,987."
+    }
+  ],
+  "lessons": [
+    "Buff riders stack with boss modifiers MULTIPLICATIVELY — Yangyang's 8,505 opener (new slot record, +21%) came from Negative Status buff (+25% taken, +30% per Bane inflict) layered on Swarm's +40%-under-Bane. Hunt these convergences FIRST every cycle; they outweigh raw team strength.",
+    "Enhanced-resonator vigor is the strongest draft lever — Chisa's bonus vigor built BOTH the record opener and the 14,499 crown team. Check who's enhanced before drafting anything else.",
+    "Cartethyia 14,499 = all-time single-team record — she brings the negative status (Erosion), Chisa brings the Bane rider: one buff card, both procs. The crown team double-dips Negative Status by construction.",
+    "Draft segments, not slots — Augusta's double-kill (Aix + all of Fleurdelys) shifted the queue a full boss early and the whole map had to re-dispatch live. Carlotta cleaned a Husk she was never drafted for and still pulled an A-checkpoint. Every assignment after team 2 was improvised on the doctrine, not the plan.",
+    "Wall discipline is worth more than greed — Fusion Alpha (all-Fusion) cleaned R2 Aix + chipped Fleurdelys and STOPPED short of the Husk that walls them: 12,156 zero-sustain PB with zero points fed to a wall all cycle.",
+    "Lv 100 HP pools read as 'stingy scores' but aren't — C4 outpaced C3's cumulative total at every checkpoint while kills came slower. Trust damage totals, not badge feel.",
+    "Support vigor ledger (SK×2, Chisa×2, Mornye×2) covered all 8 teams with one spare — and the spare got USED: Mornye subbed for Verina in the closer. C3's SK oopsie is now a solved planning problem.",
+    "The Jinhsi streak ends at 3/4 improving — the R2-scaled closer segment with no bounty in reach is a harder slot than the number shows. Next cycle: time the closer to LAND on the Mimic bounty, or feed her a fresher segment. The Magistrate still closed. 4/4 crowns.",
+    "First IRIDESCENT crown ever minted (badge tier above gold CROWNED) at 60,916 — the dashboard had never seen the tier; schema + rainbow styling were added to the ledger the same night."
+  ]
+}

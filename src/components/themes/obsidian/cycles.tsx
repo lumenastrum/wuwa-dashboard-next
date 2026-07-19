@@ -101,7 +101,9 @@ export function ObsidianCycles() {
             {c.teams.map((t, i) => {
               const maxScore = 15000;
               const w = (t.score / maxScore) * 100;
-              const crowned = t.rating === "CROWNED" || t.rating === "SSS";
+              const iridescent = t.rating === "IRIDESCENT";
+              const crowned = iridescent || t.rating === "CROWNED" || t.rating === "SSS";
+              const iridGrad = "linear-gradient(100deg, #ffb3d9, #ffd36e 35%, #9fe8ff 68%, #c9a7ff)";
               return (
                 <div key={i} style={{ marginBottom: 14 }}>
                   <div
@@ -148,6 +150,9 @@ export function ObsidianCycles() {
                                   objectFit: "cover",
                                   objectPosition: "center 20%",
                                 }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
                               />
                             </div>
                             <div style={{ fontSize: 11, color: O_PAL.textDim }}>{name}</div>
@@ -172,8 +177,9 @@ export function ObsidianCycles() {
                           fontSize: 10,
                           padding: "2px 8px",
                           borderRadius: 999,
-                          background: crowned ? O_PAL.accent : "rgba(255,255,255,0.05)",
+                          background: iridescent ? iridGrad : crowned ? O_PAL.accent : "rgba(255,255,255,0.05)",
                           color: crowned ? "#0a0d14" : O_PAL.text,
+                          boxShadow: iridescent ? "0 0 10px rgba(255,179,217,0.55)" : undefined,
                         }}
                       >
                         {t.rating}
@@ -203,8 +209,8 @@ export function ObsidianCycles() {
                       style={{
                         width: `${w}%`,
                         height: "100%",
-                        background: crowned ? O_PAL.accent : t.over5k ? "#5fe1b3" : O_PAL.textMute,
-                        boxShadow: crowned ? `0 0 8px ${O_PAL.accent}80` : "none",
+                        background: iridescent ? iridGrad : crowned ? O_PAL.accent : t.over5k ? "#5fe1b3" : O_PAL.textMute,
+                        boxShadow: iridescent ? "0 0 8px rgba(255,179,217,0.6)" : crowned ? `0 0 8px ${O_PAL.accent}80` : "none",
                       }}
                     />
                   </div>
