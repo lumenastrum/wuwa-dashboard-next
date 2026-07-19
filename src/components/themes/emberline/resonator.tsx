@@ -18,6 +18,7 @@ import type { EchoGrade, EchoVerdict } from "@/lib/echo-audit";
 import {
   echoIcon,
   elementBadge,
+  gradeIcon,
   statAbbrev,
   statIcon,
   FORTE_SLOTS,
@@ -26,14 +27,15 @@ import {
   type ForteSlot,
 } from "@/lib/game-icons";
 import { fiveStarIcon, tallPortrait } from "@/lib/portraits";
-import { rateResonator } from "@/lib/resonator-rating";
+import { rateResonator, type RatingSub } from "@/lib/resonator-rating";
 import { resonatorPath } from "@/lib/route-name";
 import { parseEchoSets, sonataIcon } from "@/lib/sonata";
 import { useTheme } from "@/lib/theme-context";
 import { weaponImage } from "@/lib/weapons";
 import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
-import { EFooter, EKicker } from "./primitives";
+import { EDiamond, EFooter, EKicker } from "./primitives";
+import { EmberlineTeamsPanels } from "./teams-panels";
 
 // Element-tinted hairline rule for section titles.
 function tintRule(el: ElementPalette) {
@@ -83,6 +85,58 @@ function EPanelTitle({
       {extra}
       <div style={tintRule(el)} />
       {right}
+    </div>
+  );
+}
+
+// Grade medal on a plate — the rating sub-scores wear the game's own
+// settlement-screen letters (public/game/grades/, per-tier neon halo baked in).
+// ✦ has no in-game art on purpose: the one tier the game can't award renders
+// as our pink→gold sparkle. A missing sub (no echoes entered, no weapon)
+// shows an em-dash plate rather than being hidden — absence is information.
+function EGradeMedal({ sub, accent }: { sub: RatingSub; accent: string }) {
+  const icon = gradeIcon(sub.grade);
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 4,
+        minWidth: 66,
+        padding: "10px 10px 7px",
+        borderRadius: 6,
+        border: `1px solid ${E_PAL.borderSoft}`,
+        background: "rgba(4,13,18,0.55)",
+      }}
+    >
+      <EDiamond corner="tl" size={5} color={accent} />
+      <div style={{ height: 30, display: "flex", alignItems: "center" }}>
+        {icon ? (
+          <img src={icon} alt={sub.grade} style={{ height: 30, width: "auto" }} />
+        ) : sub.grade === "✦" ? (
+          <span
+            style={{
+              ...eStyles.display,
+              fontSize: 26,
+              lineHeight: 1,
+              background: `linear-gradient(180deg, #f9a8d4, ${E_PAL.gold})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 8px rgba(245,201,122,0.55))",
+            }}
+          >
+            ✦
+          </span>
+        ) : (
+          <span style={{ ...eStyles.display, fontSize: 22, color: E_PAL.textMute }}>—</span>
+        )}
+      </div>
+      <EKicker size={8} spacing={1.5}>{sub.key.toUpperCase()}</EKicker>
+      <span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textDim }}>
+        {sub.score != null ? Math.round(sub.score) : "—"}
+      </span>
     </div>
   );
 }
@@ -251,9 +305,16 @@ function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
   );
 }
 
+// OVERVIEW and TEAMS are live; the rest of the strip is static chrome until
+// their content exists (per the migration runway).
+type LiveTab = "OVERVIEW" | "TEAMS";
+const TAB_STRIP = ["OVERVIEW", "STATS", "FORTE", "ECHOES", "WEAPON", "TEAMS"] as const;
+const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "TEAMS"]);
+
 export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
   const { setLastResonator } = useTheme();
+  const [tab, setTab] = useState<LiveTab>("OVERVIEW");
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
@@ -400,17 +461,29 @@ export function EmberlineResonator({ name }: { name: string }) {
               bottom: 28,
               zIndex: 4,
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 3,
+              alignItems: "flex-end",
+              gap: 9,
             }}
           >
-            <div style={{ ...eStyles.display, fontSize: 64, lineHeight: 1, color: E_PAL.gold, textShadow: "0 0 28px rgba(245,201,122,0.6)" }}>
-              {rating.grade}
+            {rating.subs.map((sub) => (
+              <EGradeMedal key={sub.key} sub={sub} accent={el.hex} />
+            ))}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 3,
+                marginLeft: 10,
+              }}
+            >
+              <div style={{ ...eStyles.display, fontSize: 64, lineHeight: 1, color: E_PAL.gold, textShadow: "0 0 28px rgba(245,201,122,0.6)" }}>
+                {rating.grade}
+              </div>
+              <EKicker size={9} spacing={2} color={E_PAL.textDim}>
+                PROFICIENCY · {Math.round(rating.score)}
+              </EKicker>
             </div>
-            <EKicker size={9} spacing={2} color={E_PAL.textDim}>
-              PROFICIENCY · {Math.round(rating.score)}
-            </EKicker>
           </div>
         )}
       </div>
@@ -428,18 +501,25 @@ export function EmberlineResonator({ name }: { name: string }) {
           letterSpacing: 2,
         }}
       >
-        {["OVERVIEW", "STATS", "FORTE", "ECHOES", "WEAPON", "TEAMS"].map((tab, i) => (
-          <span
-            key={tab}
-            style={{
-              padding: "13px 2px",
-              color: i === 0 ? el.hex : E_PAL.textMute,
-              borderBottom: i === 0 ? `2px solid ${el.hex}` : "2px solid transparent",
-            }}
-          >
-            {tab}
-          </span>
-        ))}
+        {TAB_STRIP.map((t) => {
+          const live = LIVE_TABS.has(t);
+          const active = tab === t;
+          return (
+            <span
+              key={t}
+              onClick={live ? () => setTab(t as LiveTab) : undefined}
+              style={{
+                padding: "13px 2px",
+                color: active ? el.hex : E_PAL.textMute,
+                borderBottom: active ? `2px solid ${el.hex}` : "2px solid transparent",
+                cursor: live ? "pointer" : "default",
+                userSelect: "none",
+              }}
+            >
+              {t}
+            </span>
+          );
+        })}
         <div style={{ flex: 1 }} />
         {prev && (
           <Link href={resonatorPath(prev.name)} style={{ color: E_PAL.textMute, textDecoration: "none" }}>
@@ -456,7 +536,15 @@ export function EmberlineResonator({ name }: { name: string }) {
         </span>
       </div>
 
+      {/* TEAMS tab — Codex-built panels (teams-panels.tsx) */}
+      {tab === "TEAMS" && (
+        <div style={{ padding: "22px 34px 10px", flex: 1 }}>
+          <EmberlineTeamsPanels name={r.name} />
+        </div>
+      )}
+
       {/* content grid */}
+      {tab === "OVERVIEW" && (
       <div style={{ display: "grid", gridTemplateColumns: "400px 1fr 360px", gap: 18, padding: "22px 34px 10px", flex: 1 }}>
         {/* stats + weapon column */}
         <EPanel>
@@ -738,6 +826,7 @@ export function EmberlineResonator({ name }: { name: string }) {
           </div>
         </EPanel>
       </div>
+      )}
 
       <EFooter factoid="STAT GRADE ONLY — SET BONUS NOT SCORED" updated={raw.meta.updated} />
     </div>

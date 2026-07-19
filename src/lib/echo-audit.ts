@@ -204,7 +204,7 @@ export interface BuildVerdict {
 // tiers live in the overflow zone above 100 — only reachable when rolls blow
 // past the realistic target, so SSS/✦ stay rare. D is reserved for genuinely
 // off-stat builds (handled by the score naturally collapsing), not low rolls.
-function gradeOf(score: number): EchoGrade {
+export function gradeOf(score: number): EchoGrade {
   if (score >= 115) return "✦";
   if (score >= 105) return "SSS";
   if (score >= 90) return "S";

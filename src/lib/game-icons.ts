@@ -48,6 +48,20 @@ export function elementBadge(el: ElementName): string {
   return `${BASE_PATH}/game/elements/${el}.webp`;
 }
 
+// In-game settlement-screen grade letters (grades/ — brushed metal + per-tier
+// neon halo, ripped from Common/Image/ComImg/T_ComScore*). The pak's "SSS"
+// texture is byte-identical to SS, so sss.webp is OUR composition of three
+// single-S glyphs at the SS overlap stride. ✦ has no in-game art by design
+// (the one tier the game can't award) — callers render it as text.
+const GRADE_ICON_KEY: Record<string, string> = {
+  D: "d", C: "c", B: "b", A: "a", S: "s", SS: "ss", SSS: "sss",
+};
+
+export function gradeIcon(grade: string | undefined): string | null {
+  const key = grade ? GRADE_ICON_KEY[grade] : undefined;
+  return key ? `${BASE_PATH}/game/grades/${key}.webp` : null;
+}
+
 // Compact display labels for narrow echo-card substat rows.
 const STAT_ABBREV: Record<string, string> = {
   "Energy Regen": "ER",

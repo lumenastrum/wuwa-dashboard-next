@@ -13,7 +13,7 @@
 // a single-unit, account-state snapshot.
 
 import type { AuditStat, Sequence, Status } from "./types";
-import { statusOf, type EchoGrade } from "./echo-audit";
+import { gradeOf, statusOf, type EchoGrade } from "./echo-audit";
 
 // --- Weights (the "Optimizer" soul) ------------------------------------
 export const RATING_WEIGHTS = { echo: 0.35, stats: 0.35, sig: 0.15, seq: 0.15 } as const;
@@ -85,6 +85,8 @@ export interface RatingSub {
   label: string;
   score: number | null;        // raw sub-score (echo may exceed 100 — prestige)
   weight: number;              // EFFECTIVE weight after renormalizing for missing inputs
+  grade: EchoGrade;            // per-sub medal — echo on the echo ladder (matches the
+                               // Echo Audit panel), the rest on the rating ladder
 }
 
 export interface ResonatorRating {
@@ -113,12 +115,16 @@ export function rateResonator(input: RatingInput): ResonatorRating {
   // Drop missing inputs and renormalize the surviving weights so they sum to 1 —
   // a unit with no echoes entered isn't punished, it's scored on what's known.
   const totalW = defs.reduce((acc, d) => acc + (raw[d.key] != null ? d.weight : 0), 0);
-  const subs: RatingSub[] = defs.map((d) => ({
-    key: d.key,
-    label: d.label,
-    score: raw[d.key],
-    weight: raw[d.key] != null && totalW > 0 ? d.weight / totalW : 0,
-  }));
+  const subs: RatingSub[] = defs.map((d) => {
+    const s = raw[d.key];
+    return {
+      key: d.key,
+      label: d.label,
+      score: s,
+      weight: s != null && totalW > 0 ? d.weight / totalW : 0,
+      grade: s == null ? ("—" as EchoGrade) : d.key === "echo" ? gradeOf(s) : ratingGradeOf(s),
+    };
+  });
 
   if (totalW === 0) {
     return { score: null, grade: "—", status: "neutral", subs, partial: true };

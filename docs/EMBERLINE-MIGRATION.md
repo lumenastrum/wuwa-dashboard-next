@@ -31,19 +31,38 @@ this one unified theme. This doc is the runway for the migration sessions.
 2. ~~**Signature weapon detail**~~ **DONE 2026-07-15** (`6951a4c`) — KPI pair +
    PASSIVE inset tile + WHY IT'S CRACKED behind an element-tinted left rule, in
    the left Stat Audit panel. Verified live on Fusion (Aemeath) + Havoc (Xuanling).
-3. **Teams-featuring + cycle-appearances panels** (resonator page) — obsidian uses
-   `teamsFeaturingOf(raw, name)` / `cycleAppearancesOf(raw, name)`. The Emberline
-   tab strip already has a dead TEAMS tab — natural home, or extra overview panels.
-4. **Edit mode** — Console-only today (`<EditableField>`, `edit-context`,
-   `<AuthGate>`). Deleting Console kills ALL browser writes; CLI survives.
-   **A. must decide:** port edit mode into Emberline (violates the old "read-only
-   surfaces" split) or go CLI-only. Don't decide silently.
+3. ~~**Teams-featuring + cycle-appearances panels**~~ **DONE 2026-07-19** — built
+   by Codex-Clio as `emberline/teams-panels.tsx` (BATTLE-TESTED TEAMS +
+   ENDSTATE CYCLE RECORD), wired into a now-LIVE TEAMS tab on the resonator page
+   (OVERVIEW/TEAMS clickable, rest of the strip stays static chrome). Verified
+   live vs Supabase on Aemeath (4 benchmark teams, 4 cycle rows, CROWNED gold).
+4. ~~**Edit mode**~~ **DECIDED 2026-07-19: CLI-only.** A. called it — Console dies
+   and browser writes die with it; `npm run update` is the sole write path.
+   `<EditableField>`/`edit-context`/`<AuthGate>` all go in the strip-down.
 5. **Mobile** — Emberline is desktop-spec (`minWidth: 1280`). Old themes had
    viewport handling via `useDashboardViewport`. Port the 1c mobile concept from
    the mockups file when it's mobile's turn.
-6. **Resonator rating sub-bars** — Emberline shows the hero PROFICIENCY medallion
-   (grade + score) but not the 4 weighted sub-bars (`rating.subs`) the other themes
-   render. Cheap add if wanted.
+6. ~~**Resonator rating sub-bars**~~ **SUPERSEDED → GRADE MEDALS, DONE 2026-07-19.**
+   A. vetoed bars ("less generic chart feel"). The 4 rating subs now render as
+   medals-on-plates in the hero band using the GAME'S OWN settlement grade
+   letters, ripped from `Common/Image/ComImg/T_ComScore*` → `public/game/grades/`
+   ({d,c,b,a,s,ss,sss}.webp, ~53KB). Gotchas baked into the work: the pak's SSS
+   texture is byte-identical to SS, so sss.webp is OUR 3-glyph composition at the
+   measured 68px stride; ✦ stays a custom pink→gold text render (no game art for
+   our tier, on purpose). `gradeIcon()` in `game-icons.ts`; `RatingSub` now
+   carries a per-sub `grade` (echo graded on the echo ladder so the medal always
+   matches the Echo Audit panel; stats/sig/seq on the rating ladder —
+   `gradeOf` exported from echo-audit for this). Neither ladder emits SS, so
+   ss.webp is spare inventory (future cycles-page use).
+
+## ⚠ Merge-time sync debt (fork vs main repo)
+
+The main repo grew the **IRIDESCENT** rating tier (2026-07-19, C4 import) AFTER
+this fork branched: `Rating` type, CLI `VALID_RATINGS`, rainbow-gradient badge
+in all 3 theme cycles renders. This fork has none of that. When landing
+Emberline in the real repo: bring IRIDESCENT into the fork's `Rating` type,
+add an IRIDESCENT branch to `teams-panels.tsx` `RatingBadge` AND
+`emberline/cycles.tsx`, and port the cycles run-list portrait `onError`-hide.
 
 ## Strip-down order (after the above are in)
 
