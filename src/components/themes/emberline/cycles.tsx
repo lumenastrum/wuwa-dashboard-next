@@ -13,8 +13,13 @@ const SCORE_SCALE = 15000;
 // comparable to each other (not to their own target).
 const CYCLE_SCALE = 65000;
 
+// The in-game IRIDESCENT badge is a prismatic rainbow — same stops as the
+// old themes' port (2026-07-19), glow tuned for the abyssal ground.
+const IRID_GRAD = "linear-gradient(100deg, #ffb3d9, #ffd36e 35%, #9fe8ff 68%, #c9a7ff)";
+
 function EMedal({ rating }: { rating: Rating }) {
   if (!rating) return null;
+  const iridescent = rating === "IRIDESCENT";
   const crowned = rating === "CROWNED";
   const sss = rating === "SSS";
   const col = crowned || sss ? E_PAL.gold : rating === "SS" ? E_PAL.emberSoft : E_PAL.green;
@@ -27,10 +32,10 @@ function EMedal({ rating }: { rating: Rating }) {
         padding: "3px 9px",
         borderRadius: 999,
         flexShrink: 0,
-        color: crowned ? E_PAL.dark : col,
-        background: crowned ? E_PAL.gold : `${col}14`,
-        border: `1px solid ${crowned ? E_PAL.gold : `${col}77`}`,
-        boxShadow: crowned || sss ? `0 0 12px ${E_PAL.gold}55` : "none",
+        color: iridescent || crowned ? E_PAL.dark : col,
+        background: iridescent ? IRID_GRAD : crowned ? E_PAL.gold : `${col}14`,
+        border: `1px solid ${iridescent ? "rgba(255,179,217,0.8)" : crowned ? E_PAL.gold : `${col}77`}`,
+        boxShadow: iridescent ? "0 0 12px rgba(255,179,217,0.55)" : crowned || sss ? `0 0 12px ${E_PAL.gold}55` : "none",
       }}
     >
       {rating}
@@ -194,7 +199,8 @@ export function EmberlineCycles() {
           />
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             {c.teams.map((t) => {
-              const crowned = t.rating === "CROWNED" || t.rating === "SSS";
+              const iridescent = t.rating === "IRIDESCENT";
+              const crowned = iridescent || t.rating === "CROWNED" || t.rating === "SSS";
               return (
                 <div
                   key={t.order}
@@ -255,12 +261,14 @@ export function EmberlineCycles() {
                         style={{
                           width: `${Math.min((t.score / SCORE_SCALE) * 100, 100)}%`,
                           height: "100%",
-                          background: crowned
-                            ? `linear-gradient(90deg, ${E_PAL.gold}, ${E_PAL.emberSoft})`
-                            : t.over5k
-                              ? E_PAL.green
-                              : E_PAL.textMute,
-                          boxShadow: crowned ? `0 0 8px ${E_PAL.gold}66` : "none",
+                          background: iridescent
+                            ? IRID_GRAD
+                            : crowned
+                              ? `linear-gradient(90deg, ${E_PAL.gold}, ${E_PAL.emberSoft})`
+                              : t.over5k
+                                ? E_PAL.green
+                                : E_PAL.textMute,
+                          boxShadow: iridescent ? "0 0 8px rgba(255,179,217,0.6)" : crowned ? `0 0 8px ${E_PAL.gold}66` : "none",
                         }}
                       />
                     </div>

@@ -63,6 +63,10 @@ function EPanelTitle({
   );
 }
 
+// The in-game IRIDESCENT badge is a prismatic rainbow — same stops as the
+// old themes' port (2026-07-19), glow tuned for the abyssal ground.
+const IRID_GRAD = "linear-gradient(100deg, #ffb3d9, #ffd36e 35%, #9fe8ff 68%, #c9a7ff)";
+
 function RatingBadge({ rating }: { rating: Rating }) {
   if (!rating) {
     return (
@@ -72,6 +76,7 @@ function RatingBadge({ rating }: { rating: Rating }) {
     );
   }
 
+  const iridescent = rating === "IRIDESCENT";
   const crowned = rating === "CROWNED";
   const sss = rating === "SSS";
   const color = crowned || sss ? E_PAL.gold : rating === "SS" ? E_PAL.emberSoft : E_PAL.green;
@@ -84,10 +89,10 @@ function RatingBadge({ rating }: { rating: Rating }) {
         letterSpacing: 1,
         padding: "3px 7px",
         borderRadius: 999,
-        color: crowned ? E_PAL.dark : color,
-        background: crowned ? E_PAL.gold : `${color}14`,
-        border: `1px solid ${crowned ? E_PAL.gold : `${color}77`}`,
-        boxShadow: crowned || sss ? `0 0 10px ${E_PAL.gold}55` : "none",
+        color: iridescent || crowned ? E_PAL.dark : color,
+        background: iridescent ? IRID_GRAD : crowned ? E_PAL.gold : `${color}14`,
+        border: `1px solid ${iridescent ? "rgba(255,179,217,0.8)" : crowned ? E_PAL.gold : `${color}77`}`,
+        boxShadow: iridescent ? "0 0 10px rgba(255,179,217,0.55)" : crowned || sss ? `0 0 10px ${E_PAL.gold}55` : "none",
         whiteSpace: "nowrap",
       }}
     >
@@ -269,7 +274,8 @@ export function EmberlineTeamsPanels({ name }: { name: string }) {
               </div>
 
               {cycleAppearances.map((appearance) => {
-                const prestige = appearance.rating === "CROWNED" || appearance.rating === "SSS";
+                const prestige =
+                  appearance.rating === "IRIDESCENT" || appearance.rating === "CROWNED" || appearance.rating === "SSS";
                 return (
                   <div
                     key={`${appearance.cycleId}-${appearance.order}`}

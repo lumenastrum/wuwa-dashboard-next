@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { CSSProperties } from "react";
-import { IMPLEMENTED_THEMES, THEME_LIST, useTheme } from "@/lib/theme-context";
+import { useTheme } from "@/lib/theme-context";
 import { useData } from "@/lib/data-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { resonatorPath } from "@/lib/route-name";
@@ -39,10 +39,10 @@ function activePage(pathname: string): PageId {
 export function EmberlineTopBar() {
   const pathname = usePathname() ?? "/";
   const active = activePage(pathname);
-  const { theme, setTheme, lastResonator } = useTheme();
+  const { lastResonator } = useTheme();
   const { syncStatus } = useData();
   const sync = SYNC_LABEL[syncStatus] ?? SYNC_LABEL.loading;
-  const { isMobile, isTablet } = useDashboardViewport();
+  const { isTablet } = useDashboardViewport();
   const isCompact = isTablet;
 
   // Sticky/backdrop chrome is invariant across branches (no fixed-position
@@ -91,48 +91,6 @@ export function EmberlineTopBar() {
     );
   });
 
-  const themePill = (
-    <div
-      style={{
-        display: "flex",
-        gap: 2,
-        padding: 3,
-        borderRadius: 999,
-        border: `1px solid ${E_PAL.borderSoft}`,
-        background: "rgba(4,13,18,0.5)",
-        flexShrink: 0,
-      }}
-    >
-      {THEME_LIST.map((t) => {
-        const isActive = theme === t.id;
-        const isImplemented = IMPLEMENTED_THEMES.includes(t.id);
-        return (
-          <button
-            key={t.id}
-            onClick={() => isImplemented && setTheme(t.id)}
-            disabled={!isImplemented}
-            title={isImplemented ? t.sub : "Coming next"}
-            style={{
-              padding: "4px 10px",
-              borderRadius: 999,
-              ...eStyles.mono,
-              fontSize: 9,
-              letterSpacing: 1,
-              cursor: isImplemented ? "pointer" : "not-allowed",
-              background: isActive ? E_PAL.ember : "transparent",
-              color: isActive ? E_PAL.dark : E_PAL.textMute,
-              opacity: isImplemented ? 1 : 0.4,
-              border: "none",
-              transition: "all 0.15s",
-            }}
-          >
-            {t.label.toUpperCase()}
-          </button>
-        );
-      })}
-    </div>
-  );
-
   const syncChip = (
     <span
       style={{ ...eStyles.mono, fontSize: 10, color: sync.color, letterSpacing: 1, display: "flex", gap: 5, flexShrink: 0 }}
@@ -156,11 +114,10 @@ export function EmberlineTopBar() {
           minWidth: 0,
         }}
       >
-        {/* row 1 — wordmark · spacer · (tablet-only theme pill) · sync chip */}
+        {/* row 1 — wordmark · spacer · sync chip */}
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {wordmark}
           <div style={{ flex: 1 }} />
-          {!isMobile && themePill}
           {syncChip}
         </div>
         {/* row 2 — nav as a horizontal scroll strip */}
@@ -198,7 +155,6 @@ export function EmberlineTopBar() {
       <div style={{ display: "flex", gap: 24, ...eStyles.mono, fontSize: 10, letterSpacing: 2 }}>
         {navLinks}
       </div>
-      {themePill}
       {syncChip}
     </div>
   );

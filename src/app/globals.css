@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-display-obsidian: var(--font-cormorant);
-  --font-display-atelier:  var(--font-instrument);
-  --font-display-console:  var(--font-space-grotesk);
-  --font-body:             var(--font-geist);
-  --font-mono:             var(--font-jetbrains);
-}
-
 html {
   height: 100%;
 }
@@ -15,44 +7,13 @@ html {
 body {
   min-height: 100%;
   margin: 0;
-  font-family: var(--font-geist), system-ui, sans-serif;
+  font-family: var(--font-familjen), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: var(--shell-text, #f4f3ee);
-  background: var(--shell-bg, #0a0d14);
+  color: #eaf6f3;
+  background: #050f15;
 }
 
 * { box-sizing: border-box; }
 img { user-select: none; -webkit-user-drag: none; }
 
-::selection { background: rgba(126, 224, 255, 0.3); }
-
-/* ───────────── Obsidian ───────────── */
-html[data-theme="obsidian"] {
-  --shell-bg:
-    radial-gradient(ellipse at 20% 0%, rgba(94,225,179,0.05), transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(183,133,255,0.05), transparent 50%),
-    #0a0d14;
-  --shell-text: #f4f3ee;
-  --shell-font: var(--font-geist), system-ui, sans-serif;
-}
-
-/* ───────────── Atelier ───────────── */
-html[data-theme="atelier"] {
-  --shell-bg:
-    radial-gradient(ellipse at 0% 0%, #f6f0ff 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, #e9f4fb 0%, transparent 50%),
-    #eef1f6;
-  --shell-text: #1a1d2a;
-  --shell-font: var(--font-geist), system-ui, sans-serif;
-}
-
-/* ───────────── Console ───────────── */
-html[data-theme="console"] {
-  --shell-bg: linear-gradient(180deg, #0c1220 0%, #070b12 100%);
-  --shell-text: #d8e8f5;
-  --shell-font: var(--font-space-grotesk), system-ui, sans-serif;
-}
-
-html[data-theme="console"] body {
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
-}
+::selection { background: rgba(147, 224, 211, 0.3); }

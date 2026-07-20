@@ -1,14 +1,14 @@
 # WuWa Dashboard
 
-The house Wuthering Waves roster — audits, benchmarks, and endstate cycles in three swappable themes, live-saved to Supabase. Built by Clio, fed with real pull data, and yes, the S-grades render in gold because they earned it.
+The house Wuthering Waves roster — audits, benchmarks, and endstate cycles in the Emberline theme, live-saved to Supabase. Built by Clio, fed with real pull data, and yes, the S-grades render in gold because they earned it.
 
 ## What this is
 
-A personal gacha-tracker dashboard with three visual themes sharing the same data:
+A personal gacha-tracker dashboard, single-themed as **Emberline** (the earlier Obsidian / Atelier / Console trio was retired in the 2026-07-20 strip-down):
 
-- **Obsidian** — dark, jewel-tone, elegant. Cormorant Garamond display + Geist body, gold accent.
-- **Atelier** — light editorial, ink-on-paper. Instrument Serif italic display, navy ink accent.
-- **Console** — holographic HUD. Space Grotesk + JetBrains Mono everywhere, cyan + amber + magenta. **Edit mode lives here.**
+- **Emberline** — deep abyssal teal with element-reactive ember accents. The "Resonance Instrument" type stack: Chakra Petch 500 display, Familjen Grotesk body, Martian Mono HUD. Palette (`E_PAL`) and primitives (`ECard`/`EKpi`/`EShell`/…) live in `src/components/themes/emberline/`. Fully responsive — a two-stage idiom (`src/lib/use-dashboard-viewport.ts`) collapses structure at ≤1024 and adjusts fonts/padding/heroes at ≤700; wide tables scroll inside their cards.
+
+All writes are **CLI-only** — the browser is read-only on every page.
 
 Four pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`), **Cycles** (`/cycles`).
 
@@ -20,7 +20,8 @@ Four pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`),
 | UI | React 19 + Tailwind 4 + inline-styled theme primitives |
 | Data | Supabase Postgres (`dashboard_profiles` table, JSONB blob) |
 | State | DataProvider context with debounced auto-save (650ms) |
-| Edit | EditableField primitive, Console-theme only |
+| Theme | Emberline — sole theme, inline-styled primitives |
+| Writes | CLI-only (`npm run update`) — browser is read-only (RLS) |
 | Mutation CLI | `tsx scripts/update.ts` via `npm run update` |
 | Deploy | GitHub Pages (static export) — auto-deploys on push to `main` via `.github/workflows/pages.yml`. [Live](https://lumenastrum.github.io/wuwa-dashboard-next/) |
 
@@ -37,23 +38,11 @@ npm run dev
 
 Tested on **Node 24**, npm 11. Should work on any LTS Node ≥ 20.
 
-## Updating data — two ways
+## Updating data — the CLI
 
-Both write paths are **owner-locked** (RLS since 2026-07-07): visitors get the museum tour, not the paintbrush. The live site is fully browsable read-only.
+Writes are **owner-locked** (RLS since 2026-07-07) and **CLI-only** — visitors get the museum tour, not the paintbrush. The live site is fully browsable read-only, and there is no in-browser editing on any page (the old Console edit mode was removed in the 2026-07-20 strip-down).
 
-### 1. Browser, in Console theme
-
-1. Switch to the **Console** theme via the top-bar segmented control.
-2. Click the `▣ LOCK` button (top right of the top bar). First time per browser, an **owner sign-in** overlay appears — writes require an authenticated Supabase session. After that it becomes `◐ EDIT` (amber) and the session persists.
-3. Every editable value on the page is now an input or select. Edit any of them.
-4. Click outside the input (or hit Enter) to commit. The sync indicator goes `◐ SAVE` for ~650ms, then back to `● LIVE` once Supabase confirms.
-5. Click `◐ EDIT` again to lock back into read mode.
-
-**Currently inline-editable on the Resonator page:** stats (current, optimal, _status), audit notes, build type, priority status, sequence (dropdown), weapon name + rank + level, echo set.
-
-Teams + Cycles editing in-browser is **not wired yet** — use the CLI for those (it's faster anyway).
-
-### 2. CLI — `npm run update`
+### `npm run update`
 
 Run from the project root. Works the same on Windows (PowerShell) and macOS (terminal). Quote values with spaces. Needs `SUPABASE_SERVICE_KEY` in a gitignored `.env` at the repo root — no key, no writes, by design.
 
@@ -139,7 +128,7 @@ If Supabase is unreachable, indicator stays `○ LOCAL`. Edits still apply in-me
 
 ### Supabase config
 
-The anon key is in `src/lib/supabase.ts` — committed deliberately because Supabase anon keys are designed to ship client-side. Security comes from RLS, not key secrecy: since the 2026-07-07 lockdown the anon role is **SELECT-only** (public signups disabled), so the world can read the dashboard and nobody but the owner can write to it. Writes ride either the owner's authenticated session (browser) or the service key (CLI, gitignored `.env`). The `dashboard_profiles` table has its old profile CHECK constraint dropped so any namespaced profile key works.
+The anon key is in `src/lib/supabase.ts` — committed deliberately because Supabase anon keys are designed to ship client-side. Security comes from RLS, not key secrecy: since the 2026-07-07 lockdown the anon role is **SELECT-only** (public signups disabled), so the world can read the dashboard and nobody but the owner can write to it. Writes ride the service key (CLI, gitignored `.env`) — there is no in-browser write path. The `dashboard_profiles` table has its old profile CHECK constraint dropped so any namespaced profile key works.
 
 If you ever need to re-create the table from scratch:
 
@@ -162,35 +151,35 @@ wuwa-dashboard-next/
 │  └─ weapons/                 Signature weapon images (Weapon_*.webp)
 ├─ src/
 │  ├─ app/
-│  │  ├─ layout.tsx            ThemeProvider → DataProvider → EditProvider → TopBar + children
-│  │  ├─ page.tsx              / → Roster (dispatches per theme)
+│  │  ├─ layout.tsx            ThemeProvider → DataProvider → TopBar + children
+│  │  ├─ page.tsx              / → Roster (Emberline)
 │  │  ├─ r/[name]/page.tsx     /r/[name] → Resonator
 │  │  ├─ teams/page.tsx        /teams
 │  │  ├─ cycles/page.tsx       /cycles
-│  │  └─ globals.css           Tailwind v4 + per-theme html[data-theme] tokens
+│  │  └─ globals.css           Tailwind v4 base reset + body/color (no @theme, no data-theme)
 │  ├─ components/
-│  │  ├─ top-bar.tsx           Dispatcher → picks theme-specific top bar
-│  │  ├─ weapon-img.tsx        <WeaponImg> with onError graceful hide
-│  │  ├─ editable-field.tsx    <EditableField> primitive (text/select/textarea)
+│  │  ├─ top-bar.tsx           Renders the Emberline top bar
+│  │  ├─ cover-portrait.tsx    <CoverPortrait> Spine → tall → bust chain
 │  │  └─ themes/
-│  │     ├─ obsidian/          { styles, primitives, top-bar, roster, resonator, teams, cycles }
-│  │     ├─ atelier/           { + ARosterStrip vertical left-rail on resonator }
-│  │     └─ console/           { KPanel HUD chrome, KScanlines grid overlay, edit affordances }
+│  │     └─ emberline/         { styles (E_PAL), primitives (ECard/EKpi/EShell…), top-bar, roster, resonator, teams, cycles, convene, flex-card }
 │  ├─ lib/
 │  │  ├─ types.ts              DashboardData, Resonator, AuditEntry, etc.
 │  │  ├─ supabase.ts           URL, anon key, table, profile key, debounce delay
 │  │  ├─ data-context.tsx      DataProvider + useData() hook + selectors
-│  │  ├─ theme-context.tsx     ThemeProvider + useTheme() + IMPLEMENTED_THEMES
-│  │  ├─ edit-context.tsx      EditProvider + useEditMode()
+│  │  ├─ theme-context.tsx     ThemeProvider + useTheme() — cross-page lastResonator only (localStorage wuwa.resonator)
+│  │  ├─ use-dashboard-viewport.ts  isMobile ≤700 / isTablet ≤1024 breakpoints
 │  │  ├─ elements.ts           Element + status palettes
 │  │  ├─ portraits.ts          Portrait + element-icon path resolvers + override map
 │  │  ├─ weapons.ts            weaponImage(name) → /weapons/Weapon_*.webp
+│  │  ├─ sonata.ts             parseEchoSets/sonataIcon → /sonatas/*.webp
 │  │  └─ duration.ts           durationToSec helper
 │  └─ data/                    (Empty — data.json moved to public/)
 ├─ scripts/
 │  ├─ update.ts                CLI mutator (run via `npm run update -- …`)
 │  ├─ migrate-sigweapons.ts    One-time: backup live row + seed signatureWeapons stubs
-│  └─ refactor-data-imports.py One-shot codemod, kept for reference
+│  ├─ convene-sync.ts          Pull-history sync (npm run convene)
+│  ├─ convene-import.ts        Historical pull graft (npm run convene:import)
+│  └─ service-key.ts           Loads SUPABASE_SERVICE_KEY from gitignored .env
 └─ package.json
 ```
 
@@ -208,18 +197,14 @@ Each resonator's signature weapon has a detail entry — **what it does** (passi
 
 - **Data:** a top-level `signatureWeapons: SignatureWeapon[]` collection (see `src/lib/types.ts`), keyed by `name` which matches the resonator's `weapon` field. Fields: `type`, `wearer`, `baseAtk`, `mainStat`, `mainStatValue`, `passiveName`, `passive`, `synergy`.
 - **Self-healing:** `ensureSignatureWeapons()` in `data-context.tsx` adds a blank stub for any resonator weapon that lacks one, so a newly-added resonator auto-gets an entry to fill. The CLI does the same on write.
-- **Editing:** CLI `sigweapon <weapon> <field> <value>` (and `addsigweapon`), or inline in **Console** edit mode (passive + synergy are textareas). Obsidian and Atelier render it read-only; a blank weapon shows a muted "not documented yet" line.
+- **Editing:** CLI `sigweapon <weapon> <field> <value>` (and `addsigweapon`) — the only write path. Emberline renders it read-only; a blank weapon shows a muted "not documented yet" line.
 - **Seeding the live row:** entries are seeded into Supabase by `scripts/migrate-sigweapons.ts` (backs up the row to `./backups/` first, then adds missing stubs — idempotent, never clobbers filled entries).
 
-## Themes
+## Theme
 
-| Theme | When to use | Edit affordances |
-|-------|-------------|------------------|
-| Obsidian | Read-focused, dark, default for most surfaces | None — pure display |
-| Atelier  | Editorial / printable / sharing screenshots | None — pure display |
-| Console  | When you're tuning, logging clears, updating after a session | Full inline edit + LOCK toggle |
+**Emberline** is the sole theme (the earlier Obsidian / Atelier / Console trio was retired in the 2026-07-20 strip-down). Deep abyssal teal with element-reactive ember accents and the "Resonance Instrument" type stack — Chakra Petch 500 display, Familjen Grotesk body, Martian Mono HUD. The palette (`E_PAL`) and primitives (`ECard`/`EKpi`/`EShell`/…) live in `src/components/themes/emberline/`; there's no theme switcher, no `data-theme`, and no per-theme dispatcher — `src/components/top-bar.tsx` and the app pages render Emberline directly.
 
-Adding a fourth theme: copy `src/components/themes/obsidian/`, replace the palette and primitives, register it in `src/lib/theme-context.tsx` (`THEME_LIST`, `IMPLEMENTED_THEMES`, `ThemeId` type), and dispatch in `src/components/top-bar.tsx` + each route under `src/app/`.
+It's fully **responsive**: a two-stage idiom in `src/lib/use-dashboard-viewport.ts` collapses structure at `isTablet` (≤1024) and adjusts fonts/padding/heroes at `isMobile` (≤700). Wide tables scroll inside their own cards, and the FLEX card export button is desktop/tablet-only.
 
 ## Deployment
 
@@ -251,7 +236,7 @@ The static export is configured in `next.config.ts`:
 
 **Sync indicator stuck on `◐ SAVE`** — Network or RLS issue. Check browser console for the Supabase error code. Common ones:
 - `23514` → CHECK constraint violation on `profile` column. The constraint should be dropped; if it came back, re-run `ALTER TABLE dashboard_profiles DROP CONSTRAINT dashboard_profiles_profile_check;` in Supabase SQL Editor.
-- `401/403` → RLS doing its job: anon is read-only. Sign in via the edit toggle (browser) or use the service key (CLI). If you've forked this for your own data, write your own policies — writes to `authenticated`, reads to everyone, signups off.
+- `401/403` → RLS doing its job: anon is read-only. Use the service key (CLI) to write. If you've forked this for your own data, write your own policies — writes to `authenticated`, reads to everyone, signups off.
 
 **Indicator stays `○ LOCAL` immediately on load** — Supabase client failed to init (bad URL/key). Check `src/lib/supabase.ts` constants.
 
@@ -267,7 +252,7 @@ If you're a Claude landing in this repo:
 
 - This is **Next.js 16** — many APIs differ from training data (notably `params` is a `Promise` now, accessed via `use(params)` in client components). Always read `node_modules/next/dist/docs/` before changing routing or async data conventions.
 - **Don't reinstate the static `lib/data.ts`** — it was replaced with `lib/data-context.tsx` deliberately. Module-level constants from `data.json` can't see Supabase live updates.
-- **Edit mode is Console-only by design.** Don't add `<EditableField>` to Obsidian or Atelier pages.
-- **Inline styles are preserved 1:1 from the original design prototype** (kept outside this repo). Don't refactor them to Tailwind classes without asking — the prototype is the source of truth for visual fidelity.
+- **There is no in-browser editing.** `EditableField`, `edit-context`, `AuthGate`, and `src/lib/auth.ts` were all deleted in the 2026-07-20 strip-down; the CLI is the only write path. Don't try to reintroduce inline editing.
+- **Inline styles are preserved 1:1 from the Emberline design prototype** (kept outside this repo). Don't refactor them to Tailwind classes without asking — the prototype is the source of truth for visual fidelity.
 
 See `CLAUDE.md` for shorter context.

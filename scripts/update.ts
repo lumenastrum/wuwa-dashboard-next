@@ -61,8 +61,6 @@ import { deriveStatStatus } from "../src/lib/stat-audit";
 import { durationToSec } from "../src/lib/duration";
 
 const SUPABASE_URL = "https://ayhrqkxdeecybjhmgdoq.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5aHJxa3hkZWVjeWJqaG1nZG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTI0NjcsImV4cCI6MjA5Mzg2ODQ2N30.GN-y9xEyNfQUVUXCqOGJC5cpN35X7B8PpOlFJPn10A8";
 const SUPABASE_TABLE = "dashboard_profiles";
 const PROFILE_KEY = "andres-wuwa";
 
@@ -227,7 +225,7 @@ function assertTime(v: string, label = "time") {
 }
 
 // Invariant: a benchmark's rank === its position in the array (1-based). The
-// three theme renders key off both array order AND b.rank, so keep them locked.
+// Emberline renders key off both array order AND b.rank, so keep them locked.
 // Call after every add / move / sort / remove.
 function renumberBenchmarks(data: Data) {
   data.benchmarks.forEach((b, i) => {

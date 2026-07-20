@@ -121,7 +121,21 @@ Emberline in the real repo: bring IRIDESCENT into the fork's `Rating` type,
 add an IRIDESCENT branch to `teams-panels.tsx` `RatingBadge` AND
 `emberline/cycles.tsx`, and port the cycles run-list portrait `onError`-hide.
 
-## Strip-down order (after the above are in)
+## Strip-down order (after the above are in) — **EXECUTED 2026-07-20**
+
+**All five steps below are DONE.** Obsidian/Atelier/Console deleted (24 files),
+dispatchers collapsed to direct Emberline renders, browser edit mode fully
+removed (edit-context / auth.ts / AuthGate / EditableField — CLI is the sole
+write path), theme-context shrunk to lastResonator-only, 5 fonts pruned
+(Resonance Instrument stack remains), globals.css reduced to the Emberline
+base, CLAUDE.md + README.md rewritten single-theme. The IRIDESCENT merge debt
+(section above) was paid in the same pass: Rating type + EMedal/RatingBadge/
+score-bar rainbow branches, live-verified against C4's three IRIDESCENT teams
+(cameo rows degrade via EFace letter tiles natively — no onError port needed).
+Whole-tree `npm run lint` now genuinely clean (two pre-existing violations
+fixed: theme-context setState-in-effect shape, dead SUPABASE_ANON_KEY consts
+in 4 scripts). This doc is historical from here — the landing steps below
+close it out.
 
 1. Migrate + verify each system in Emberline while the old themes still exist to
    diff against.

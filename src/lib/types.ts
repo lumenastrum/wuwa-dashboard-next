@@ -3,9 +3,8 @@ export type Role = "Main DPS" | "Sub-DPS" | "Support";
 export type Status = "green" | "yellow" | "red" | "neutral";
 export type Sequence = "S0" | "S1" | "S2" | "S3" | "S4" | "S5" | "S6";
 export type WeaponType = "Sword" | "Pistols" | "Broadblade" | "Gauntlets" | "Rectifier";
-export type Rating = "" | "B" | "A" | "S" | "SS" | "SSS" | "CROWNED";
+export type Rating = "" | "B" | "A" | "S" | "SS" | "SSS" | "CROWNED" | "IRIDESCENT";
 
-export type ThemeId = "obsidian" | "atelier" | "console" | "emberline";
 export type PageId = "roster" | "resonator" | "teams" | "cycles" | "convene";
 
 export interface DashboardMeta {

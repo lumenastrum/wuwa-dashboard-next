@@ -1,53 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Geist,
-  Cormorant_Garamond,
-  Instrument_Serif,
-  Space_Grotesk,
-  JetBrains_Mono,
-  Chakra_Petch,
-  Familjen_Grotesk,
-  Martian_Mono,
-} from "next/font/google";
+import { Chakra_Petch, Familjen_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider, THEME_INIT_SCRIPT } from "@/lib/theme-context";
+import { ThemeProvider } from "@/lib/theme-context";
 import { DataProvider } from "@/lib/data-context";
-import { EditProvider } from "@/lib/edit-context";
 import { TopBar } from "@/components/top-bar";
 
-const geist = Geist({
-  variable: "--font-geist",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-});
-
-// Emberline theme faces — the "Resonance Instrument" stack (2026-07-15):
+// Emberline faces — the "Resonance Instrument" stack (2026-07-15):
 // Chakra Petch (display) + Familjen Grotesk (body) + Martian Mono (HUD).
 const chakraPetch = Chakra_Petch({
   variable: "--font-chakra",
@@ -78,11 +36,6 @@ export const viewport: Viewport = {
 };
 
 const fontClassNames = [
-  geist.variable,
-  cormorant.variable,
-  instrument.variable,
-  spaceGrotesk.variable,
-  jetbrains.variable,
   chakraPetch.variable,
   familjenGrotesk.variable,
   martianMono.variable,
@@ -90,17 +43,12 @@ const fontClassNames = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fontClassNames} antialiased`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
+    <html lang="en" className={`${fontClassNames} antialiased`}>
       <body>
         <ThemeProvider>
           <DataProvider>
-            <EditProvider>
-              <TopBar />
-              {children}
-            </EditProvider>
+            <TopBar />
+            {children}
           </DataProvider>
         </ThemeProvider>
       </body>

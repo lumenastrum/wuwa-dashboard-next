@@ -218,11 +218,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#9ca0ad",
-          fontFamily: "var(--font-jetbrains), monospace",
+          color: "#9db8bd",
+          fontFamily: "var(--font-martian), ui-monospace, monospace",
           fontSize: 11,
           letterSpacing: 2,
-          background: "#0a0d14",
+          background: "#050f15",
         }}
       >
         {syncStatus === "error" ? "DATA UNAVAILABLE" : "SYNCING ROSTER…"}
