@@ -79,9 +79,9 @@ export function teamPortraitFrame(name: string): PortraitFrame {
 // Official splash art (public/splash/, sourced from the wiki's
 // "<Name> Splash Art" set, alpha-trimmed + webp'd at q90). The FLEX card's
 // vanity canvas — rendered whole, never cover-cropped (the splashes are
-// composed medallion pieces over transparency). A missing file (Aemeath —
-// her art is ours, not Kuro's) falls back to the tall sprite at the
-// callsite via onError.
+// composed medallion pieces over transparency). A missing file (e.g. a
+// fresh roster add before its wiki rip) falls back to the tall sprite at
+// the callsite via onError.
 export function splashArt(name: string): string {
   const file = `${name.replace(/[^\w ]/g, "").replace(/ +/g, "_")}_Splash_Art.webp`;
   return `${BASE_PATH}/splash/${file}`;

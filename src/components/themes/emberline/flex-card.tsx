@@ -219,9 +219,9 @@ const panelStyle: React.CSSProperties = {
 // wide band out of them kills the composition, so the piece renders WHOLE:
 // contain-by-height, right-anchored, element-glow drop shadow, with a
 // blurred+dimmed copy of itself washing the zone behind it. Falls back to
-// the tall-sprite cut-out when a resonator has no wiki art (Aemeath — her
-// art is ours, not Kuro's). Callers key this per resonator so the failed
-// state resets by remount.
+// the tall-sprite cut-out when a resonator's splash isn't in public/splash/
+// yet (new adds land art-less until the wiki rip). Callers key this per
+// resonator so the failed state resets by remount.
 function EFlexArt({ r, el }: { r: RosterEntry; el: ElementPalette }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
