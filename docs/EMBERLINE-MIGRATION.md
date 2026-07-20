@@ -39,6 +39,18 @@ this one unified theme. This doc is the runway for the migration sessions.
    (corner pixels = exact palette hexes, portrait/panel/echo zones lit).
    3-lens adversarial review (edge-cases / theme-fidelity / repo-gotchas):
    0 confirmed findings.
+   **Splash-art canvas iteration (same day, A.'s call):** the card's art zone
+   now renders the resonator's OFFICIAL splash art (wiki "<Name> Splash Art"
+   set → `public/splash/`, alpha-trimmed webp q90, 22 files ~15MB,
+   `splashArt()` in portraits.ts). Key learning: every splash is 22–57%
+   TRANSPARENT — they're composed medallion pieces (sun disc / moon /
+   orrery), NOT wallpapers, so cover-cropping kills them (Changli's card
+   showed pavilion, no Changli). The card renders the piece WHOLE:
+   contain-by-height right-anchored + element-glow drop shadow, over a
+   blurred+dimmed copy of itself as zone ambiance, behind left/top scrims.
+   No per-art tuning map needed. Aemeath (no wiki art — she's ours) falls
+   back to the tall-sprite cut-out via onError remount. Blur verified to
+   survive the html-to-image export (pixel-sampled 3040×1760).
 2. ~~**Signature weapon detail**~~ **DONE 2026-07-15** (`6951a4c`) — KPI pair +
    PASSIVE inset tile + WHY IT'S CRACKED behind an element-tinted left rule, in
    the left Stat Audit panel. Verified live on Fusion (Aemeath) + Havoc (Xuanling).

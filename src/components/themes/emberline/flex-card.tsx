@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { ELEMENTS, type ElementPalette } from "@/lib/elements";
-import { fiveStarIcon, tallPortrait } from "@/lib/portraits";
+import { fiveStarIcon, splashArt, tallPortrait } from "@/lib/portraits";
 import {
   echoIcon,
   elementBadge,
@@ -209,10 +209,85 @@ const panelStyle: React.CSSProperties = {
   position: "relative",
   border: `1px solid ${E_PAL.border}`,
   borderRadius: 6,
-  background: "rgba(5,14,19,0.62)",
+  background: "rgba(4,12,17,0.82)",
   padding: "13px 15px",
   minWidth: 0,
 };
+
+// Official splash art as the vanity canvas. The splashes are composed
+// medallion pieces (sun disc, moon, orrery) over transparency — cropping a
+// wide band out of them kills the composition, so the piece renders WHOLE:
+// contain-by-height, right-anchored, element-glow drop shadow, with a
+// blurred+dimmed copy of itself washing the zone behind it. Falls back to
+// the tall-sprite cut-out when a resonator has no wiki art (Aemeath — her
+// art is ours, not Kuro's). Callers key this per resonator so the failed
+// state resets by remount.
+function EFlexArt({ r, el }: { r: RosterEntry; el: ElementPalette }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <img
+        src={tallPortrait(r.name)}
+        alt={r.name}
+        style={{
+          position: "absolute",
+          right: 140,
+          bottom: 0,
+          height: "126%",
+          width: "auto",
+          maxWidth: "none",
+          filter: `drop-shadow(0 24px 50px ${el.glow})`,
+        }}
+      />
+    );
+  }
+  const src = splashArt(r.name);
+  return (
+    <>
+      {/* ambiance backdrop — the art's own palette washed across the zone */}
+      <img
+        src={src}
+        alt=""
+        aria-hidden
+        style={{
+          position: "absolute",
+          right: -160,
+          top: "50%",
+          transform: "translateY(-50%)",
+          height: "230%",
+          width: "auto",
+          maxWidth: "none",
+          filter: "blur(30px) saturate(1.2)",
+          opacity: 0.3,
+        }}
+      />
+      {/* scrims: left for panel readability, top to blend under the header */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(90deg, rgba(5,15,21,0.85) 28%, transparent 55%), linear-gradient(180deg, rgba(5,15,21,0.7), transparent 18%)",
+        }}
+      />
+      {/* the piece itself, whole, right-anchored */}
+      <img
+        src={src}
+        alt={r.name}
+        onError={() => setFailed(true)}
+        style={{
+          position: "absolute",
+          right: 44,
+          bottom: 2,
+          height: "104%",
+          width: "auto",
+          maxWidth: "none",
+          filter: `drop-shadow(0 18px 44px ${el.glow})`,
+        }}
+      />
+    </>
+  );
+}
 
 export function EmberlineFlexCard({
   r, sw, echoBuild, rating, stats, idx, total, onClose,
@@ -350,19 +425,7 @@ export function EmberlineFlexCard({
 
             {/* top region: panels left, portrait bleed right */}
             <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-              <img
-                src={tallPortrait(r.name)}
-                alt={r.name}
-                style={{
-                  position: "absolute",
-                  right: 140,
-                  bottom: 0,
-                  height: "126%",
-                  width: "auto",
-                  maxWidth: "none",
-                  filter: `drop-shadow(0 24px 50px ${el.glow})`,
-                }}
-              />
+              <EFlexArt key={r.name} r={r} el={el} />
               {/* bottom scrim — the portrait's feet fade before the echo band */}
               <div
                 style={{
