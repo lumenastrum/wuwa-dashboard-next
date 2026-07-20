@@ -24,10 +24,21 @@ this one unified theme. This doc is the runway for the migration sessions.
 
 ## To migrate INTO Emberline (exists in old themes, absent here)
 
-1. **FLEX card** — `components/themes/obsidian/flex-card.tsx` (1520×880 composed
-   build card, html-to-image PNG export, Chromium-only). Reuses obsidian's
-   `OEchoCard`/`OForteDisc`/`OGrade`/`OSequenceChain` — port needs Emberline-styled
-   equivalents, not a reskin of the obsidian internals.
+1. ~~**FLEX card**~~ **DONE 2026-07-20** — Emberline-native rebuild in
+   `emberline/flex-card.tsx`, not a reskin: hero-band portrait bleed with the
+   element radial wash + bottom scrim, Stat Audit/Weapon + Forte/Sonata panels
+   stacked in one left column (panels hug content — a two-column layout left
+   dead space, caught in live QA), grade-medal rating cluster over the scrim,
+   banded 5-tile echo strip (cost chip + per-slot sonata icon + graded
+   substats), ✦ FLEX CARD button in the tab strip. Shares the page's own
+   medals/icons via privates now exported from `emberline/resonator.tsx`
+   (`gradeColor`/`EGradeMedal`/`EForteIcon` — same pattern obsidian used).
+   Export = same html-to-image path (Chromium-only, 2× → 3040×1760).
+   Verified live on Aemeath (Fusion) + Yangyang: Xuanling (Havoc + colon
+   route): 33/33 images loaded, zero card-bounds overflow, export pixel-QA'd
+   (corner pixels = exact palette hexes, portrait/panel/echo zones lit).
+   3-lens adversarial review (edge-cases / theme-fidelity / repo-gotchas):
+   0 confirmed findings.
 2. ~~**Signature weapon detail**~~ **DONE 2026-07-15** (`6951a4c`) — KPI pair +
    PASSIVE inset tile + WHY IT'S CRACKED behind an element-tinted left rule, in
    the left Stat Audit panel. Verified live on Fusion (Aemeath) + Havoc (Xuanling).

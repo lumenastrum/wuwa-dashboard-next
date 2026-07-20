@@ -36,13 +36,14 @@ import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
 import { EDiamond, EFooter, EKicker } from "./primitives";
 import { EmberlineTeamsPanels } from "./teams-panels";
+import { EmberlineFlexCard } from "./flex-card";
 
 // Element-tinted hairline rule for section titles.
 function tintRule(el: ElementPalette) {
   return { flex: 1, height: 1, background: `linear-gradient(90deg, ${el.glow}, transparent)` } as const;
 }
 
-function gradeColor(grade: EchoGrade, status: string): { color: string; textShadow?: string } {
+export function gradeColor(grade: EchoGrade, status: string): { color: string; textShadow?: string } {
   if (grade === "S" || grade === "SSS" || grade === "✦") {
     return { color: E_PAL.gold, textShadow: "0 0 10px rgba(245,201,122,0.5)" };
   }
@@ -94,7 +95,7 @@ function EPanelTitle({
 // ✦ has no in-game art on purpose: the one tier the game can't award renders
 // as our pink→gold sparkle. A missing sub (no echoes entered, no weapon)
 // shows an em-dash plate rather than being hidden — absence is information.
-function EGradeMedal({ sub, accent }: { sub: RatingSub; accent: string }) {
+export function EGradeMedal({ sub, accent }: { sub: RatingSub; accent: string }) {
   const icon = gradeIcon(sub.grade);
   return (
     <div
@@ -143,7 +144,7 @@ function EGradeMedal({ sub, accent }: { sub: RatingSub; accent: string }) {
 
 // Forte icon with the repo fallback chain: per-char file → (basic only) shared
 // per-weapon glyph → hide. Repo glyphs are white — ink them on light discs.
-function EForteIcon({
+export function EForteIcon({
   r,
   slot,
   size,
@@ -315,6 +316,7 @@ export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
   const { setLastResonator } = useTheme();
   const [tab, setTab] = useState<LiveTab>("OVERVIEW");
+  const [flexOpen, setFlexOpen] = useState(false);
 
   const r = getResonatorOrFirstOf(rosterByName, roster, name);
   const el = ELEMENTS[r.element];
@@ -521,6 +523,20 @@ export function EmberlineResonator({ name }: { name: string }) {
           );
         })}
         <div style={{ flex: 1 }} />
+        <span
+          onClick={() => setFlexOpen(true)}
+          style={{
+            padding: "4px 12px",
+            border: `1px solid ${el.hex}66`,
+            borderRadius: 4,
+            background: "rgba(140,220,225,0.05)",
+            color: el.soft,
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          ✦ FLEX CARD
+        </span>
         {prev && (
           <Link href={resonatorPath(prev.name)} style={{ color: E_PAL.textMute, textDecoration: "none" }}>
             ← {prev.name.toUpperCase()}
@@ -829,6 +845,19 @@ export function EmberlineResonator({ name }: { name: string }) {
       )}
 
       <EFooter factoid="STAT GRADE ONLY — SET BONUS NOT SCORED" updated={raw.meta.updated} />
+
+      {flexOpen && (
+        <EmberlineFlexCard
+          r={r}
+          sw={sw}
+          echoBuild={echoBuild}
+          rating={rating}
+          stats={r.audit?.stats ?? []}
+          idx={idx}
+          total={roster.length}
+          onClose={() => setFlexOpen(false)}
+        />
+      )}
     </div>
   );
 }
