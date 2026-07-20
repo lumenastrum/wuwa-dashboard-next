@@ -3,11 +3,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { echoBuildOf, signatureWeaponOf, rosterIndexOf, useData } from "@/lib/data-context";
+import { echoBuildOf, isSignatureWeaponFor, signatureWeaponOf, rosterIndexOf, useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
 import { elementBadge } from "@/lib/game-icons";
-import { fiveStarIcon, tallPortrait } from "@/lib/portraits";
+import { tallPortrait } from "@/lib/portraits";
 import { resonatorPath } from "@/lib/route-name";
 import { scoreBuild } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
@@ -15,7 +15,7 @@ import { useTheme } from "@/lib/theme-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles, goldGlow } from "./styles";
-import { ECard, EDiamond, EFace, EFooter, EKicker, EKpi, ESectionTitle, EShell, EStatusDot } from "./primitives";
+import { ECard, EDiamond, EFace, EFooter, EKicker, EKpi, ERarityPips, ESectionTitle, EShell, EStatusDot } from "./primitives";
 
 const FILTERS: (ElementName | "All")[] = ["All", "Fusion", "Glacio", "Electro", "Spectro", "Havoc", "Aero"];
 
@@ -93,7 +93,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
     sequence: r.sequence,
     weaponRank: r.weaponRank,
     hasWeapon: !!r.weapon,
-    onSignature: !!sw && sw.wearer === r.name,
+    onSignature: isSignatureWeaponFor(sw, r.name),
     stats: r.audit?.stats ?? [],
     echoScore: echoVerdict?.score ?? null,
   });
@@ -163,7 +163,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
           <div style={{ height: 400, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 8, paddingBottom: 8 }}>
             <div style={{ ...eStyles.display, fontSize: 36, lineHeight: 1, textShadow: "0 2px 18px rgba(5,15,21,0.9)" }}>{r.name}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <img src={fiveStarIcon()} alt="5★" style={{ height: 14, width: "auto" }} />
+              <ERarityPips rarity={r.rarity} height={14} />
               {rating.grade !== "—" && (
                 <div style={{ ...eStyles.display, fontSize: 24, ...goldGlow(16) }}>{rating.grade}</div>
               )}
@@ -180,7 +180,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8 }}>
               <div style={{ ...eStyles.display, fontSize: 54, lineHeight: 1 }}>{r.name}</div>
-              <img src={fiveStarIcon()} alt="5★" style={{ height: 15, width: "auto" }} />
+              <ERarityPips rarity={r.rarity} height={15} />
               {rating.grade !== "—" && (
                 <div style={{ ...eStyles.display, fontSize: 30, ...goldGlow(18) }}>{rating.grade}</div>
               )}

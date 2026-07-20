@@ -16,6 +16,7 @@ export interface DashboardMeta {
 
 export interface Resonator {
   name: string;
+  rarity?: 4 | 5;              // legacy rows omit this and default to 5★
   element: ElementName;
   weaponType: WeaponType;
   role: Role;
@@ -123,6 +124,7 @@ export interface SignatureWeapon {
   name: string;          // matches Resonator.weapon — the link key
   type: WeaponType;
   wearer: string;        // resonator who owns it (1:1)
+  isSignature?: boolean; // false when this record only describes an equipped off-signature weapon
   baseAtk: string;       // e.g. "587"
   mainStat: string;      // e.g. "Crit DMG"
   mainStatValue: string; // e.g. "+72.0%"

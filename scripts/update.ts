@@ -88,6 +88,7 @@ interface Data {
 const SIGWEAPON_FIELDS: Record<string, string> = {
   type: "type",
   wearer: "wearer",
+  signature: "isSignature",
   baseatk: "baseAtk",
   mainstat: "mainStat",
   mainstatvalue: "mainStatValue",
@@ -106,6 +107,7 @@ function ensureSigWeapons(data: Data) {
         name: weapon,
         type: (r.weaponType as string) ?? "",
         wearer: (r.name as string) ?? "",
+        isSignature: false,
         baseAtk: "",
         mainStat: "",
         mainStatValue: "",
@@ -264,6 +266,7 @@ resonator:
   build <name> <text>                   set audit buildType
   prio <name> <status>                  set audit priorityStatus
   seq <name> <S0..S6>                   set resonator sequence
+  rarity <name> <4|5>                   set resonator rarity
   level <name> <int>                    set resonator level
   weapon <name> <text>                  set resonator weapon name
   weapontype <name> <type>              set resonator weapon type (${WEAPON_TYPES.join("|")})
@@ -384,7 +387,7 @@ async function main() {
       sequence: r.sequence as Sequence,
       weaponRank: r.weaponRank as string,
       hasWeapon: !!r.weapon,
-      onSignature: !!sig && sig.wearer === name,
+      onSignature: !!sig && sig.wearer === name && sig.isSignature !== false,
       stats: (audit?.stats ?? []) as unknown as AuditStat[],
       echoScore,
     });
@@ -473,6 +476,15 @@ async function main() {
       console.log(`${name} level: ${r.level}`);
       break;
     }
+    case "rarity": {
+      const [name, value] = rest;
+      const r = findResonator(data, name);
+      const rarity = parseIntOrThrow(value, "rarity");
+      if (rarity !== 4 && rarity !== 5) throw new Error(`rarity must be 4 or 5 (got "${value}")`);
+      console.log(`${name} rarity: ${r.rarity ?? 5}★ → ${rarity}★`);
+      r.rarity = rarity;
+      break;
+    }
     case "weapontype": {
       const [name, value] = rest;
       if (!name || !value) throw new Error(`usage: weapontype <name> <${WEAPON_TYPES.join("|")}>`);
@@ -490,7 +502,13 @@ async function main() {
       const key = SIGWEAPON_FIELDS[fieldRaw.toLowerCase()];
       if (!key) throw new Error(`sigweapon field must be one of: ${Object.keys(SIGWEAPON_FIELDS).join(", ")} (got "${fieldRaw}")`);
       const w = findSigWeapon(data, name);
-      const value = valueParts.join(" ");
+      const rawValue = valueParts.join(" ");
+      const value = key === "isSignature"
+        ? rawValue.toLowerCase() === "true"
+        : rawValue;
+      if (key === "isSignature" && !["true", "false"].includes(rawValue.toLowerCase())) {
+        throw new Error(`sigweapon signature must be true or false (got "${rawValue}")`);
+      }
       console.log(`${name} ${key}: ${w[key] ?? ""} → ${value}`);
       w[key] = value;
       break;
@@ -505,6 +523,7 @@ async function main() {
         name,
         type: type ?? "",
         wearer,
+        isSignature: true,
         baseAtk: "",
         mainStat: "",
         mainStatValue: "",

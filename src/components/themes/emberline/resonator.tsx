@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   echoBuildOf,
   getResonatorOrFirstOf,
+  isSignatureWeaponFor,
   rosterIndexOf,
   rosterNeighborsOf,
   signatureWeaponOf,
@@ -26,7 +27,7 @@ import {
   forteIconFallback,
   type ForteSlot,
 } from "@/lib/game-icons";
-import { fiveStarIcon, tallPortrait } from "@/lib/portraits";
+import { tallPortrait } from "@/lib/portraits";
 import { rateResonator, type RatingSub } from "@/lib/resonator-rating";
 import { resonatorPath } from "@/lib/route-name";
 import { parseEchoSets, sonataIcon } from "@/lib/sonata";
@@ -35,7 +36,7 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
 import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
-import { EDiamond, EFooter, EKicker } from "./primitives";
+import { EDiamond, EFooter, EKicker, ERarityPips } from "./primitives";
 import { EmberlineTeamsPanels } from "./teams-panels";
 import { EmberlineFlexCard } from "./flex-card";
 
@@ -329,6 +330,7 @@ export function EmberlineResonator({ name }: { name: string }) {
   const { prev, next } = rosterNeighborsOf(roster, r.name);
 
   const sw = signatureWeaponOf(raw, r.weapon);
+  const hasSignatureWeapon = isSignatureWeaponFor(sw, r.name);
   const swHasDetail = Boolean(sw && (sw.passive || sw.synergy || sw.baseAtk || sw.mainStat));
   const echoBuild = echoBuildOf(raw, r.name);
   const echoVerdict = echoBuild ? scoreBuild(echoBuild.echoes, echoBuild.weights) : null;
@@ -341,7 +343,7 @@ export function EmberlineResonator({ name }: { name: string }) {
     sequence: r.sequence,
     weaponRank: r.weaponRank,
     hasWeapon: !!r.weapon,
-    onSignature: !!sw && sw.wearer === r.name,
+    onSignature: hasSignatureWeapon,
     stats: r.audit?.stats ?? [],
     echoScore: echoVerdict?.score ?? null,
   });
@@ -478,10 +480,10 @@ export function EmberlineResonator({ name }: { name: string }) {
             </div>
           )}
           {isMobile ? (
-            <img src={fiveStarIcon()} alt="5★" style={{ height: 13, width: "auto" }} />
+            <ERarityPips rarity={r.rarity} height={13} />
           ) : (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <img src={fiveStarIcon()} alt="5★" style={{ height: 14, width: "auto" }} />
+              <ERarityPips rarity={r.rarity} height={14} />
               {r.audit?.notes && (
                 <span style={{ ...eStyles.body, fontSize: 14, fontStyle: "italic", color: E_PAL.textDim }}>
                   — {r.audit.notes}
@@ -706,7 +708,9 @@ export function EmberlineResonator({ name }: { name: string }) {
           {r.weapon && (
             <>
               <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0 10px" }}>
-                <span style={{ ...eStyles.display, fontSize: 17, color: el.soft }}>Signature Weapon</span>
+                <span style={{ ...eStyles.display, fontSize: 17, color: el.soft }}>
+                  {hasSignatureWeapon ? "Signature Weapon" : "Equipped Weapon"}
+                </span>
                 <div style={tintRule(el)} />
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 13 }}>

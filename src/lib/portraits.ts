@@ -12,7 +12,7 @@ const PORTRAIT_OVERRIDES: Record<string, string> = {
   Verina: "verina.png",
   Encore: "encore.png",
   Nyx: "rover_spectro.png",
-  Sanhua: "rover_spectro.png",
+  Sanhua: "sanhua.png",
   "Yangyang: Xuanling": "xuanling.png",
 };
 

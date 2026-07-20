@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { ELEMENTS, type ElementPalette } from "@/lib/elements";
-import { fiveStarIcon, splashArt, tallPortrait } from "@/lib/portraits";
+import { splashArt, tallPortrait } from "@/lib/portraits";
 import {
   echoIcon,
   elementBadge,
@@ -25,7 +25,7 @@ import type { EchoVerdict } from "@/lib/echo-audit";
 import type { rateResonator } from "@/lib/resonator-rating";
 import type { AuditStat, Echo, EchoBuild, RosterEntry, SignatureWeapon } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
-import { EDiamond, EKicker } from "./primitives";
+import { EDiamond, EKicker, ERarityPips } from "./primitives";
 // Shared privates exported from resonator.tsx (same pattern obsidian uses) —
 // the card must wear the exact same medals/icons as the live page.
 import { EGradeMedal, EForteIcon, gradeColor } from "./resonator";
@@ -412,7 +412,7 @@ export function EmberlineFlexCard({
                 <EFlexSeqChain sequence={r.sequence} el={el} />
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <img src={fiveStarIcon()} alt="5★" style={{ height: 12, width: "auto" }} />
+                <ERarityPips rarity={r.rarity} height={12} />
                 {r.audit?.notes && (
                   <span style={{ ...eStyles.body, fontSize: 13, fontStyle: "italic", color: E_PAL.textDim }}>— {r.audit.notes}</span>
                 )}
@@ -482,7 +482,7 @@ export function EmberlineFlexCard({
                   {r.weapon && (
                     <>
                       <div style={{ marginTop: 14, marginBottom: 10 }}>
-                        <EFlexTitle title="Signature Weapon" el={el} />
+                        <EFlexTitle title={sw?.isSignature === false ? "Equipped Weapon" : "Signature Weapon"} el={el} />
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div

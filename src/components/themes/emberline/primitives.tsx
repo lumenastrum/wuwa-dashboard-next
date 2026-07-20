@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { portrait } from "@/lib/portraits";
+import { fiveStarIcon, portrait } from "@/lib/portraits";
 import type { Status } from "@/lib/types";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
@@ -136,6 +136,22 @@ export function EStatusDot({ status, size = 6, glow = true }: { status: Status; 
         display: "inline-block",
       }}
     />
+  );
+}
+
+// The source art is Kuro's five-pip strip. Clip it to the resonator's actual
+// rarity so four-stars keep the same Emberline treatment without lying.
+export function ERarityPips({ rarity = 5, height = 14 }: { rarity?: 4 | 5; height?: number }) {
+  const fullWidth = height * (74 / 16);
+  const pipCount = rarity === 4 ? 4 : 5;
+  return (
+    <span
+      role="img"
+      aria-label={`${pipCount}★`}
+      style={{ display: "inline-block", width: fullWidth * (pipCount / 5), height, overflow: "hidden", flexShrink: 0 }}
+    >
+      <img src={fiveStarIcon()} alt="" aria-hidden="true" style={{ display: "block", width: fullWidth, height }} />
+    </span>
   );
 }
 

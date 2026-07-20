@@ -43,6 +43,7 @@ function ensureSignatureWeapons(data: DashboardData): DashboardData {
         name: r.weapon,
         type: r.weaponType,
         wearer: r.name,
+        isSignature: false,
         baseAtk: "",
         mainStat: "",
         mainStatValue: "",
@@ -287,6 +288,13 @@ export function signatureWeaponOf(
   weaponName: string,
 ): SignatureWeapon | undefined {
   return raw.signatureWeapons?.find((w) => w.name === weaponName);
+}
+
+export function isSignatureWeaponFor(
+  weapon: SignatureWeapon | undefined,
+  resonatorName: string,
+): boolean {
+  return Boolean(weapon && weapon.wearer === resonatorName && weapon.isSignature !== false);
 }
 
 export function echoBuildOf(
