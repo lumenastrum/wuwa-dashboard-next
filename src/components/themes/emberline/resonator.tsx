@@ -31,6 +31,7 @@ import { rateResonator, type RatingSub } from "@/lib/resonator-rating";
 import { resonatorPath } from "@/lib/route-name";
 import { parseEchoSets, sonataIcon } from "@/lib/sonata";
 import { useTheme } from "@/lib/theme-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
 import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
@@ -195,20 +196,23 @@ const FORTE_ARC_POS: Record<ForteSlot, React.CSSProperties> = {
   intro: { right: "6%", bottom: 6 },
 };
 
-function EForteDisc({ r, slot, el, forte }: { r: RosterEntry; slot: ForteSlot; el: ElementPalette; forte: ResonatorForte }) {
+// `flow` swaps the absolute arc placement for an in-flow disc (mobile chain per
+// 1c): position relative, no arc offset, and slightly smaller so 5 fit a phone
+// row. The EForteIcon remount key is preserved on both layouts.
+function EForteDisc({ r, slot, el, forte, flow = false }: { r: RosterEntry; slot: ForteSlot; el: ElementPalette; forte: ResonatorForte; flow?: boolean }) {
   const level = forte[slot];
   const maxed = level >= 10;
   const emphasized = slot === "circuit";
-  const disc = emphasized ? 60 : 52;
+  const disc = flow ? (emphasized ? 50 : 44) : emphasized ? 60 : 52;
+  const iconSize = flow ? (emphasized ? 30 : 26) : emphasized ? 36 : 30;
   return (
     <div
       style={{
-        position: "absolute",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         gap: 5,
-        ...FORTE_ARC_POS[slot],
+        ...(flow ? { position: "relative", flexShrink: 0 } : { position: "absolute", ...FORTE_ARC_POS[slot] }),
       }}
     >
       <div
@@ -224,13 +228,13 @@ function EForteDisc({ r, slot, el, forte }: { r: RosterEntry; slot: ForteSlot; e
           justifyContent: "center",
         }}
       >
-        <EForteIcon key={`${r.name}-${slot}`} r={r} slot={slot} size={emphasized ? 36 : 30} maxed={maxed} />
+        <EForteIcon key={`${r.name}-${slot}`} r={r} slot={slot} size={iconSize} maxed={maxed} />
       </div>
       <span style={{ ...eStyles.mono, fontSize: 10, color: maxed ? el.soft : E_PAL.yellow }}>
         {level}/10
       </span>
-      <span style={{ ...eStyles.mono, fontSize: 8, letterSpacing: 1, color: E_PAL.textDim }}>
-        {FORTE_ARC_LABEL[slot]}
+      <span style={{ ...eStyles.mono, fontSize: flow ? 7.5 : 8, letterSpacing: flow ? 0.5 : 1, color: E_PAL.textDim }}>
+        {flow && slot === "circuit" ? "CIRCUIT" : FORTE_ARC_LABEL[slot]}
       </span>
     </div>
   );
@@ -315,6 +319,7 @@ const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "TEAMS"]);
 export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
   const { setLastResonator } = useTheme();
+  const { isMobile, isTablet } = useDashboardViewport();
   const [tab, setTab] = useState<LiveTab>("OVERVIEW");
   const [flexOpen, setFlexOpen] = useState(false);
 
@@ -351,14 +356,16 @@ export function EmberlineResonator({ name }: { name: string }) {
   }, [r.name, setLastResonator]);
 
   return (
-    <div style={{ ...eStyles.shell, minWidth: 1280, background: E_PAL.bgGrad, display: "flex", flexDirection: "column" }}>
+    <div style={{ ...eStyles.shell, minWidth: (isMobile || isTablet) ? 0 : 1280, background: E_PAL.bgGrad, display: "flex", flexDirection: "column" }}>
       {/* hero band */}
       <div
         style={{
           position: "relative",
           height: 420,
           overflow: "hidden",
-          background: `radial-gradient(1000px 460px at 78% 30%, ${el.glow}, transparent 62%), linear-gradient(180deg, rgba(140,220,225,0.05), transparent)`,
+          background: isMobile
+            ? `radial-gradient(320px 260px at 50% 28%, ${el.glow}, transparent 65%), linear-gradient(180deg, rgba(140,220,225,0.05), transparent)`
+            : `radial-gradient(1000px 460px at 78% 30%, ${el.glow}, transparent 62%), linear-gradient(180deg, rgba(140,220,225,0.05), transparent)`,
         }}
       >
         <img
@@ -366,9 +373,9 @@ export function EmberlineResonator({ name }: { name: string }) {
           alt={r.name}
           style={{
             position: "absolute",
-            right: 110,
-            top: 14,
-            height: "172%",
+            ...(isMobile
+              ? { left: "50%", transform: "translateX(-50%)", right: "auto", top: "auto", bottom: -16, height: "110%" }
+              : { right: 110, top: 14, height: "172%" }),
             width: "auto",
             maxWidth: "none",
             filter: `drop-shadow(0 24px 50px ${el.glow})`,
@@ -378,84 +385,147 @@ export function EmberlineResonator({ name }: { name: string }) {
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(90deg, rgba(5,15,21,0.9) 34%, transparent 66%), linear-gradient(0deg, rgba(5,15,21,0.95) 4%, transparent 34%)",
+            background: isMobile
+              ? "linear-gradient(180deg, transparent 55%, rgba(5,15,21,0.95) 88%)"
+              : "linear-gradient(90deg, rgba(5,15,21,0.9) 34%, transparent 66%), linear-gradient(0deg, rgba(5,15,21,0.95) 4%, transparent 34%)",
           }}
         />
+
+        {/* mobile: element badge lifts to a top-right circle */}
+        {isMobile && (
+          <div
+            style={{
+              position: "absolute",
+              top: 14,
+              right: 14,
+              zIndex: 4,
+              width: 46,
+              height: 46,
+              borderRadius: 999,
+              border: `1px solid ${el.hex}`,
+              background: "rgba(4,13,18,0.55)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: `0 0 14px ${el.glow}`,
+            }}
+          >
+            <img src={elementBadge(r.element)} alt={r.element} style={{ width: 34, height: 34 }} />
+          </div>
+        )}
+
+        {/* mobile: RATING plate top-left (the big grade lives here, not in a bottom block) */}
+        {isMobile && rating.score != null && (
+          <div
+            style={{
+              position: "absolute",
+              top: 14,
+              left: 14,
+              zIndex: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              border: "1px solid rgba(245,201,122,0.4)",
+              borderRadius: 8,
+              padding: "6px 10px",
+              background: "rgba(4,13,18,0.55)",
+            }}
+          >
+            <div style={{ ...eStyles.display, fontSize: 26, lineHeight: 1, color: E_PAL.gold, textShadow: "0 0 14px rgba(245,201,122,0.55)" }}>
+              {rating.grade}
+            </div>
+            <EKicker size={7} spacing={1.5} color={E_PAL.textDim}>RATING</EKicker>
+          </div>
+        )}
 
         <div
           style={{
             position: "absolute",
-            left: 34,
-            bottom: 28,
             zIndex: 4,
             display: "flex",
             flexDirection: "column",
             gap: 12,
-            maxWidth: 640,
+            ...(isMobile
+              ? { left: 16, right: 16, bottom: 16, alignItems: "center", textAlign: "center" }
+              : { left: 34, bottom: 28, maxWidth: 640 }),
           }}
         >
-          <EKicker spacing={3}>
+          <EKicker spacing={isMobile ? 2 : 3} size={isMobile ? 8 : 10}>
             № {String(idx + 1).padStart(2, "0")} / {roster.length} · RESONATOR CODEX
           </EKicker>
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <div style={{ ...eStyles.display, fontSize: 80, lineHeight: 0.95, letterSpacing: 1 }}>{r.name}</div>
+          {isMobile ? (
+            <div style={{ ...eStyles.display, fontSize: 40, lineHeight: 0.98, letterSpacing: 1 }}>{r.name}</div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+              <div style={{ ...eStyles.display, fontSize: 80, lineHeight: 0.95, letterSpacing: 1 }}>{r.name}</div>
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 999,
+                  border: `1px solid ${el.hex}`,
+                  background: "rgba(4,13,18,0.55)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: `0 0 18px ${el.glow}`,
+                  flexShrink: 0,
+                }}
+              >
+                <img src={elementBadge(r.element)} alt={r.element} style={{ width: 42, height: 42 }} />
+              </div>
+            </div>
+          )}
+          {isMobile ? (
+            <img src={fiveStarIcon()} alt="5★" style={{ height: 13, width: "auto" }} />
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img src={fiveStarIcon()} alt="5★" style={{ height: 14, width: "auto" }} />
+              {r.audit?.notes && (
+                <span style={{ ...eStyles.body, fontSize: 14, fontStyle: "italic", color: E_PAL.textDim }}>
+                  — {r.audit.notes}
+                </span>
+              )}
+            </div>
+          )}
+          {isMobile ? (
+            <div style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 2, color: E_PAL.textDim }}>
+              {r.role.toUpperCase()} · {r.element.toUpperCase()} · {r.sequence} · LV.{r.level}
+            </div>
+          ) : (
             <div
               style={{
-                width: 56,
-                height: 56,
-                borderRadius: 999,
-                border: `1px solid ${el.hex}`,
-                background: "rgba(4,13,18,0.55)",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                boxShadow: `0 0 18px ${el.glow}`,
-                flexShrink: 0,
+                gap: 10,
+                flexWrap: "wrap",
+                ...eStyles.mono,
+                fontSize: 10,
+                letterSpacing: 1,
               }}
             >
-              <img src={elementBadge(r.element)} alt={r.element} style={{ width: 42, height: 42 }} />
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <img src={fiveStarIcon()} alt="5★" style={{ height: 14, width: "auto" }} />
-            {r.audit?.notes && (
-              <span style={{ ...eStyles.body, fontSize: 14, fontStyle: "italic", color: E_PAL.textDim }}>
-                — {r.audit.notes}
+              {[r.role.toUpperCase(), r.weaponType.toUpperCase()].map((chip) => (
+                <span key={chip} style={{ padding: "4px 12px", border: `1px solid ${E_PAL.borderStrong}`, borderRadius: 4, color: E_PAL.textDim }}>
+                  {chip}
+                </span>
+              ))}
+              <span style={{ padding: "4px 12px", border: `1px solid ${el.hex}`, borderRadius: 4, color: el.soft }}>
+                {r.sequence}
               </span>
-            )}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              flexWrap: "wrap",
-              ...eStyles.mono,
-              fontSize: 10,
-              letterSpacing: 1,
-            }}
-          >
-            {[r.role.toUpperCase(), r.weaponType.toUpperCase()].map((chip) => (
-              <span key={chip} style={{ padding: "4px 12px", border: `1px solid ${E_PAL.borderStrong}`, borderRadius: 4, color: E_PAL.textDim }}>
-                {chip}
-              </span>
-            ))}
-            <span style={{ padding: "4px 12px", border: `1px solid ${el.hex}`, borderRadius: 4, color: el.soft }}>
-              {r.sequence}
-            </span>
-            <span style={{ padding: "4px 12px", border: `1px solid ${E_PAL.borderStrong}`, borderRadius: 4, color: E_PAL.textDim }}>
-              LV.{r.level}
-            </span>
-            {r.audit?.buildType && (
               <span style={{ padding: "4px 12px", border: `1px solid ${E_PAL.borderStrong}`, borderRadius: 4, color: E_PAL.textDim }}>
-                {r.audit.buildType.toUpperCase()}
+                LV.{r.level}
               </span>
-            )}
-          </div>
+              {r.audit?.buildType && (
+                <span style={{ padding: "4px 12px", border: `1px solid ${E_PAL.borderStrong}`, borderRadius: 4, color: E_PAL.textDim }}>
+                  {r.audit.buildType.toUpperCase()}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        {rating.score != null && (
+        {!isMobile && rating.score != null && (
           <div
             style={{
               position: "absolute",
@@ -495,9 +565,10 @@ export function EmberlineResonator({ name }: { name: string }) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 34,
-          padding: "0 34px",
+          gap: isTablet ? 18 : 34,
+          padding: isMobile ? "0 16px" : "0 34px",
           borderBottom: `1px solid ${E_PAL.border}`,
+          ...(isTablet && { overflowX: "auto", scrollbarWidth: "none" }),
           ...eStyles.mono,
           fontSize: 10,
           letterSpacing: 2,
@@ -516,52 +587,73 @@ export function EmberlineResonator({ name }: { name: string }) {
                 borderBottom: active ? `2px solid ${el.hex}` : "2px solid transparent",
                 cursor: live ? "pointer" : "default",
                 userSelect: "none",
+                ...(isTablet && { flexShrink: 0, whiteSpace: "nowrap" }),
               }}
             >
               {t}
             </span>
           );
         })}
-        <div style={{ flex: 1 }} />
-        <span
-          onClick={() => setFlexOpen(true)}
-          style={{
-            padding: "4px 12px",
-            border: `1px solid ${el.hex}66`,
-            borderRadius: 4,
-            background: "rgba(140,220,225,0.05)",
-            color: el.soft,
-            cursor: "pointer",
-            userSelect: "none",
-          }}
-        >
-          ✦ FLEX CARD
-        </span>
+        {!isTablet && <div style={{ flex: 1 }} />}
+        {!isMobile && (
+          <span
+            onClick={() => setFlexOpen(true)}
+            style={{
+              padding: "4px 12px",
+              border: `1px solid ${el.hex}66`,
+              borderRadius: 4,
+              background: "rgba(140,220,225,0.05)",
+              color: el.soft,
+              cursor: "pointer",
+              userSelect: "none",
+              ...(isTablet && { flexShrink: 0, whiteSpace: "nowrap" }),
+            }}
+          >
+            ✦ FLEX CARD
+          </span>
+        )}
         {prev && (
-          <Link href={resonatorPath(prev.name)} style={{ color: E_PAL.textMute, textDecoration: "none" }}>
-            ← {prev.name.toUpperCase()}
+          <Link
+            href={resonatorPath(prev.name)}
+            style={{ color: E_PAL.textMute, textDecoration: "none", ...(isTablet && { flexShrink: 0 }) }}
+          >
+            {isTablet ? "←" : `← ${prev.name.toUpperCase()}`}
           </Link>
         )}
         {next && (
-          <Link href={resonatorPath(next.name)} style={{ color: E_PAL.textMute, textDecoration: "none" }}>
-            {next.name.toUpperCase()} →
+          <Link
+            href={resonatorPath(next.name)}
+            style={{ color: E_PAL.textMute, textDecoration: "none", ...(isTablet && { flexShrink: 0 }) }}
+          >
+            {isTablet ? "→" : `${next.name.toUpperCase()} →`}
           </Link>
         )}
-        <span style={{ color: E_PAL.textFaint }}>
-          SEQ {r.sequence} {"◆".repeat(seqNum)}{"◇".repeat(Math.max(0, 6 - seqNum))}
-        </span>
+        {!isTablet && (
+          <span style={{ color: E_PAL.textFaint }}>
+            SEQ {r.sequence} {"◆".repeat(seqNum)}{"◇".repeat(Math.max(0, 6 - seqNum))}
+          </span>
+        )}
       </div>
 
       {/* TEAMS tab — Codex-built panels (teams-panels.tsx) */}
       {tab === "TEAMS" && (
-        <div style={{ padding: "22px 34px 10px", flex: 1 }}>
+        <div style={{ padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1 }}>
           <EmberlineTeamsPanels name={r.name} />
         </div>
       )}
 
       {/* content grid */}
       {tab === "OVERVIEW" && (
-      <div style={{ display: "grid", gridTemplateColumns: "400px 1fr 360px", gap: 18, padding: "22px 34px 10px", flex: 1 }}>
+      <>
+      {/* mobile: the 4 sub-medals leave the hero and sit under the tab strip */}
+      {isMobile && rating.score != null && (
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 9, padding: "16px 16px 0" }}>
+          {rating.subs.map((sub) => (
+            <EGradeMedal key={sub.key} sub={sub} accent={el.hex} />
+          ))}
+        </div>
+      )}
+      <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "400px 1fr 360px", gap: 18, padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1 }}>
         {/* stats + weapon column */}
         <EPanel>
           <EPanelTitle
@@ -732,31 +824,43 @@ export function EmberlineResonator({ name }: { name: string }) {
                 </span>
               }
             />
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: 88,
-                transform: "translateX(-50%)",
-                width: 420,
-                height: 300,
-                border: "1px solid rgba(140,220,225,0.14)",
-                borderRadius: "50%",
-                pointerEvents: "none",
-              }}
-            />
-            <div style={{ position: "relative", height: 196, marginTop: 10 }}>
-              {FORTE_SLOTS.map((s) => (
-                <EForteDisc key={s.key} r={r} slot={s.key} el={el} forte={r.forte!} />
-              ))}
-            </div>
+            {!isMobile && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: 88,
+                  transform: "translateX(-50%)",
+                  width: 420,
+                  height: 300,
+                  border: "1px solid rgba(140,220,225,0.14)",
+                  borderRadius: "50%",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+            {isMobile ? (
+              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px 8px", marginTop: 14 }}>
+                {FORTE_SLOTS.map((s) => (
+                  <EForteDisc key={s.key} r={r} slot={s.key} el={el} forte={r.forte!} flow />
+                ))}
+              </div>
+            ) : (
+              <div style={{ position: "relative", height: 196, marginTop: 10 }}>
+                {FORTE_SLOTS.map((s) => (
+                  <EForteDisc key={s.key} r={r} slot={s.key} el={el} forte={r.forte!} />
+                ))}
+              </div>
+            )}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
+                flexWrap: isMobile ? "wrap" : undefined,
                 borderTop: "1px solid rgba(140,220,225,0.1)",
                 paddingTop: 11,
+                marginTop: isMobile ? 14 : 0,
                 ...eStyles.mono,
                 fontSize: 9,
                 letterSpacing: 1,
@@ -842,6 +946,7 @@ export function EmberlineResonator({ name }: { name: string }) {
           </div>
         </EPanel>
       </div>
+      </>
       )}
 
       <EFooter factoid="STAT GRADE ONLY — SET BONUS NOT SCORED" updated={raw.meta.updated} />

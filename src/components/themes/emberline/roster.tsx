@@ -12,6 +12,7 @@ import { resonatorPath } from "@/lib/route-name";
 import { scoreBuild } from "@/lib/echo-audit";
 import { rateResonator } from "@/lib/resonator-rating";
 import { useTheme } from "@/lib/theme-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import type { ElementName, RosterEntry } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles, goldGlow } from "./styles";
 import { ECard, EDiamond, EFace, EFooter, EKicker, EKpi, ESectionTitle, EShell, EStatusDot } from "./primitives";
@@ -80,6 +81,7 @@ function ERosterTile({ r }: { r: RosterEntry }) {
 
 function EFeaturedHero({ r }: { r: RosterEntry }) {
   const { raw, roster } = useData();
+  const { isMobile } = useDashboardViewport();
   const el = ELEMENTS[r.element];
   const bench = raw.benchmarks.find((b) => b.team.includes(r.name));
   const idx = Math.max(0, rosterIndexOf(roster, r.name));
@@ -100,12 +102,12 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
     <div
       style={{
         position: "relative",
-        margin: "0 34px",
-        height: 330,
+        margin: isMobile ? "0 16px" : "0 34px",
+        height: isMobile ? undefined : 330,
         border: `1px solid ${E_PAL.borderKpi}`,
         borderRadius: 8,
         overflow: "hidden",
-        background: `radial-gradient(760px 400px at 16% 40%, ${el.glow}, transparent 60%), linear-gradient(180deg, rgba(140,220,225,0.04), rgba(4,13,18,0.5))`,
+        background: `radial-gradient(760px 400px at ${isMobile ? "50% 35%" : "16% 40%"}, ${el.glow}, transparent 60%), linear-gradient(180deg, rgba(140,220,225,0.04), rgba(4,13,18,0.5))`,
       }}
     >
       <img
@@ -113,9 +115,10 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
         alt={r.name}
         style={{
           position: "absolute",
-          left: 30,
-          top: -6,
-          height: "150%",
+          left: isMobile ? "50%" : 30,
+          transform: isMobile ? "translateX(-50%)" : undefined,
+          top: isMobile ? 0 : -6,
+          height: isMobile ? 400 : "150%",
           width: "auto",
           maxWidth: "none",
           filter: `drop-shadow(0 20px 44px ${el.glow})`,
@@ -124,45 +127,72 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          background: "linear-gradient(90deg, transparent 22%, rgba(5,15,21,0.88) 44%)",
+          ...(isMobile ? { left: 0, right: 0, top: 0, height: 400 } : { inset: 0 }),
+          background: isMobile
+            ? "linear-gradient(180deg, transparent 48%, rgba(5,15,21,0.6) 74%, rgba(5,15,21,0.97) 96%)"
+            : "linear-gradient(90deg, transparent 22%, rgba(5,15,21,0.88) 44%)",
         }}
       />
       <div
-        style={{
-          position: "absolute",
-          left: 420,
-          right: 34,
-          top: 34,
-          bottom: 30,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          zIndex: 2,
-        }}
+        style={
+          isMobile
+            ? {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                gap: 14,
+                padding: "0 14px 16px",
+                zIndex: 2,
+              }
+            : {
+                position: "absolute",
+                left: 420,
+                right: 34,
+                top: 34,
+                bottom: 30,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                zIndex: 2,
+              }
+        }
       >
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <EKicker spacing={3}>LAST VIEWED · № {String(idx + 1).padStart(2, "0")}</EKicker>
-            <EDiamond color={el.hex} size={6} />
-            <EKicker spacing={2} color={E_PAL.emberSoft}>
-              {(r.element + " · " + r.weaponType).toUpperCase()}
-            </EKicker>
+        {isMobile ? (
+          <div style={{ height: 400, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", gap: 8, paddingBottom: 8 }}>
+            <div style={{ ...eStyles.display, fontSize: 36, lineHeight: 1, textShadow: "0 2px 18px rgba(5,15,21,0.9)" }}>{r.name}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img src={fiveStarIcon()} alt="5★" style={{ height: 14, width: "auto" }} />
+              {rating.grade !== "—" && (
+                <div style={{ ...eStyles.display, fontSize: 24, ...goldGlow(16) }}>{rating.grade}</div>
+              )}
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8 }}>
-            <div style={{ ...eStyles.display, fontSize: 54, lineHeight: 1 }}>{r.name}</div>
-            <img src={fiveStarIcon()} alt="5★" style={{ height: 15, width: "auto" }} />
-            {rating.grade !== "—" && (
-              <div style={{ ...eStyles.display, fontSize: 30, ...goldGlow(18) }}>{rating.grade}</div>
-            )}
+        ) : (
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <EKicker spacing={3}>LAST VIEWED · № {String(idx + 1).padStart(2, "0")}</EKicker>
+              <EDiamond color={el.hex} size={6} />
+              <EKicker spacing={2} color={E_PAL.emberSoft}>
+                {(r.element + " · " + r.weaponType).toUpperCase()}
+              </EKicker>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8 }}>
+              <div style={{ ...eStyles.display, fontSize: 54, lineHeight: 1 }}>{r.name}</div>
+              <img src={fiveStarIcon()} alt="5★" style={{ height: 15, width: "auto" }} />
+              {rating.grade !== "—" && (
+                <div style={{ ...eStyles.display, fontSize: 30, ...goldGlow(18) }}>{rating.grade}</div>
+              )}
+            </div>
+            <div style={{ ...eStyles.body, fontSize: 13, fontStyle: "italic", color: E_PAL.textDim, marginTop: 6 }}>
+              Sequence {r.sequence} · {r.role}
+              {r.audit?.notes ? ` — ${r.audit.notes}` : ""}
+            </div>
           </div>
-          <div style={{ ...eStyles.body, fontSize: 13, fontStyle: "italic", color: E_PAL.textDim, marginTop: 6 }}>
-            Sequence {r.sequence} · {r.role}
-            {r.audit?.notes ? ` — ${r.audit.notes}` : ""}
-          </div>
-        </div>
+        )}
         {r.audit && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, minmax(0, 1fr))" : "repeat(4, 1fr)", gap: 12, width: isMobile ? "100%" : undefined }}>
             {r.audit.stats.map((s) => (
               <div
                 key={s.label}
@@ -177,7 +207,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
                 <div
                   style={{
                     ...eStyles.display,
-                    fontSize: 24,
+                    fontSize: isMobile ? 20 : 24,
                     marginTop: 2,
                     color: E_STATUS[s._status] ?? E_PAL.text,
                   }}
@@ -189,7 +219,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
             ))}
           </div>
         )}
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: isMobile ? "wrap" : "nowrap", justifyContent: isMobile ? "center" : "flex-start", width: isMobile ? "100%" : undefined }}>
           <Link
             href={resonatorPath(r.name)}
             style={{
@@ -205,7 +235,7 @@ function EFeaturedHero({ r }: { r: RosterEntry }) {
           >
             OPEN BUILD →
           </Link>
-          <div style={{ flex: 1 }} />
+          {!isMobile && <div style={{ flex: 1 }} />}
           {bench && (
             <EKicker size={10} spacing={1}>
               BEST {bench.best} · AVG {bench.average} · DEATHS {bench.deaths}
@@ -299,6 +329,7 @@ function ESidePanel() {
 export function EmberlineRoster() {
   const { raw, roster, rosterByName } = useData();
   const { lastResonator } = useTheme();
+  const { isMobile, isTablet } = useDashboardViewport();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
 
   const featured = rosterByName[lastResonator] ?? roster[0];
@@ -311,19 +342,19 @@ export function EmberlineRoster() {
   return (
     <EShell>
       {/* header */}
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, padding: "28px 34px 24px" }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "stretch" : "flex-end", justifyContent: "space-between", gap: isMobile ? 16 : 24, padding: isMobile ? "18px 16px 16px" : "28px 34px 24px" }}>
         <div>
           <EKicker spacing={3} style={{ marginBottom: 8 }}>
             CYCLE {String(cycle.id).padStart(3, "0")} · {cycle.label.toUpperCase()} · CLOSED {cycle.date.replace(/-/g, ".")}
           </EKicker>
-          <div style={{ ...eStyles.display, fontSize: 52, lineHeight: 1 }}>
+          <div style={{ ...eStyles.display, fontSize: isMobile ? 36 : 52, lineHeight: 1 }}>
             Good evening, <span style={{ fontStyle: "italic", color: E_PAL.emberSoft }}>Rover</span>.
           </div>
           <div style={{ ...eStyles.body, fontSize: 14, color: E_PAL.textDim, marginTop: 10 }}>
             The atelier closed strong — {cycle.totalPoints.toLocaleString()} points, {cycle.teamsOver5k} teams over five thousand.
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(150px, 1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, minmax(150px, 1fr))", gap: 12 }}>
           <EKpi
             label="RESONATORS"
             value={roster.length}
@@ -348,7 +379,7 @@ export function EmberlineRoster() {
       <EFeaturedHero r={featured} />
 
       {/* roster grid + side panel */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.65fr 1fr", gap: 18, padding: "18px 34px 28px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.65fr 1fr", gap: 18, padding: isMobile ? "16px 16px 24px" : "18px 34px 28px" }}>
         <ECard diamonds="both" style={{ alignSelf: "start" }}>
           <ESectionTitle
             title="The Roster"
@@ -356,7 +387,7 @@ export function EmberlineRoster() {
             sub={`${filtered.length} of ${roster.length} shown · click any to inspect`}
             style={{ marginBottom: 6 }}
           />
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "10px 0 16px" }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: isMobile ? "nowrap" : "wrap", overflowX: isMobile ? "auto" : "visible", paddingBottom: isMobile ? 2 : 0, margin: "10px 0 16px" }}>
             {FILTERS.map((f) => {
               const active = filter === f;
               const hex = f === "All" ? E_PAL.tide : ELEMENTS[f as ElementName].hex;
@@ -388,7 +419,7 @@ export function EmberlineRoster() {
               );
             })}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 10 }}>
             {filtered.map((r) => (
               <ERosterTile key={r.name} r={r} />
             ))}

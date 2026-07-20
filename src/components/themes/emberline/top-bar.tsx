@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { CSSProperties } from "react";
 import { IMPLEMENTED_THEMES, THEME_LIST, useTheme } from "@/lib/theme-context";
 import { useData } from "@/lib/data-context";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { resonatorPath } from "@/lib/route-name";
 import type { PageId } from "@/lib/types";
 import { E_PAL, eStyles } from "./styles";
@@ -40,97 +42,164 @@ export function EmberlineTopBar() {
   const { theme, setTheme, lastResonator } = useTheme();
   const { syncStatus } = useData();
   const sync = SYNC_LABEL[syncStatus] ?? SYNC_LABEL.loading;
+  const { isMobile, isTablet } = useDashboardViewport();
+  const isCompact = isTablet;
+
+  // Sticky/backdrop chrome is invariant across branches (no fixed-position
+  // children inside — backdropFilter containing-block trap).
+  const rootBase: CSSProperties = {
+    borderBottom: "1px solid rgba(140,220,225,0.10)",
+    background: "rgba(5,15,21,0.72)",
+    backdropFilter: "blur(14px)",
+    position: "sticky",
+    top: 0,
+    zIndex: 50,
+    color: E_PAL.text,
+  };
+
+  const wordmark = (
+    <Link
+      href="/"
+      style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none", color: "inherit", flexShrink: 0 }}
+    >
+      <EDiamond color={E_PAL.ember} />
+      <span style={{ ...eStyles.display, fontSize: 15, letterSpacing: 2 }}>
+        A.&apos;S WUWA DASHBOARD
+      </span>
+    </Link>
+  );
+
+  const navLinks = NAV.map((n) => {
+    const href = n.id === "resonator" ? resonatorPath(lastResonator) : n.href;
+    const isActive = active === n.id;
+    return (
+      <Link
+        key={n.id}
+        href={href}
+        style={{
+          color: isActive ? E_PAL.ember : E_PAL.textMute,
+          borderBottom: isActive ? `1px solid ${E_PAL.ember}` : "1px solid transparent",
+          paddingBottom: 3,
+          textDecoration: "none",
+          transition: "color 0.15s",
+          flexShrink: isCompact ? 0 : undefined,
+          whiteSpace: isCompact ? "nowrap" : undefined,
+        }}
+      >
+        {n.label}
+      </Link>
+    );
+  });
+
+  const themePill = (
+    <div
+      style={{
+        display: "flex",
+        gap: 2,
+        padding: 3,
+        borderRadius: 999,
+        border: `1px solid ${E_PAL.borderSoft}`,
+        background: "rgba(4,13,18,0.5)",
+        flexShrink: 0,
+      }}
+    >
+      {THEME_LIST.map((t) => {
+        const isActive = theme === t.id;
+        const isImplemented = IMPLEMENTED_THEMES.includes(t.id);
+        return (
+          <button
+            key={t.id}
+            onClick={() => isImplemented && setTheme(t.id)}
+            disabled={!isImplemented}
+            title={isImplemented ? t.sub : "Coming next"}
+            style={{
+              padding: "4px 10px",
+              borderRadius: 999,
+              ...eStyles.mono,
+              fontSize: 9,
+              letterSpacing: 1,
+              cursor: isImplemented ? "pointer" : "not-allowed",
+              background: isActive ? E_PAL.ember : "transparent",
+              color: isActive ? E_PAL.dark : E_PAL.textMute,
+              opacity: isImplemented ? 1 : 0.4,
+              border: "none",
+              transition: "all 0.15s",
+            }}
+          >
+            {t.label.toUpperCase()}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const syncChip = (
+    <span
+      style={{ ...eStyles.mono, fontSize: 10, color: sync.color, letterSpacing: 1, display: "flex", gap: 5, flexShrink: 0 }}
+      title={`Supabase sync · ${syncStatus}`}
+    >
+      <span>{sync.dot}</span>
+      <span>{sync.text}</span>
+    </span>
+  );
+
+  if (isCompact) {
+    return (
+      <div
+        style={{
+          ...rootBase,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          gap: 10,
+          padding: "10px 16px 12px",
+          minWidth: 0,
+        }}
+      >
+        {/* row 1 — wordmark · spacer · (tablet-only theme pill) · sync chip */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {wordmark}
+          <div style={{ flex: 1 }} />
+          {!isMobile && themePill}
+          {syncChip}
+        </div>
+        {/* row 2 — nav as a horizontal scroll strip */}
+        <div
+          style={{
+            display: "flex",
+            gap: 18,
+            ...eStyles.mono,
+            fontSize: 10,
+            letterSpacing: 2,
+            overflowX: "auto",
+            scrollbarWidth: "none",
+            paddingBottom: 2,
+          }}
+        >
+          {navLinks}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
       style={{
+        ...rootBase,
         display: "flex",
         alignItems: "center",
         gap: 22,
         padding: "16px 34px",
-        borderBottom: "1px solid rgba(140,220,225,0.10)",
-        background: "rgba(5,15,21,0.72)",
-        backdropFilter: "blur(14px)",
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
         minWidth: 1280,
-        color: E_PAL.text,
       }}
     >
-      <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none", color: "inherit" }}>
-        <EDiamond color={E_PAL.ember} />
-        <span style={{ ...eStyles.display, fontSize: 15, letterSpacing: 2 }}>
-          A.&apos;S WUWA DASHBOARD
-        </span>
-      </Link>
+      {wordmark}
       <div style={{ flex: 1 }} />
       <div style={{ display: "flex", gap: 24, ...eStyles.mono, fontSize: 10, letterSpacing: 2 }}>
-        {NAV.map((n) => {
-          const href = n.id === "resonator" ? resonatorPath(lastResonator) : n.href;
-          const isActive = active === n.id;
-          return (
-            <Link
-              key={n.id}
-              href={href}
-              style={{
-                color: isActive ? E_PAL.ember : E_PAL.textMute,
-                borderBottom: isActive ? `1px solid ${E_PAL.ember}` : "1px solid transparent",
-                paddingBottom: 3,
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-            >
-              {n.label}
-            </Link>
-          );
-        })}
+        {navLinks}
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 2,
-          padding: 3,
-          borderRadius: 999,
-          border: `1px solid ${E_PAL.borderSoft}`,
-          background: "rgba(4,13,18,0.5)",
-        }}
-      >
-        {THEME_LIST.map((t) => {
-          const isActive = theme === t.id;
-          const isImplemented = IMPLEMENTED_THEMES.includes(t.id);
-          return (
-            <button
-              key={t.id}
-              onClick={() => isImplemented && setTheme(t.id)}
-              disabled={!isImplemented}
-              title={isImplemented ? t.sub : "Coming next"}
-              style={{
-                padding: "4px 10px",
-                borderRadius: 999,
-                ...eStyles.mono,
-                fontSize: 9,
-                letterSpacing: 1,
-                cursor: isImplemented ? "pointer" : "not-allowed",
-                background: isActive ? E_PAL.ember : "transparent",
-                color: isActive ? E_PAL.dark : E_PAL.textMute,
-                opacity: isImplemented ? 1 : 0.4,
-                border: "none",
-                transition: "all 0.15s",
-              }}
-            >
-              {t.label.toUpperCase()}
-            </button>
-          );
-        })}
-      </div>
-      <span
-        style={{ ...eStyles.mono, fontSize: 10, color: sync.color, letterSpacing: 1, display: "flex", gap: 5 }}
-        title={`Supabase sync · ${syncStatus}`}
-      >
-        <span>{sync.dot}</span>
-        <span>{sync.text}</span>
-      </span>
+      {themePill}
+      {syncChip}
     </div>
   );
 }

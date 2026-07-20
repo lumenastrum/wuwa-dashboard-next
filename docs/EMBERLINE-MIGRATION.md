@@ -65,9 +65,40 @@ this one unified theme. This doc is the runway for the migration sessions.
 4. ~~**Edit mode**~~ **DECIDED 2026-07-19: CLI-only.** A. called it — Console dies
    and browser writes die with it; `npm run update` is the sole write path.
    `<EditableField>`/`edit-context`/`<AuthGate>` all go in the strip-down.
-5. **Mobile** — Emberline is desktop-spec (`minWidth: 1280`). Old themes had
-   viewport handling via `useDashboardViewport`. Port the 1c mobile concept from
-   the mockups file when it's mobile's turn.
+5. ~~**Mobile**~~ **DONE 2026-07-20** — full responsive pass across all 5 pages +
+   chrome, built from the 1c mockup's language (layout only — Resonance
+   Instrument stack kept, never the mockup's Marcellus/JetBrains).
+   Two-stage semantics matching obsidian's shipped idiom: `isTablet` (≤1024)
+   collapses structure (multi-col grids → single column, top-bar stacks, tab
+   strip compacts), `isMobile` (≤700) does fonts/padding/hero re-composition.
+   All THREE 1280 locks dropped together (EShell, top-bar, resonator's bespoke
+   shell); primitives (EShell/EFooter/ECard/EKpi) self-adapt by calling the
+   hook internally — no signature changes. Highlights: resonator hero is 1c
+   verbatim on mobile (centered portrait, bottom scrim, element circle
+   top-right, RATING plate top-left, identity centered bottom, sub-medals in a
+   centered row under the tab strip — 66px×4 fits 358px); roster hero = art
+   zone on top with identity over the scrim, stat tiles + CTA FLOW BELOW the
+   art (first attempt anchored the whole cluster over the portrait's face —
+   don't regress to that); forte arc → 5-across flow chain (labels tightened,
+   `flow` prop on EForteDisc — NOT shared with flex-card, verified); teams
+   keeps its HEADED table scrolling in-card at minWidth 560 (teams-panels
+   idiom, deliberately NOT obsidian's label-less stacked rows) + the cover
+   strip's hardcoded `repeat(3,1fr)` → `team.team.length` bug fix rode along;
+   cycles + convene selectors = horizontal scroll strips with fixed-width
+   cards, cycles auto-parks on the selected cycle (scrollIntoView
+   inline:center, block:nearest); constellation untouched by design. FLEX CARD
+   trigger hidden on mobile (obsidian precedent), visible on tablet;
+   flex-card.tsx + teams-panels.tsx byte-untouched.
+   Verified live at TRUE 375/768/1440 layout viewports (the Claude browser
+   pane's mobile preset only scales the VISUAL viewport — layout stays 1280;
+   verification needed a same-origin 375px iframe rig in a CDP browser):
+   zero page-body h-scroll on every page + TEAMS tab, zero overflow offenders,
+   zero console errors, desktop construct-identical at 1440 (80px name, SEQ
+   ornament, 3-col grid, named prev/next all present). Two tablet-band bugs
+   caught live and fixed (tab strip + convene header compacted only at
+   isMobile, overflowed 701-1024). `npm run build` clean (30 pages), eslint
+   clean, 3-lens adversarial review (correctness / fidelity / repo-gotchas):
+   0 findings.
 6. ~~**Resonator rating sub-bars**~~ **SUPERSEDED → GRADE MEDALS, DONE 2026-07-19.**
    A. vetoed bars ("less generic chart feel"). The 4 rating subs now render as
    medals-on-plates in the hero band using the GAME'S OWN settlement grade

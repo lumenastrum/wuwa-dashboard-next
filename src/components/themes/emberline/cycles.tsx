@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useData } from "@/lib/data-context";
 import type { Rating } from "@/lib/types";
 import { E_PAL, eStyles } from "./styles";
 import { ECard, EFace, EFooter, EKicker, ESectionTitle, EShell } from "./primitives";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 
 // Bar + histogram scale ceiling for a single team score.
 const SCORE_SCALE = 15000;
@@ -39,18 +40,28 @@ function EMedal({ rating }: { rating: Rating }) {
 
 export function EmberlineCycles() {
   const { raw, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
   const cycles = raw.endstateMatrix.cycles;
   const [selRaw, setSel] = useState(cycles.length - 1);
   const sel = Math.min(selRaw, cycles.length - 1);
   const c = cycles[sel];
   const dayOneCount = cycles.filter((cc) => cc.dayOne).length;
 
+  // Mobile selector is a horizontal scroll strip — park it on the selected
+  // card (latest cycle by default), same idea as the constellation auto-park.
+  const stripRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!isMobile) return;
+    const card = stripRef.current?.children[sel] as HTMLElement | undefined;
+    card?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [isMobile, sel]);
+
   return (
     <EShell>
       {/* header */}
-      <div style={{ padding: "28px 34px 20px" }}>
+      <div style={{ padding: isMobile ? "18px 16px 14px" : "28px 34px 20px" }}>
         <EKicker spacing={3} style={{ marginBottom: 8 }}>ENDSTATE MATRIX</EKicker>
-        <div style={{ ...eStyles.display, fontSize: 48, lineHeight: 1 }}>
+        <div style={{ ...eStyles.display, fontSize: isMobile ? 34 : 48, lineHeight: 1 }}>
           Eight teams. One run each.{" "}
           <span style={{ fontStyle: "italic", color: E_PAL.emberSoft }}>No mulligans.</span>
         </div>
@@ -58,12 +69,23 @@ export function EmberlineCycles() {
 
       {/* cycle selector */}
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${Math.max(cycles.length, 2)}, 1fr)`,
-          gap: 14,
-          padding: "0 34px 18px",
-        }}
+        ref={stripRef}
+        style={
+          isMobile
+            ? {
+                display: "flex",
+                gap: 12,
+                overflowX: "auto",
+                WebkitOverflowScrolling: "touch",
+                padding: "0 16px 16px",
+              }
+            : {
+                display: "grid",
+                gridTemplateColumns: `repeat(${Math.max(cycles.length, 2)}, 1fr)`,
+                gap: 14,
+                padding: "0 34px 18px",
+              }
+        }
       >
         {cycles.map((cc, i) => {
           const active = i === sel;
@@ -73,6 +95,7 @@ export function EmberlineCycles() {
               onClick={() => setSel(i)}
               style={{
                 position: "relative",
+                flex: isMobile ? "0 0 300px" : undefined,
                 padding: "18px 22px",
                 borderRadius: 8,
                 cursor: "pointer",
@@ -110,8 +133,8 @@ export function EmberlineCycles() {
                   </EKicker>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
-                <div style={{ flex: 1, position: "relative", height: 4, borderRadius: 999, background: E_PAL.track }}>
+              <div style={{ display: "flex", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", gap: 12, marginTop: 14 }}>
+                <div style={{ flex: 1, flexBasis: isMobile ? "100%" : undefined, position: "relative", height: 4, borderRadius: 999, background: E_PAL.track }}>
                   <div
                     style={{
                       width: `${Math.min((cc.totalPoints / CYCLE_SCALE) * 100, 100)}%`,
@@ -159,14 +182,14 @@ export function EmberlineCycles() {
       </div>
 
       {/* main grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 18, padding: "0 34px 28px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.5fr 1fr", gap: isMobile ? 16 : 18, padding: isMobile ? "0 16px 24px" : "0 34px 28px" }}>
         {/* the run */}
         <ECard diamonds="both" style={{ padding: "18px 22px", alignSelf: "start" }}>
           <ESectionTitle
             title="The Run"
             size={24}
             sub={<em>{c.label} · {c.totalPoints.toLocaleString()} points</em>}
-            right={<EKicker size={8.5} spacing={0.5} style={{ whiteSpace: "nowrap" }}>SCALE 0–{SCORE_SCALE.toLocaleString()}</EKicker>}
+            right={isMobile ? undefined : <EKicker size={8.5} spacing={0.5} style={{ whiteSpace: "nowrap" }}>SCALE 0–{SCORE_SCALE.toLocaleString()}</EKicker>}
             style={{ marginBottom: 14 }}
           />
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
@@ -182,38 +205,51 @@ export function EmberlineCycles() {
                     border: `1px solid ${crowned ? "rgba(245,201,122,0.30)" : "rgba(140,220,225,0.07)"}`,
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{ ...eStyles.mono, fontSize: 10, color: E_PAL.textMute, width: 20 }}>
-                      {String(t.order).padStart(2, "0")}
-                    </span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, flexWrap: "wrap" }}>
-                      {t.members.map((n) => (
-                        <div key={n} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                          <EFace name={n} size={24} radius={5} border="rgba(140,220,225,0.18)" />
-                          <span style={{ ...eStyles.body, fontSize: 12, color: rosterByName[n] ? E_PAL.text : E_PAL.textDim }}>
-                            {n}
-                          </span>
-                        </div>
-                      ))}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: isMobile ? "column" : "row",
+                      alignItems: isMobile ? "stretch" : "center",
+                      gap: isMobile ? 8 : 12,
+                    }}
+                  >
+                    {/* line 1 (mobile): order + members — display:contents on desktop keeps the flat row */}
+                    <div style={{ display: isMobile ? "flex" : "contents", alignItems: "center", gap: 12 }}>
+                      <span style={{ ...eStyles.mono, fontSize: 10, color: E_PAL.textMute, width: 20 }}>
+                        {String(t.order).padStart(2, "0")}
+                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, flexWrap: "wrap" }}>
+                        {t.members.map((n) => (
+                          <div key={n} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                            <EFace name={n} size={24} radius={5} border="rgba(140,220,225,0.18)" />
+                            <span style={{ ...eStyles.body, fontSize: 12, color: rosterByName[n] ? E_PAL.text : E_PAL.textDim }}>
+                              {n}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <span style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1, color: E_PAL.textMute, flexShrink: 0 }}>
-                      {t.buff.toUpperCase()}
-                    </span>
-                    <EMedal rating={t.rating} />
-                    <span
-                      style={{
-                        ...eStyles.display,
-                        fontSize: 22,
-                        width: 74,
-                        textAlign: "right",
-                        color: crowned ? E_PAL.gold : t.over5k ? E_PAL.text : E_PAL.textMute,
-                      }}
-                    >
-                      {t.score.toLocaleString()}
-                    </span>
+                    {/* line 2 (mobile): buff + medal + score */}
+                    <div style={{ display: isMobile ? "flex" : "contents", alignItems: "center", gap: 12 }}>
+                      <span style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1, color: E_PAL.textMute, flexShrink: 0 }}>
+                        {t.buff.toUpperCase()}
+                      </span>
+                      <EMedal rating={t.rating} />
+                      <span
+                        style={{
+                          ...eStyles.display,
+                          fontSize: 22,
+                          width: isMobile ? "auto" : 74,
+                          textAlign: isMobile ? "left" : "right",
+                          color: crowned ? E_PAL.gold : t.over5k ? E_PAL.text : E_PAL.textMute,
+                        }}
+                      >
+                        {t.score.toLocaleString()}
+                      </span>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 7 }}>
-                    <span style={{ width: 20 }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 0 : 12, marginTop: 7 }}>
+                    <span style={{ width: isMobile ? 0 : 20 }} />
                     <div style={{ flex: 1, height: 3, borderRadius: 999, background: "rgba(140,220,225,0.07)", overflow: "hidden" }}>
                       <div
                         style={{

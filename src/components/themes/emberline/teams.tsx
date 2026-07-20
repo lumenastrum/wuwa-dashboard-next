@@ -7,6 +7,7 @@ import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
 import { elementBadge } from "@/lib/game-icons";
 import type { ElementName } from "@/lib/types";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { CoverPortrait } from "@/components/cover-portrait";
 import { E_PAL, eStyles } from "./styles";
 import { EDiamond, EFace, EFooter, EKicker, EShell } from "./primitives";
@@ -15,6 +16,7 @@ const GRID = "40px 1fr 70px 66px 60px 36px";
 
 export function EmberlineTeams() {
   const { raw, rosterByName } = useData();
+  const { isMobile, isTablet } = useDashboardViewport();
   const [sel, setSel] = useState(0);
 
   const benches = raw.benchmarks;
@@ -26,9 +28,9 @@ export function EmberlineTeams() {
   return (
     <EShell>
       {/* header */}
-      <div style={{ padding: "28px 34px 22px" }}>
+      <div style={{ padding: isMobile ? "18px 16px 16px" : "28px 34px 22px" }}>
         <EKicker spacing={3} style={{ marginBottom: 8 }}>BENCHMARKS · OVERDRIVE</EKicker>
-        <div style={{ ...eStyles.display, fontSize: 48, lineHeight: 1 }}>
+        <div style={{ ...eStyles.display, fontSize: isMobile ? 36 : 48, lineHeight: 1 }}>
           The hand against <span style={{ fontStyle: "italic", color: E_PAL.emberSoft }}>the dummy</span>.
         </div>
         <div
@@ -36,6 +38,8 @@ export function EmberlineTeams() {
             display: "flex",
             alignItems: "center",
             gap: 10,
+            rowGap: isMobile ? 6 : undefined,
+            flexWrap: isMobile ? "wrap" : undefined,
             marginTop: 12,
             ...eStyles.mono,
             fontSize: 10,
@@ -48,13 +52,13 @@ export function EmberlineTeams() {
           <span>{meta.runs.toUpperCase()} · {meta.timer} TIMER</span>
           <span style={{ color: E_PAL.textFaint }}>✦</span>
           <span>{meta.resistances.split("|").slice(0, 2).map((s) => s.trim().replace(/\s*\(([^)]+)\)/, " $1")).join(" · ").toUpperCase()}</span>
-          <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(140,220,225,0.15), transparent)" }} />
+          {!isMobile && <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(140,220,225,0.15), transparent)" }} />}
           <span style={{ color: E_PAL.textFaint }}>{meta.date.toUpperCase()}</span>
         </div>
       </div>
 
       {/* table + featured */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18, padding: "0 34px 28px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1.4fr 1fr", gap: isMobile ? 14 : 18, padding: isMobile ? "0 16px 24px" : "0 34px 28px" }}>
         {/* benchmark table */}
         <div
           style={{
@@ -67,6 +71,9 @@ export function EmberlineTeams() {
           }}
         >
           <EDiamond corner="tl" style={{ zIndex: 2 }} />
+          {/* 1c in-card horizontal scroll: header + rows share one min-width track on mobile */}
+          <div style={{ overflowX: isMobile ? "auto" : "visible" }}>
+          <div style={{ minWidth: isMobile ? 560 : undefined }}>
           <div
             style={{
               display: "grid",
@@ -154,6 +161,8 @@ export function EmberlineTeams() {
               </div>
             );
           })}
+          </div>
+          </div>
         </div>
 
         {/* featured team */}
@@ -167,7 +176,7 @@ export function EmberlineTeams() {
             alignSelf: "start",
           }}
         >
-          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2, background: E_PAL.trackStrong }}>
+          <div style={{ position: "relative", display: "grid", gridTemplateColumns: `repeat(${team.team.length}, 1fr)`, gap: 2, background: E_PAL.trackStrong }}>
             {team.team.map((n) => {
               const rr = rosterByName[n];
               const glow = rr ? ELEMENTS[rr.element].glow : "rgba(140,220,225,0.08)";
@@ -241,11 +250,11 @@ export function EmberlineTeams() {
                     border: `1px solid ${E_PAL.border}`,
                     borderRadius: 6,
                     background: E_PAL.insetStrong,
-                    padding: "12px 14px",
+                    padding: isMobile ? "10px" : "12px 14px",
                   }}
                 >
                   <EKicker size={9} spacing={2}>{t.label}</EKicker>
-                  <div style={{ ...eStyles.display, fontSize: 26, marginTop: 3, color: t.color }}>{t.value}</div>
+                  <div style={{ ...eStyles.display, fontSize: isMobile ? 22 : 26, marginTop: 3, color: t.color }}>{t.value}</div>
                 </div>
               ))}
             </div>
@@ -264,13 +273,13 @@ export function EmberlineTeams() {
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      padding: "9px 12px",
+                      padding: isMobile ? "8px 10px" : "9px 12px",
                       borderRadius: 6,
                       background: E_PAL.inset,
                       border: `1px solid ${E_PAL.borderSoft}`,
                     }}
                   >
-                    <EFace name={n} size={38} radius={7} border="rgba(140,220,225,0.18)" />
+                    <EFace name={n} size={isMobile ? 34 : 38} radius={7} border="rgba(140,220,225,0.18)" />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ ...eStyles.body, fontSize: 13, fontWeight: 600 }}>{n}</div>
                       <div

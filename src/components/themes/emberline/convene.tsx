@@ -12,6 +12,7 @@ import {
 import { HARD_PITY, SOFT_PITY, is5050Pool, PRIMARY_BANNERS } from "@/lib/convene-types";
 import { portrait } from "@/lib/portraits";
 import { usePulls } from "@/lib/use-pulls";
+import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
 import { E_PAL, eStyles } from "./styles";
 import { ECard, EDiamond, EFooter, EKicker, EKpi, ESectionTitle, EShell } from "./primitives";
@@ -242,6 +243,7 @@ function ERing({ banner }: { banner: BannerStats }) {
 
 export function EmberlineConvene() {
   const { summary, status } = usePulls();
+  const { isMobile, isTablet } = useDashboardViewport();
   const [selType, setSelType] = useState<number | null>(null);
 
   const banners = useMemo(
@@ -296,10 +298,19 @@ export function EmberlineConvene() {
   return (
     <EShell wash={CONVENE_WASH}>
       {/* header + KPIs */}
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, padding: "28px 34px 22px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isTablet ? "column" : "row",
+          alignItems: isTablet ? "flex-start" : "flex-end",
+          justifyContent: "space-between",
+          gap: isTablet ? 16 : 24,
+          padding: isMobile ? "18px 16px 16px" : "28px 34px 22px",
+        }}
+      >
         <div>
           <EKicker spacing={3} style={{ marginBottom: 8 }}>THE CONVENE LEDGER</EKicker>
-          <div style={{ ...eStyles.display, fontSize: 52, lineHeight: 1 }}>
+          <div style={{ ...eStyles.display, fontSize: isMobile ? 38 : 52, lineHeight: 1 }}>
             Fortune, <span style={{ fontStyle: "italic", color: E_PAL.emberSoft }}>accounted for</span>.
           </div>
           <div style={{ ...eStyles.body, fontSize: 14, color: E_PAL.textDim, marginTop: 10 }}>
@@ -307,7 +318,7 @@ export function EmberlineConvene() {
             {totalFourStars} four-stars, and one honest pity table.
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(140px, 1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, minmax(140px, 1fr))", gap: 12 }}>
           <EKpi
             label="TOTAL PULLS"
             value={summary.totalPulls.toLocaleString()}
@@ -343,10 +354,11 @@ export function EmberlineConvene() {
       {/* pool selector */}
       <div
         style={{
-          display: "grid",
+          display: isMobile ? "flex" : "grid",
           gridTemplateColumns: `repeat(${Math.min(banners.length, 3)}, 1fr)`,
-          gap: 14,
-          padding: "0 34px 18px",
+          gap: isMobile ? 12 : 14,
+          overflowX: isMobile ? "auto" : "visible",
+          padding: isMobile ? "0 16px 14px" : "0 34px 18px",
         }}
       >
         {banners.map((b, i) => {
@@ -358,6 +370,7 @@ export function EmberlineConvene() {
               onClick={() => setSelType(b.cardPoolType)}
               style={{
                 position: "relative",
+                flex: isMobile ? "0 0 210px" : undefined,
                 padding: "16px 20px 18px",
                 borderRadius: 8,
                 cursor: "pointer",
@@ -421,16 +434,18 @@ export function EmberlineConvene() {
 
       {/* main grid — minWidth: 0 on both columns so the wide constellation
           strip scrolls inside its card instead of blowing the grid open */}
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.55fr) minmax(0, 1fr)", gap: 18, padding: "0 34px 28px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isTablet ? "minmax(0, 1fr)" : "minmax(0, 1.55fr) minmax(0, 1fr)", gap: 18, padding: isMobile ? "0 16px 24px" : "0 34px 28px" }}>
         {/* left: constellation + ledger */}
         <div style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
           <ECard style={{ padding: "18px 22px" }}>
             <ESectionTitle
               title="The Constellation"
-              sub="every five-star, by pity"
+              sub={isMobile ? undefined : "every five-star, by pity"}
               right={
-                <EKicker size={9} spacing={1}>
-                  {banner.name.toUpperCase()} · {banner.fiveStars.length} HITS
+                <EKicker size={9} spacing={1} style={{ whiteSpace: "nowrap" }}>
+                  {isMobile
+                    ? `${banner.fiveStars.length} HITS`
+                    : `${banner.name.toUpperCase()} · ${banner.fiveStars.length} HITS`}
                 </EKicker>
               }
             />
@@ -441,7 +456,7 @@ export function EmberlineConvene() {
                 NO FIVE-STARS IN THIS POOL YET
               </div>
             )}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8, ...eStyles.mono, fontSize: 9, letterSpacing: 1, color: E_PAL.textMute }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8, ...(isMobile ? { flexWrap: "wrap", rowGap: 6 } : null), ...eStyles.mono, fontSize: 9, letterSpacing: 1, color: E_PAL.textMute }}>
               {([
                 ["WON 50/50", E_PAL.green],
                 ["LOST 50/50", E_PAL.pink],
@@ -452,7 +467,7 @@ export function EmberlineConvene() {
                   {label}
                 </span>
               ))}
-              <div style={{ flex: 1 }} />
+              {!isMobile && <div style={{ flex: 1 }} />}
               <span>SOFT PITY {SOFT_PITY} · HARD PITY {HARD_PITY}</span>
             </div>
           </ECard>
@@ -469,7 +484,7 @@ export function EmberlineConvene() {
               }
               style={{ marginBottom: 10 }}
             />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 18px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "6px 18px" }}>
               {ledger.map((f, i) => {
                 const oc = outcomeOf(f);
                 const col = OUTCOME_COLOR[oc];
@@ -532,9 +547,9 @@ export function EmberlineConvene() {
         <div style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
           <ECard style={{ padding: "18px 22px" }}>
             <ESectionTitle title={banner.name} style={{ marginBottom: 6 }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: isMobile ? 16 : 22 }}>
               <ERing banner={banner} />
-              <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <div style={{ flex: 1, alignSelf: isMobile ? "stretch" : undefined, display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: `1px solid ${E_PAL.borderSoft}` }}>
                   <span style={{ ...eStyles.mono, fontSize: 10, letterSpacing: 1, color: E_PAL.textDim }}>AVG 5★ PITY</span>
                   <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
@@ -604,7 +619,11 @@ export function EmberlineConvene() {
           <ECard style={{ padding: "18px 22px" }}>
             <ESectionTitle
               title="The Coinflips"
-              right={<EKicker size={9} spacing={1}>{flipSource.name.toUpperCase()}</EKicker>}
+              right={
+                isMobile ? undefined : (
+                  <EKicker size={9} spacing={1}>{flipSource.name.toUpperCase()}</EKicker>
+                )
+              }
               style={{ marginBottom: 12 }}
             />
             <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
