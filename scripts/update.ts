@@ -312,7 +312,7 @@ benchmark:
 cycle:
   addcycle --file <cycle.json>             append a whole new cycle (teams + lessons; totals/over5k derive)
   cycle <id> team <order> score <int>
-  cycle <id> team <order> rating <""|B|A|S|SS|SSS|CROWNED>
+  cycle <id> team <order> rating <""|B|A|S|SS|SSS|CROWNED|IRIDESCENT>
   cycle <id> team <order> buff <text>
   cycle <id> team <order> notes <text>
   cycle <id> team <order> members <"A,B,C">     comma-separated names
@@ -943,7 +943,7 @@ async function main() {
         throw new Error(`cycle JSON needs a non-empty "teams" array`);
       }
 
-      const VALID_RATINGS = ["", "B", "A", "S", "SS", "SSS", "CROWNED"];
+      const VALID_RATINGS = ["", "B", "A", "S", "SS", "SSS", "CROWNED", "IRIDESCENT"];
       const teams = (raw.teams as AnyRecord[]).map((t, i) => {
         const order = t.order != null ? parseIntOrThrow(String(t.order), "team order") : i + 1;
         const score = parseIntOrThrow(String(t.score ?? 0), `team ${order} score`);
