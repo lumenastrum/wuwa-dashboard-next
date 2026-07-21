@@ -82,13 +82,22 @@ const PERCENT_STATS = new Set(["CR", "CD", "ER", "Team CR", "Team CD"]);
 // Warn-not-throw on an unknown label: every patch can add a bonus type, and a
 // stale list shouldn't block recording a real number (same policy as echo
 // species). Canonical spellings live here so the data doesn't fragment.
+// Transcribed from the real in-game sheet (Verina, 2026-07-21) rather than
+// guessed — the first pass omitted Physical DMG Bonus, every RES row, and the
+// stamina/tune rows. Record NON-ZERO values only: a panel of fifteen 0.0% rows
+// buries the two numbers that matter.
 const EXTRA_STAT_LABELS = [
   "HP", "DEF", "Healing Bonus",
   "Basic Attack DMG Bonus", "Heavy Attack DMG Bonus",
   "Resonance Skill DMG Bonus", "Resonance Liberation DMG Bonus",
   "Echo Skill DMG Bonus",
+  "Physical DMG Bonus",
   "Glacio DMG Bonus", "Fusion DMG Bonus", "Electro DMG Bonus",
   "Aero DMG Bonus", "Spectro DMG Bonus", "Havoc DMG Bonus",
+  "Physical RES", "Glacio RES", "Fusion RES", "Electro RES",
+  "Aero RES", "Spectro RES", "Havoc RES",
+  "Tune Break Boost", "Off-Tune Buildup Rate",
+  "Max STA", "Max Flight STA",
 ];
 
 type AnyRecord = Record<string, unknown>;
