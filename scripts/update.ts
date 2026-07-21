@@ -328,6 +328,12 @@ echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
 forte (tree investment; levels 1-10, nodes = unlocked side bonus nodes):
   forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=10]
     e.g. forte Aemeath 10 10 10 10 10
+  fortekit <name> --file <kit.json>      FORTE tab kit codex — whole-array replace
+                                         JSON: [ { icon, name, type, take }, ... ]
+                                         icon = file stem in public/game/forte/<resonator>/
+                                         (basic|b1|y|c1|intro|t|d1|d2)
+  fortekit <name> show                   list entries
+  fortekit <name> clear                  remove the codex
 
 resonator rating (read-only, Optimizer weighting):
   rating <name>                                   echo+stats+sig+seq → one grade
@@ -875,6 +881,53 @@ async function main() {
       if (nodes < 0 || nodes > FORTE_NODE_MAX) throw new Error(`nodes must be 0-${FORTE_NODE_MAX} (got ${nodes})`);
       r.forte = { basic, skill, circuit, liberation, intro, nodes };
       console.log(`${name} forte: basic ${basic} · skill ${skill} · circuit ${circuit} · lib ${liberation} · intro ${intro} · ${nodes}/${FORTE_NODE_MAX} nodes`);
+      break;
+    }
+    case "fortekit": {
+      // fortekit <name> --file <kit.json> | show | clear
+      // The FORTE tab's kit codex — whole-array replace from a JSON file, since
+      // takes are paragraph-length and don't survive shell quoting with dignity.
+      const [name, sub, ...kitRest] = rest;
+      if (!name) throw new Error(`usage: fortekit <name> --file <kit.json> | fortekit <name> show | fortekit <name> clear`);
+      const r = findResonator(data, name);
+
+      if (sub === "show") {
+        const existing = r.forteKit as { icon: string; name: string; type: string; take: string }[] | undefined;
+        if (!existing?.length) {
+          console.log(`${r.name}: no kit breakdown entered`);
+        } else {
+          for (const e of existing) {
+            console.log(`  [${e.icon}] ${e.name} (${e.type})`);
+            console.log(`      ${e.take.slice(0, 120)}${e.take.length > 120 ? "…" : ""}`);
+          }
+        }
+        return; // read-only — skip the save
+      }
+      if (sub === "clear") {
+        delete r.forteKit;
+        console.log(`${r.name}: kit breakdown cleared`);
+        break;
+      }
+      if (sub !== "--file" || !kitRest[0]) {
+        throw new Error(
+          `usage: fortekit <name> --file <kit.json>\n` +
+            `  JSON: [ { icon, name, type, take }, ... ] — replaces the whole kit\n` +
+            `  icon = atlas file stem in public/game/forte/<resonator>/ (basic|b1|y|c1|intro|t|d1|d2)`,
+        );
+      }
+      const kitRaw = JSON.parse(await fs.readFile(path.resolve(kitRest[0]), "utf-8"));
+      if (!Array.isArray(kitRaw) || kitRaw.length === 0) throw new Error(`kit file must be a non-empty JSON array`);
+      const kit = kitRaw.map((e, i) => {
+        for (const field of ["icon", "name", "type", "take"] as const) {
+          if (typeof e[field] !== "string" || !e[field].trim()) {
+            throw new Error(`kit entry ${i + 1}: missing/empty "${field}"`);
+          }
+        }
+        return { icon: e.icon.trim(), name: e.name.trim(), type: e.type.trim(), take: e.take.trim() };
+      });
+      r.forteKit = kit;
+      console.log(`${r.name} kit codex: ${kit.length} entries`);
+      for (const e of kit) console.log(`  [${e.icon}] ${e.name} (${e.type})`);
       break;
     }
     case "echoweight": {

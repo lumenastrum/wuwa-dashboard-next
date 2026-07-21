@@ -110,3 +110,10 @@ export function forteIcon(resonator: string, slot: ForteSlot): string {
 export function forteIconFallback(slot: ForteSlot, weaponType: WeaponType): string | null {
   return slot === "basic" ? `${BASE_PATH}/game/skill-common/${weaponType.toLowerCase()}.webp` : null;
 }
+
+/** Kit-codex icon by raw atlas file stem (basic|b1|y|c1|intro|t|d1|d2…) — the
+ *  FORTE tab's entries name their own file instead of going through the
+ *  five-slot ForteSlot mapping, so outro (t) and inherents (d1/d2) resolve too. */
+export function forteKitIcon(resonator: string, stem: string): string {
+  return `${BASE_PATH}/game/forte/${routeName(resonator).toLowerCase()}/${stem}.webp`;
+}

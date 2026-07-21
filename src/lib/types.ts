@@ -27,6 +27,20 @@ export interface Resonator {
   level: number;
   notes: string;
   forte?: ResonatorForte;        // optional — render nothing when absent
+  forteKit?: ForteKitEntry[];    // optional — FORTE tab kit codex, absent = empty state
+}
+
+// One ability in the FORTE tab's kit codex. `icon` is the atlas file stem under
+// public/game/forte/<resonator>/ (Kuro naming: basic, b1=skill, y=circuit,
+// c1=liberation, intro, t=outro, d1/d2=inherents) — a missing file degrades to
+// a letter tile, so entries can ship before their icon is ripped. `take` is the
+// house-voice breakdown, same register as SignatureWeapon.synergy: what the
+// ability actually does for the player, not the game's jargon restated.
+export interface ForteKitEntry {
+  icon: string;
+  name: string;   // in-game ability name, e.g. "Shared Voyage"
+  type: string;   // in-game slot label, e.g. "Resonance Skill", "Inherent Skill"
+  take: string;
 }
 
 // Every branch of the forte tree carries TWO side nodes, and there are five

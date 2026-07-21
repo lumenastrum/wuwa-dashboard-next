@@ -25,6 +25,7 @@ import {
   FORTE_SLOTS,
   forteIcon,
   forteIconFallback,
+  forteKitIcon,
   type ForteSlot,
 } from "@/lib/game-icons";
 import { tallPortrait } from "@/lib/portraits";
@@ -34,7 +35,7 @@ import { parseEchoSets, sonataIcon } from "@/lib/sonata";
 import { useTheme } from "@/lib/theme-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
-import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
+import type { Echo, ForteKitEntry, ResonatorForte, RosterEntry } from "@/lib/types";
 import { FORTE_NODE_MAX } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
 import { EDiamond, EFooter, EKicker, ERarityPips } from "./primitives";
@@ -253,6 +254,59 @@ function fortePriorityNotes(forte: ResonatorForte): string[] {
   return notes;
 }
 
+// Kit-codex ability glyph: the ripped atlas icon on a disc, degrading to the
+// ability's initial letter when the file isn't ripped yet (e.g. a second
+// inherent's d2.webp). Keyed by resonator+stem at the call site so the error
+// state resets on navigation.
+function EKitGlyph({ r, entry, el }: { r: RosterEntry; entry: ForteKitEntry; el: ElementPalette }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div
+      style={{
+        width: 46,
+        height: 46,
+        borderRadius: 999,
+        border: `1px solid ${el.hex}55`,
+        background: `radial-gradient(30px 30px at 50% 40%, ${el.glow}, rgba(4,13,18,0.6))`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      {failed ? (
+        <span style={{ ...eStyles.display, fontSize: 20, color: el.soft }}>{entry.name.charAt(0)}</span>
+      ) : (
+        <img
+          src={forteKitIcon(r.name, entry.icon)}
+          alt={entry.name}
+          onError={() => setFailed(true)}
+          style={{ width: 28, height: 28, opacity: 0.9 }}
+        />
+      )}
+    </div>
+  );
+}
+
+function EKitCard({ r, entry, el }: { r: RosterEntry; entry: ForteKitEntry; el: ElementPalette }) {
+  return (
+    <EPanel>
+      <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+        <EKitGlyph key={`${r.name}-${entry.icon}`} r={r} entry={entry} el={el} />
+        <div style={{ minWidth: 0 }}>
+          <div style={{ ...eStyles.display, fontSize: 17, lineHeight: 1.15, color: el.soft }}>{entry.name}</div>
+          <div style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1.5, color: E_PAL.textDim, marginTop: 4 }}>
+            {entry.type.toUpperCase()}
+          </div>
+        </div>
+      </div>
+      <div style={{ ...eStyles.body, fontSize: 12.5, marginTop: 11, lineHeight: 1.6, color: E_PAL.text, fontStyle: "italic" }}>
+        {highlightStats(entry.take, { ...eStyles.mono, color: el.soft, fontWeight: 600, fontStyle: "normal" })}
+      </div>
+    </EPanel>
+  );
+}
+
 function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
   const icon = echoIcon(echo.name);
   const gc = gradeColor(ev.grade, ev.status);
@@ -314,9 +368,9 @@ function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
 
 // OVERVIEW and TEAMS are live; the rest of the strip is static chrome until
 // their content exists (per the migration runway).
-type LiveTab = "OVERVIEW" | "STATS" | "TEAMS";
+type LiveTab = "OVERVIEW" | "STATS" | "FORTE" | "TEAMS";
 const TAB_STRIP = ["OVERVIEW", "STATS", "FORTE", "ECHOES", "WEAPON", "TEAMS"] as const;
-const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "STATS", "TEAMS"]);
+const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "STATS", "FORTE", "TEAMS"]);
 
 export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
@@ -704,6 +758,48 @@ export function EmberlineResonator({ name }: { name: string }) {
               </div>
             )}
           </EPanel>
+        </div>
+      )}
+
+      {/* FORTE tab — the kit codex: every ability translated into house voice.
+          Tree INVESTMENT (the arc + priority notes) stays on OVERVIEW; this tab
+          answers "what does the kit actually do", one card per ability, same
+          register as the weapon panel's WHY IT'S CRACKED. A compact disc strip
+          up top echoes the investment so the tab stands alone. Grid needs
+          alignContent:start for the same flex-child stretch reason as STATS. */}
+      {tab === "FORTE" && (
+        <div style={{ padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
+          {r.forte && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: isMobile ? 10 : 22,
+                flexWrap: "wrap",
+                justifyContent: isMobile ? "center" : "flex-start",
+              }}
+            >
+              {FORTE_SLOTS.map((s) => (
+                <EForteDisc key={s.key} r={r} slot={s.key} el={el} forte={r.forte!} flow />
+              ))}
+              <span style={{ ...eStyles.mono, fontSize: 9, letterSpacing: 1.5, color: r.forte.nodes >= FORTE_NODE_MAX ? el.soft : E_PAL.textDim }}>
+                {r.forte.nodes}/{FORTE_NODE_MAX} NODES
+              </span>
+            </div>
+          )}
+          {r.forteKit?.length ? (
+            <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1fr 1fr", gap: 18, alignItems: "start", alignContent: "start" }}>
+              {r.forteKit.map((entry) => (
+                <EKitCard key={`${r.name}-${entry.icon}-${entry.name}`} r={r} entry={entry} el={el} />
+              ))}
+            </div>
+          ) : (
+            <EPanel>
+              <div style={{ ...eStyles.mono, fontSize: 9.5, color: E_PAL.textMute, lineHeight: 1.7 }}>
+                KIT BREAKDOWN NOT ENTERED — `npm run update -- fortekit`
+              </div>
+            </EPanel>
+          )}
         </div>
       )}
 

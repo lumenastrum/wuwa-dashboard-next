@@ -1,0 +1,56 @@
+[
+  {
+    "icon": "basic",
+    "name": "Infinity Calibration",
+    "type": "Basic Attack",
+    "take": "Four-stage string, mid-air plunge, dodge counter — standard opening act, all Fusion DMG. The trap is in the fine print: Heavy Attack Charged II is counted as Resonance Liberation DMG. That's a liberation nuke wearing a basic attack's name tag, and it's why her whole build scales it. During Instant Response the charge time nearly vanishes, and landing a Charged II refunds 200 Synchronization Rate — a full Duet, paid back instantly. The autos are the pump. The heavy is the payload."
+  },
+  {
+    "icon": "b1",
+    "name": "Shared Voyage",
+    "type": "Resonance Skill",
+    "take": "The skill button doesn't cast a skill — it swaps BODIES. Aemeath and her Mech share one health bar, one stat sheet, and one combo string: press it after a late combo stage, a heavy, or a dodge counter and she stitches a Sync Strike into the seam (Armament Merge going in, Call of Dawn coming out), landing in the OTHER form with the string still running. One-second cooldown, no resource cost. It's not a stance switch, it's a duet partner — two movesets braided into one uninterrupted sentence."
+  },
+  {
+    "icon": "y",
+    "name": "To Sculpt the Silence",
+    "type": "Forte Circuit",
+    "take": "The heart of the loop. Everything she does builds Synchronization Rate (cap 200); finishing combo stage 4 opens Seraphic Duo for 5s, and with 100+ Sync banked she cashes it into Seraphic Duet — Overture from her side, Encore from the Mech's — which counts as Resonance Liberation DMG, swaps forms, and banks a point of Resonance Rate. Meanwhile her teammates' Tune Rupture / Fusion Burst procs paint Trail stacks on enemies (30 deep), and every Duet detonates the paint for stacking DMG multipliers. Her team leaves lit fuses everywhere. She's the one holding the match."
+  },
+  {
+    "icon": "c1",
+    "name": "Towards the Daybreak",
+    "type": "Resonance Liberation",
+    "take": "Heavenfall Edict: Overdrive slams the ground, throws her into Mech form, and starts the real clock: 60s of Unbound where the ult button becomes Finale, plus Stardust Resonance juicing her next two Duets (extra Tune Rupture instances, or +200% on the Fusion Burst multiplier). Then the win condition: cap Synchronization Rate AND Resonance Rate while Unbound and she enters Instant Response — the state every other line in this kit has been feeding. Finale drains both gauges into one screen-clearing Fusion nuke. Fill the bars, spend the storm."
+  },
+  {
+    "icon": "intro",
+    "name": "Overture of Departure",
+    "type": "Intro Skill",
+    "take": "She doesn't walk on stage — the show starts on the tag-in. Songs Across the Universe (or Debut of Meteoric Radiance if the Mech takes the entrance) deals Fusion DMG, front-loads Synchronization Rate, and grants Starlume Acceleration for 15s: cast the Liberation inside that window and it banks an EXTRA point of Resonance Rate. That's the tempo tell for the whole rotation — intro first, ult second, and the Finale gauges fill a beat faster every cycle."
+  },
+  {
+    "icon": "t",
+    "name": "Silent Protection",
+    "type": "Outro Skill",
+    "take": "Even her exit is a gift. Swapping out hands every OTHER Resonator 10% All-DMG Amplification for 20s — and anyone who inflicts Tune Rupture - Shifting or Fusion Burst gets 20% instead. Translation: build the team around her Resonance Mode and the outro pays double. She leaves the room and the room still hits harder because she was in it."
+  },
+  {
+    "icon": "d1",
+    "name": "Before All Sounds",
+    "type": "Inherent Skill",
+    "take": "The screenshot enabler. During Instant Response, both Heavy Attacks gain 200% DMG Amplification — TRIPLE payout on the exact button that Instant Response already charges near-instantly and that already counts as Liberation DMG. This is the line that turns 'nice burst window' into the 1.1M one-hit. Everything else in the kit builds the altar; this inherent is what gets sacrificed on it."
+  },
+  {
+    "icon": "d2",
+    "name": "Between the Stars",
+    "type": "Inherent Skill",
+    "take": "Her sheet Crit DMG is a lie — the real number is bigger. In Tune Rupture mode, each teammate who inflicts Shifting or deals Tune Rupture DMG hands her +20% Crit DMG, up to three times (+60%); in Fusion Burst mode it's +30% twice. Max the stacks and Heavenfall Edict: Finale gets Amplified 25% on top. Free damage for playing the team comp she already wants. The stars don't just watch her — they tithe."
+  },
+  {
+    "icon": "tunebreak",
+    "name": "Unlanded Melody",
+    "type": "Tune Break",
+    "take": "When a boss's Off-Tune gauge maxes out, she performs the Tune Break — and the follow-up drops her straight into combo stage 3 — mid-string, no reset. Even the stagger mechanic feeds the loop. Nothing in this kit is allowed to be a dead end."
+  }
+]
