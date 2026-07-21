@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Hunter's Path",
+    "type": "Basic Attack",
+    "take": "A four-stage Electro string wearing a war economy. Every swing — basics, Steelclash heavies, mid-airs, dodge counters, even the skill — pays into Prowess, a 100-point meter with exactly one purpose: the Thunderoar suite. At full Prowess the heavy transforms into Thunderoar: Backstep, dumps the whole tank, and forks — keep pressing for Spinslash's triple slash at 141% per hit, or hit Jump for the 179%×2 Uppercut. Full Ascendancy upgrades even her dodge counter into a Thunderoar starter that counts as Heavy DMG. Nothing in this moveset is filler; it's all tribute flowing toward the throne."
+  },
+  {
+    "icon": "b1",
+    "name": "Warrior's Blade",
+    "type": "Resonance Skill",
+    "take": "The smallest button in the kit and it still tithes to both meters: a leap-and-slam triple hit at 218% each on a 15s cooldown that feeds Prowess AND hands back 10% Ascendancy. Cast it at full Prowess and it exits straight into Thunderoar: Uppercut without passing through the heavy at all. One press, two economies, an optional launcher — the empress does not waste motions."
+  },
+  {
+    "icon": "y",
+    "name": "Call Me By the Sun",
+    "type": "Forte Circuit",
+    "take": "The mint. Normals build Ascendancy — Intro deposits 20%, skill 10%, Liberation a fat 40% — and at a full bar Warrior's Blade is replaced by the Undying Sunlight ladder: Strike into Leap into Plunge, an air-combo staircase that spends the entire meter on a 779% + 87% finisher counted as Heavy DMG and mints 1 stack of Majesty on the way down. Every rung re-casts after an interruption, and there's a dodge-counter entrance for starting the climb defensively. Majesty is the currency her real ult runs on, which makes this circuit the treasury — and she IS the sun, so yes, the ladder only goes up."
+  },
+  {
+    "icon": "c1",
+    "name": "Sunward Conquest",
+    "type": "Resonance Liberation",
+    "take": "Two ults in one slot. Press: Sword of Eternal Oath, a ~572% total Heavy-DMG sweep for 125 energy that refunds 40% Ascendancy on its way out. Hold at 2 stacks of Majesty: Sublime is the Sun — zero energy cost, pays in Majesty instead, and STOPS TIME. Seven seconds of Sworn Allegiance where the world holds still while she casts Sunborne up to 9 times at 119% each, then closes with Everbright Protector — a ~895% + 239% capstone that consumes every stack of Crown of Wills as the clock restarts. It also paints Ruler's Realm for 30s: any ally casting an Intro inside it gets a shield worth 650 plus 5% of her Max HP. Her ultimate is an imperial decree — everyone else simply isn't consulted."
+  },
+  {
+    "icon": "intro",
+    "name": "Stride of Goldenflare",
+    "type": "Intro Skill",
+    "take": "A double Electro strike at 99% each that fully reloads Prowess and deposits 20% Ascendancy the instant she takes the field. Translation: she never arrives unarmed — every swap-in comes with a full Thunderoar already chambered. The stride is golden because the ground she walks onto was hers before she landed."
+  },
+  {
+    "icon": "t",
+    "name": "Battlesong of the Unyielding",
+    "type": "Outro Skill",
+    "take": "The handoff with a return clause: the incoming Resonator gets 15% DMG Amplification for ALL Attributes over 14s — element-agnostic, end-of-formula, the premium lane. And when that Resonator casts their own Outro, the battlesong reports back: Augusta banks 1 Majesty and 1 Crown of Wills (15% Electro DMG per stack) while off-field. Her buff literally collects taxes on the rotation. The empire funds itself."
+  },
+  {
+    "icon": "d1",
+    "name": "Glory's Favor",
+    "type": "Inherent Skill",
+    "take": "Dealing damage wraps her in a shield worth 350 plus 2.5% of her Max HP — refreshed as often as every half second, for 5s a pop. It's the face-tank license the whole kit is built on: a Heavy Attack carry who plants her feet and swings needs armor that regrows mid-combo, and hers regrows faster than most bosses can chip it. Glory favors the one still standing."
+  },
+  {
+    "icon": "d2",
+    "name": "Blazing Valor",
+    "type": "Inherent Skill",
+    "take": "After 4 seconds out of combat she quietly restocks: Majesty refilled to 1 stack if she's below, Crown of Wills fully restored, ticking every 4s. It's the overworld concierge node — every random field fight opens with the ult economy pre-seeded and the crown already polished. She doesn't warm up. Warming up is for challengers."
+  }
+]

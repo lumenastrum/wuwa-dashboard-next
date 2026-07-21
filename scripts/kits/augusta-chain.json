@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Stained in Scorched Earth",
+    "take": "Crown of Wills learns to cut: each stack now adds 15% Crit DMG on top of its Electro bonus, the cap doubles to 2 stacks, and her Intro mints one on arrival. The Undying Sunlight ladder also goes fully interrupt-immune — nobody stops the climb anymore. The crit story starts here and the kit never looks back."
+  },
+  {
+    "name": "Cleansed in Crimson War",
+    "take": "Each Crown stack adds 20% Crit Rate — and here's the unhinged part: every 1% of Crit Rate OVER 100% converts into 2% Crit DMG, up to a full +100%. Overcapping stops being a build mistake and becomes the actual strategy. This is the node that turns her stat sheet into a money-laundering operation for crit."
+  },
+  {
+    "name": "Forged in Rot and Ruin",
+    "take": "A flat 25% multiplier increase across her entire payload roster — every Thunderoar variant, Undying Sunlight: Plunge, Sunborne, and the Everbright Protector capstone. No conditions, no stacks, no setup. The forge just makes every blade she already swings a quarter heavier."
+  },
+  {
+    "name": "Ascent in Sun and Glory",
+    "take": "Her Intro now crowns the whole court: +20% ATK for every Resonator in the team for 30s, just for walking on stage. A quickswap carry whose swap-in is itself a team buff — the sun rises and everyone's numbers get taller in the light."
+  },
+  {
+    "name": "Unshaken in Wrathful Tides",
+    "take": "Glory's Favor's shield grows by 50%. The stat-stick node between the flashy ones — but on a carry whose gameplan is standing in the boss's face trading heavies, half again more armor every half second is quietly one of the most playable nodes in the chain."
+  },
+  {
+    "name": "Engraved in Radiant Light",
+    "take": "The coronation. Crown of Wills caps at 4 stacks, a second overflow band opens — every 1% Crit Rate past 150% converts to 2% Crit DMG for another +50% — and the Thunderoar finishers start minting 2 Crown stacks themselves while triggering Thunder Rage, twin 100% ATK Electro procs counted as Heavy DMG. The engine that needed her ult to spin now self-perpetuates off her heavies. Radiant light, engraved permanently: the empress at S6 doesn't build toward a burst window — she IS one."
+  }
+]
