@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Illusion Collapse",
+    "type": "Basic Attack",
+    "take": "Three-stage Havoc strings, and Stage 3 is the one that matters — it banks a point of Trance, her Mirage fuel. With Trance in the tank her Heavy becomes Delusive Dive and pulls her under into Mirage, where the real kit lives. Castable in water, because of course the jellyfish fights wherever she pleases."
+  },
+  {
+    "icon": "b1",
+    "name": "Dance with Shadows",
+    "type": "Resonance Skill",
+    "take": "Two skills sharing one button. On land: Graceful Step, a quick Havoc poke on a 6s timer that banks Trance. In Mirage: Flickering Reverie — counted as an ECHO SKILL when cast, which matters enormously for her — sending the target into Hazy Dream: slowed for 6.5s and primed like a trap. The next damage they take triggers Jolt, a 198% detonation counted as Basic Attack DMG. She doesn't hit you. She leaves something in your drink and waits."
+  },
+  {
+    "icon": "y",
+    "name": "Between Illusion and Reality",
+    "type": "Forte Circuit",
+    "take": "The Mirage state — her whole second self. Phantom Sting strings that heal the team on hit while converting Trance into Shiver, coordinated attacks off the third stage, an air-castable combo that never resets, and at full Shiver the skill becomes Perception Drain: a 667% double-hit that heals the entire team, dreams the target, and counts as BOTH Basic Attack and Echo Skill damage. Plus Abyssal Rebirth: after her intro, teammates' Echo Skill casts feed her Concerto — up to six times per window. Poison and cure administered in the same dose."
+  },
+  {
+    "icon": "c1",
+    "name": "Beneath the Sea",
+    "type": "Resonance Liberation",
+    "take": "Flowing Suffocation — a 376% Havoc wave, counted as Basic Attack DMG AND an Echo Skill cast, that grants the whole team Diffusion for 30s: whoever's on field summons Dreamweavers, jellyfish coordinated attacks trailing every second of damage they deal, up to 21 in total. It's not a burst — it's a standing school of them following whoever she blesses. The ocean doesn't chase. It surrounds."
+  },
+  {
+    "icon": "intro",
+    "name": "Cruise",
+    "type": "Intro Skill",
+    "take": "A swap-in that starts her Basic combo at Stage 3 — exactly the stage that banks Trance — or, arriving mid-Mirage, becomes Tidal Surge with three coordinated attacks and a fresh Phantom Sting combo. Either way she enters mid-sentence, never at the start of one."
+  },
+  {
+    "icon": "t",
+    "name": "Gentle Tentacles",
+    "type": "Outro Skill",
+    "take": "Hands the incoming Resonator +20% Havoc DMG and +25% Resonance Skill DMG for 14s. Purpose-built dowry for a Havoc hypercarry — she and Camellya are a matched set on paper and in practice. The tentacles are gentle. The numbers are not."
+  },
+  {
+    "icon": "d1",
+    "name": "\"Cure\"",
+    "type": "Inherent Skill",
+    "take": "Healing Bonus +20%, flat. Every drop she pours — the Phantom Sting sips, Perception Drain's big draught — runs richer. The quotation marks in the name are doing a lot of work."
+  },
+  {
+    "icon": "d2",
+    "name": "\"Poison\"",
+    "type": "Inherent Skill",
+    "take": "Every Echo Skill cast grants 6% Havoc DMG Bonus for 10s, stacking twice — and her own kit counts Flickering Reverie, Perception Drain, and the ult itself as Echo Skill casts, so she keeps both vials topped up all by herself. Same hand. Other bottle."
+  }
+]
