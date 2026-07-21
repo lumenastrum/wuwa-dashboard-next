@@ -24,6 +24,7 @@ import { isPercentStat, scoreBuild, scoreEcho } from "@/lib/echo-audit";
 import type { EchoVerdict } from "@/lib/echo-audit";
 import type { rateResonator } from "@/lib/resonator-rating";
 import type { AuditStat, Echo, EchoBuild, RosterEntry, SignatureWeapon } from "@/lib/types";
+import { FORTE_NODE_MAX } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
 import { EDiamond, EKicker, ERarityPips } from "./primitives";
 // Shared privates exported from resonator.tsx (same pattern obsidian uses) —
@@ -532,8 +533,8 @@ export function EmberlineFlexCard({
                         title="Forte"
                         el={el}
                         right={
-                          <span style={{ ...eStyles.mono, fontSize: 8.5, color: r.forte.nodes >= 8 ? el.soft : E_PAL.textMute }}>
-                            {r.forte.nodes}/8 NODES
+                          <span style={{ ...eStyles.mono, fontSize: 8.5, color: r.forte.nodes >= FORTE_NODE_MAX ? el.soft : E_PAL.textMute }}>
+                            {r.forte.nodes}/{FORTE_NODE_MAX} NODES
                           </span>
                         }
                       />

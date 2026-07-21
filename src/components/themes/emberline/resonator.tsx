@@ -35,6 +35,7 @@ import { useTheme } from "@/lib/theme-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
 import type { Echo, ResonatorForte, RosterEntry } from "@/lib/types";
+import { FORTE_NODE_MAX } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
 import { EDiamond, EFooter, EKicker, ERarityPips } from "./primitives";
 import { EmberlineTeamsPanels } from "./teams-panels";
@@ -886,7 +887,7 @@ export function EmberlineResonator({ name }: { name: string }) {
               el={el}
               right={
                 <span style={{ ...eStyles.mono, fontSize: 9, color: el.soft }}>
-                  {r.forte.nodes}/8 NODES
+                  {r.forte.nodes}/{FORTE_NODE_MAX} NODES
                 </span>
               }
             />

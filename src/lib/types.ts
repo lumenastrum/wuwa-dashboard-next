@@ -29,15 +29,22 @@ export interface Resonator {
   forte?: ResonatorForte;        // optional — render nothing when absent
 }
 
-// Forte tree investment: the five skill levels (1-10) plus how many of the
-// eight side stat-bonus nodes are unlocked (endgame default 8).
+// Every branch of the forte tree carries TWO side nodes, and there are five
+// branches — including Forte Circuit, whose pair are the inherent skills (for
+// Camellya: Seedbed / Epiphyte). So the ceiling is 10, not 8. This was modelled
+// as 8 until 2026-07-21, which silently dropped the Circuit pair and let a
+// partially-built tree render as "8/8 — maxed".
+export const FORTE_NODE_MAX = 10;
+
+// Forte tree investment: the five skill levels (1-10) plus how many of the ten
+// side nodes are unlocked.
 export interface ResonatorForte {
   basic: number;
   skill: number;
   circuit: number;
   liberation: number;
   intro: number;
-  nodes: number;                 // 0-8 unlocked bonus nodes
+  nodes: number;                 // 0-FORTE_NODE_MAX unlocked side nodes
 }
 
 export type StatLabel = "ATK" | "HP" | "DEF" | "CR" | "CD" | "ER" | "Team CR" | "Team CD";

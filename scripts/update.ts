@@ -56,6 +56,7 @@ import type {
   Sequence,
   StatWeights,
 } from "../src/lib/types";
+import { FORTE_NODE_MAX } from "../src/lib/types";
 import { rateResonator } from "../src/lib/resonator-rating";
 import { deriveStatStatus } from "../src/lib/stat-audit";
 import { durationToSec } from "../src/lib/duration";
@@ -316,7 +317,7 @@ echoes (per-echo stats + audit; slots 1-5 = cost 4/3/3/1/1):
          echoweight Aemeath "Resonance Liberation DMG" 0.8
 
 forte (tree investment; levels 1-10, nodes = unlocked side bonus nodes):
-  forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=8]
+  forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=10]
     e.g. forte Aemeath 10 10 10 10 10
 
 resonator rating (read-only, Optimizer weighting):
@@ -851,19 +852,20 @@ async function main() {
       break;
     }
     case "forte": {
-      // forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=8]
+      // forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes=FORTE_NODE_MAX]
+      // Five branches x 2 side nodes = 10. The Circuit pair are the inherent skills.
       const [name, ...lv] = rest;
-      if (!name || lv.length < 5) throw new Error(`usage: forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes 0-8]`);
+      if (!name || lv.length < 5) throw new Error(`usage: forte <name> <basic> <skill> <circuit> <liberation> <intro> [nodes 0-${FORTE_NODE_MAX}]`);
       const r = findResonator(data, name);
       const [basic, skill, circuit, liberation, intro] = lv.slice(0, 5).map((v, i) => {
         const n = parseIntOrThrow(v, ["basic", "skill", "circuit", "liberation", "intro"][i]);
         if (n < 1 || n > 10) throw new Error(`forte levels are 1-10 (${["basic", "skill", "circuit", "liberation", "intro"][i]} got ${n})`);
         return n;
       });
-      const nodes = lv[5] !== undefined ? parseIntOrThrow(lv[5], "nodes") : 8;
-      if (nodes < 0 || nodes > 8) throw new Error(`nodes must be 0-8 (got ${nodes})`);
+      const nodes = lv[5] !== undefined ? parseIntOrThrow(lv[5], "nodes") : FORTE_NODE_MAX;
+      if (nodes < 0 || nodes > FORTE_NODE_MAX) throw new Error(`nodes must be 0-${FORTE_NODE_MAX} (got ${nodes})`);
       r.forte = { basic, skill, circuit, liberation, intro, nodes };
-      console.log(`${name} forte: basic ${basic} · skill ${skill} · circuit ${circuit} · lib ${liberation} · intro ${intro} · ${nodes}/8 nodes`);
+      console.log(`${name} forte: basic ${basic} · skill ${skill} · circuit ${circuit} · lib ${liberation} · intro ${intro} · ${nodes}/${FORTE_NODE_MAX} nodes`);
       break;
     }
     case "echoweight": {
