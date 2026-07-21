@@ -230,6 +230,41 @@ PY
 - Forte **levels** (`npm run update -- forte …`) are Andres's homework once he's leveled
   the tree; the panel hides until set.
 
+### 7b. Forte icons: verify slot mapping from `db_skill.db`, don't trust the letter
+
+The atlas sprite letters (`A1`/`B1`/`C1`/`D1`/`Y`/`T`/`QTE`) are NOT self-describing, and the
+per-slot files the render wants are `basic` / `b1` / `y` / `c1` / `intro` (see
+`FORTE_SLOT_FILES` in `src/lib/game-icons.ts`). Confirm the mapping against the pak's own
+skill rows instead of assuming — one query, no guessing:
+
+```bash
+python - <<'PY'
+import re, sqlite3
+db = sqlite3.connect("db_skill.db"); t = sqlite3.connect("testout/lang_mt_en.db")
+nm = {i: c for i, c in t.execute(
+    "SELECT Id,Content FROM MultiText WHERE Id LIKE 'Skill_%_SkillName'")}
+for sid, blob in db.execute("SELECT Id,BinData FROM skill"):
+    if not isinstance(blob, bytes) or b"SP_Icon<CodeName>" not in blob: continue
+    ic = sorted({m.group().decode() for m in re.finditer(rb"SP_Icon<CodeName>\w*", blob)})[0]
+    print(f"{ic:<24} {nm.get(f'Skill_{sid}_SkillName','?')}")
+PY
+```
+
+Camellya (codename **Chun**) resolved as: `B1`=Resonance Skill, `Y`=Forte Circuit,
+`C1`=Resonance Liberation, `QTE`=Intro, `T`=Outro (not rendered), `D1`/`D2`=inherent
+passives, `A1`=the Normal Attack glyph (no skill row). That matches the house convention —
+but it was *verified*, not assumed.
+
+**Her QTE sprite is NOT blank** (Aemeath's was), so all five slots came straight from the
+atlas with no forte-page screenshot needed. Always alpha-count before assuming otherwise.
+
+### 7c. TPI assets ship in two schemas
+
+`crop_lgui_sprites.py` used to read only `SoftAtlasTextures[].AssetPathName` (Aemeath-era).
+Older characters like Chun use `AtlasTextures[].ObjectName` = `"Texture2D'T_Foo'"` instead
+and blew up with `KeyError: 'SoftAtlasTextures'`. The script now accepts **both** — if a new
+rip dies on a missing key, check which schema that character's TPI uses before patching.
+
 ## 8. Ship + verify
 
 1. `npm run build` locally (Windows path-bug tripwire; CI is Linux and won't catch them).
