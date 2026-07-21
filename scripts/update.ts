@@ -77,6 +77,19 @@ const SEQUENCES = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 const STAT_LABELS = ["ATK", "HP", "DEF", "CR", "CD", "ER", "Team CR", "Team CD"];
 const PERCENT_STATS = new Set(["CR", "CD", "ER", "Team CR", "Team CD"]);
 
+// Sheet stats the audit does NOT grade — the in-game stat page's later tabs.
+// Warn-not-throw on an unknown label: every patch can add a bonus type, and a
+// stale list shouldn't block recording a real number (same policy as echo
+// species). Canonical spellings live here so the data doesn't fragment.
+const EXTRA_STAT_LABELS = [
+  "HP", "DEF", "Healing Bonus",
+  "Basic Attack DMG Bonus", "Heavy Attack DMG Bonus",
+  "Resonance Skill DMG Bonus", "Resonance Liberation DMG Bonus",
+  "Echo Skill DMG Bonus",
+  "Glacio DMG Bonus", "Fusion DMG Bonus", "Electro DMG Bonus",
+  "Aero DMG Bonus", "Spectro DMG Bonus", "Havoc DMG Bonus",
+];
+
 type AnyRecord = Record<string, unknown>;
 interface Data {
   meta: { updated: string; [k: string]: unknown };
@@ -272,6 +285,9 @@ resonator:
   statlabel <name> "<L1,L2,...>"        reshape WHICH stats are tracked; retained labels keep their
                                         values (e.g. a support: "HP,DEF,ER")
                                         valid: ${STAT_LABELS.join(", ")}
+  xstat <name> "<label>" <value>        record an UNGRADED sheet stat (STATS tab); "-" clears
+  xstat <name> show                     list them
+                                        known: ${EXTRA_STAT_LABELS.join(", ")}
   notes <name> <text>                   set audit notes
   build <name> <text>                   set audit buildType
   prio <name> <status>                  set audit priorityStatus
@@ -524,6 +540,44 @@ async function main() {
         const lost = existing.get(l);
         const val = String(lost?.current ?? "");
         console.log(`  - dropped: ${l}${val ? ` (discarded value "${val}")` : ""}`);
+      }
+      break;
+    }
+    case "xstat": {
+      // Record an UNGRADED sheet stat (Healing Bonus, element DMG%, HP/DEF on a
+      // non-scaler). Deliberately separate from `stat` — these have no band, no
+      // status, and never feed the rating.
+      const [name, ...restArgs] = rest;
+      const audit = findAudit(data, name);
+      if (!Array.isArray(audit.extraStats)) audit.extraStats = [];
+      const extras = audit.extraStats as { label: string; value: string }[];
+
+      if (restArgs[0] === "show" || restArgs.length === 0) {
+        console.log(`${name} extra stats:${extras.length ? "" : " (none)"}`);
+        for (const x of extras) console.log(`   ${x.label.padEnd(32)} ${x.value}`);
+        mutated = false;
+        break;
+      }
+      // Label may contain spaces, so the VALUE is the last token.
+      const value = restArgs[restArgs.length - 1];
+      const label = restArgs.slice(0, -1).join(" ");
+      if (!label) throw new Error(`usage: xstat <name> "<label>" <value>   |   xstat <name> show`);
+      const canonical = EXTRA_STAT_LABELS.find((l) => l.toLowerCase() === label.toLowerCase());
+      if (!canonical) {
+        console.log(`  ! "${label}" is not a known sheet stat — saving anyway. Known: ${EXTRA_STAT_LABELS.join(", ")}`);
+      }
+      const key = canonical ?? label;
+      const at = extras.findIndex((x) => x.label.toLowerCase() === key.toLowerCase());
+      if (value === "-") {
+        if (at < 0) throw new Error(`${name} has no extra stat "${key}"`);
+        extras.splice(at, 1);
+        console.log(`${name} ${key}: cleared`);
+      } else if (at >= 0) {
+        console.log(`${name} ${key}: ${extras[at].value} -> ${value}`);
+        extras[at].value = value;
+      } else {
+        extras.push({ label: key, value });
+        console.log(`${name} ${key}: ${value} (added)`);
       }
       break;
     }

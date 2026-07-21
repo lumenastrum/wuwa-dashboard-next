@@ -52,10 +52,21 @@ export interface AuditStat {
   _status: Status;
 }
 
+// A stat off the in-game sheet's later pages that the AUDIT deliberately does
+// not grade: Healing Bonus, element/skill DMG bonuses, and the HP/DEF that only
+// matter for actual HP/DEF scalers. These are a RECORD, not a judgment — most
+// carry no community band, and several (Healing Bonus) aren't in `StatLabel` at
+// all. Kept off `stats` on purpose so the audit stays opinionated and short.
+export interface ExtraStat {
+  label: string;
+  value: string;
+}
+
 export interface AuditEntry {
   name: string;
   buildType: string;
   stats: AuditStat[];
+  extraStats?: ExtraStat[];   // optional: absent on most rows, panel hides when empty
   notes: string;
   priorityStatus: Status;
   _calcPriority: Status;

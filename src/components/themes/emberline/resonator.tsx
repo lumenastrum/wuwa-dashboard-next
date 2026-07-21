@@ -313,9 +313,9 @@ function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
 
 // OVERVIEW and TEAMS are live; the rest of the strip is static chrome until
 // their content exists (per the migration runway).
-type LiveTab = "OVERVIEW" | "TEAMS";
+type LiveTab = "OVERVIEW" | "STATS" | "TEAMS";
 const TAB_STRIP = ["OVERVIEW", "STATS", "FORTE", "ECHOES", "WEAPON", "TEAMS"] as const;
-const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "TEAMS"]);
+const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "STATS", "TEAMS"]);
 
 export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
@@ -641,6 +641,68 @@ export function EmberlineResonator({ name }: { name: string }) {
       {tab === "TEAMS" && (
         <div style={{ padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1 }}>
           <EmberlineTeamsPanels name={r.name} />
+        </div>
+      )}
+
+      {/* STATS tab — the in-game sheet as a RECORD, not a verdict. The graded
+          audit lives on OVERVIEW; this mirrors the stat page's later tabs, where
+          most values (Healing Bonus, element DMG%) have no community band and
+          several aren't in `StatLabel` at all. Nothing here feeds the rating.
+          The grid needs alignContent:start — it's a flex child with `flex: 1`, so
+          auto rows otherwise stretch and fling the two panels to opposite ends of
+          the viewport with dead space between them. */}
+      {tab === "STATS" && (
+        <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1fr 1fr", gap: 18, padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1, alignItems: "start", alignContent: "start" }}>
+          <EPanel>
+            <EPanelTitle
+              title="Combat Sheet"
+              el={el}
+              right={<span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textMute }}>AUDITED</span>}
+            />
+            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 12 }}>
+              {(r.audit?.stats ?? []).map((s) => {
+                const hex = E_STATUS[s._status] ?? E_PAL.text;
+                const glyph = statIcon(s.label);
+                return (
+                  <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                    {glyph && (
+                      <img
+                        src={glyph}
+                        alt=""
+                        onError={(e) => { (e.target as HTMLImageElement).style.visibility = "hidden"; }}
+                        style={{ width: 15, height: 15 }}
+                      />
+                    )}
+                    <span style={{ ...eStyles.mono, fontSize: 10, color: E_PAL.textDim, flex: 1 }}>{s.label}</span>
+                    <span style={{ ...eStyles.mono, fontSize: 12, color: hex, width: 64, textAlign: "right" }}>{s.current || "—"}</span>
+                    <span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textMute, width: 92, textAlign: "right" }}>{s.optimal}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </EPanel>
+
+          <EPanel>
+            <EPanelTitle
+              title="Sheet Detail"
+              el={el}
+              right={<span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textMute }}>NOT GRADED</span>}
+            />
+            {(r.audit?.extraStats ?? []).length ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 12 }}>
+                {(r.audit?.extraStats ?? []).map((x) => (
+                  <div key={x.label} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                    <span style={{ ...eStyles.mono, fontSize: 10, color: E_PAL.textDim, flex: 1 }}>{x.label}</span>
+                    <span style={{ ...eStyles.mono, fontSize: 12, color: E_PAL.text, textAlign: "right" }}>{x.value}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ ...eStyles.mono, fontSize: 9.5, color: E_PAL.textMute, marginTop: 14, lineHeight: 1.7 }}>
+                NO SHEET DETAIL ENTERED — `npm run update -- xstat`
+              </div>
+            )}
+          </EPanel>
         </div>
       )}
 
