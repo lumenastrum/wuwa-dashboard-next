@@ -117,3 +117,10 @@ export function forteIconFallback(slot: ForteSlot, weaponType: WeaponType): stri
 export function forteKitIcon(resonator: string, stem: string): string {
   return `${BASE_PATH}/game/forte/${routeName(resonator).toLowerCase()}/${stem}.webp`;
 }
+
+/** Sequence-node medallion for the CHAIN tab (wiki "Sequence Node …" art,
+ *  shipped as public/game/chain/<resonator>/s1..s6.webp). Missing file →
+ *  the card's S# disc, handled at the render. */
+export function chainIcon(resonator: string, node: number): string {
+  return `${BASE_PATH}/game/chain/${routeName(resonator).toLowerCase()}/s${node}.webp`;
+}

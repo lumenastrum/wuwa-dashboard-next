@@ -22,6 +22,7 @@ import {
   gradeIcon,
   statAbbrev,
   statIcon,
+  chainIcon,
   FORTE_SLOTS,
   forteIcon,
   forteIconFallback,
@@ -309,8 +310,11 @@ function EKitCard({ r, entry, el }: { r: RosterEntry; entry: ForteKitEntry; el: 
 
 // Sequence-node card for the CHAIN tab. Owned nodes wear the element; unowned
 // ones sit dimmed with a LOCKED chip — ownership derives from r.sequence, so a
-// sequence bump lights the next card without touching chain data.
-function EChainCard({ node, idx, owned, el }: { node: ChainNode; idx: number; owned: boolean; el: ElementPalette }) {
+// sequence bump lights the next card without touching chain data. The disc
+// wears the game's own Sequence Node medallion (public/game/chain/<name>/s#),
+// degrading to the S# numeral when the art isn't shipped yet.
+function EChainCard({ r, node, idx, owned, el }: { r: RosterEntry; node: ChainNode; idx: number; owned: boolean; el: ElementPalette }) {
+  const [artFailed, setArtFailed] = useState(false);
   return (
     <EPanel style={owned ? undefined : { opacity: 0.55 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
@@ -330,12 +334,21 @@ function EChainCard({ node, idx, owned, el }: { node: ChainNode; idx: number; ow
             flexShrink: 0,
           }}
         >
-          <span style={{ ...eStyles.display, fontSize: 17, color: owned ? el.soft : E_PAL.textMute }}>S{idx + 1}</span>
+          {artFailed ? (
+            <span style={{ ...eStyles.display, fontSize: 17, color: owned ? el.soft : E_PAL.textMute }}>S{idx + 1}</span>
+          ) : (
+            <img
+              src={chainIcon(r.name, idx + 1)}
+              alt={`S${idx + 1}`}
+              onError={() => setArtFailed(true)}
+              style={{ width: 34, height: 34, opacity: owned ? 0.95 : 0.5 }}
+            />
+          )}
         </div>
         <div style={{ minWidth: 0, flex: 1 }}>
           <div style={{ ...eStyles.display, fontSize: 17, lineHeight: 1.15, color: owned ? el.soft : E_PAL.textDim }}>{node.name}</div>
           <div style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1.5, color: owned ? el.soft : E_PAL.textMute, marginTop: 4 }}>
-            {owned ? "◆ ACTIVE" : "◇ NOT OWNED"}
+            S{idx + 1} · {owned ? "◆ ACTIVE" : "◇ NOT OWNED"}
           </div>
         </div>
       </div>
@@ -859,7 +872,7 @@ export function EmberlineResonator({ name }: { name: string }) {
           {r.chain?.length ? (
             <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1fr 1fr", gap: 18, alignItems: "start", alignContent: "start" }}>
               {r.chain.map((node, i) => (
-                <EChainCard key={`${r.name}-s${i + 1}`} node={node} idx={i} owned={seqNum >= i + 1} el={el} />
+                <EChainCard key={`${r.name}-s${i + 1}`} r={r} node={node} idx={i} owned={seqNum >= i + 1} el={el} />
               ))}
             </div>
           ) : (
