@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Crown Destined by Fate",
+    "take": "The windup becomes the payout. Every Conviction threshold — 30/60/90/120 — hands Fleurdelys +25% Crit DMG for 15s, stacking to +100% by the time the bar fills, and the whole pile is spent the moment Blade of Howling Squall casts. Plus Zeal: defeat a marked target and the next hit inherits the highest Aero Erosion count among the fallen. The crown was always going to land on the Squall."
+  },
+  {
+    "name": "Blade Broken by Tempest",
+    "take": "The transformation now warps the field: casting the ult raises the Aero Erosion stack cap by 3 for everything nearby, and her next hit stamps 3 stacks on the room with a free damage tick. The elf side gets paid too — basics, heavy, dodge counter, and intro multipliers up 50%, and the sword-recalling plunge up a full 200%. Every sword type recalled also shaves a second off her skill. The potato hits like she already knows who she becomes."
+  },
+  {
+    "name": "Prisoner Hanged in the Tower",
+    "take": "The Hanged Man card, and the node that merges her two halves: Fleurdelys's fifth basic stage, her second mid-air stage, the Enhanced Heavy, and May Tempest Break the Tides now stamp 2 stacks of Aero Erosion each — the goddess marks her own targets while winding up, no elf required. And Blade of Howling Squall's DMG Multiplier is DOUBLED. The finisher that already detonates every stack now hits twice as hard per point. This is the copy that turns the sword-drop into a screenshot machine."
+  },
+  {
+    "name": "Sacrifice Made for Salvation",
+    "take": "The team node. Whenever ANY Resonator inflicts any elemental anomaly — Havoc Bane, Fusion Burst, Spectro Frazzle, Electro Flare, Glacio Chafe, Aero Erosion — the whole team gains 20% DMG Bonus for all Attributes for 20s. In an anomaly-stacking comp this is functionally permanent. Her sacrifice buys everyone's salvation, which is the most Cartethyia sentence ever written."
+  },
+  {
+    "name": "Hope Reshaped in Storms",
+    "take": "The girl who pays in HP gets insurance: a fatal blow no longer downs her — she shields for 20% of her Max HP instead, once every 10 minutes. And the prayer gets cheaper: the ult's HP cost drops from half her Max HP to a quarter. The storm still takes its tithe. It just stopped taking half of her."
+  },
+  {
+    "name": "Freedom Found in Storm's Wake",
+    "take": "The Squall stops erasing her work: instead of stripping Aero Erosion, it MAXES the stacks on impact — the detonation and the setup become the same swing. For 30s after her intro or ult, teammates' Erosion procs on capped targets trigger instant damage ticks. And everything takes 40% more DMG from Fleurdelys, flat. The chain ends in freedom, and freedom apparently means the storm never has to start over."
+  }
+]

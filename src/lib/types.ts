@@ -28,6 +28,15 @@ export interface Resonator {
   notes: string;
   forte?: ResonatorForte;        // optional — render nothing when absent
   forteKit?: ForteKitEntry[];    // optional — FORTE tab kit codex, absent = empty state
+  chain?: ChainNode[];           // optional — CHAIN tab, exactly 6 (index = S1..S6)
+}
+
+// One sequence node for the CHAIN tab. Array position = node number (S1..S6).
+// Ownership is derived from Resonator.sequence at render time — never stored,
+// so a sequence bump lights the next card with no chain edit.
+export interface ChainNode {
+  name: string;   // in-game node name, e.g. "Prisoner Hanged in the Tower"
+  take: string;   // house-voice read of what the copy actually buys
 }
 
 // One ability in the FORTE tab's kit codex. `icon` is the atlas file stem under

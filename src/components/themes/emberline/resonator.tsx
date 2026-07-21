@@ -35,7 +35,7 @@ import { parseEchoSets, sonataIcon } from "@/lib/sonata";
 import { useTheme } from "@/lib/theme-context";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { weaponImage } from "@/lib/weapons";
-import type { Echo, ForteKitEntry, ResonatorForte, RosterEntry } from "@/lib/types";
+import type { ChainNode, Echo, ForteKitEntry, ResonatorForte, RosterEntry } from "@/lib/types";
 import { FORTE_NODE_MAX } from "@/lib/types";
 import { E_PAL, E_STATUS, eStyles } from "./styles";
 import { EDiamond, EFooter, EKicker, ERarityPips } from "./primitives";
@@ -307,6 +307,45 @@ function EKitCard({ r, entry, el }: { r: RosterEntry; entry: ForteKitEntry; el: 
   );
 }
 
+// Sequence-node card for the CHAIN tab. Owned nodes wear the element; unowned
+// ones sit dimmed with a LOCKED chip — ownership derives from r.sequence, so a
+// sequence bump lights the next card without touching chain data.
+function EChainCard({ node, idx, owned, el }: { node: ChainNode; idx: number; owned: boolean; el: ElementPalette }) {
+  return (
+    <EPanel style={owned ? undefined : { opacity: 0.55 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+        <div
+          style={{
+            width: 46,
+            height: 46,
+            borderRadius: 999,
+            border: `1px solid ${owned ? el.hex : "rgba(140,220,225,0.25)"}`,
+            background: owned
+              ? `radial-gradient(30px 30px at 50% 40%, ${el.glow}, rgba(4,13,18,0.6))`
+              : "rgba(140,220,225,0.05)",
+            boxShadow: owned ? `0 0 14px ${el.glow}` : undefined,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ ...eStyles.display, fontSize: 17, color: owned ? el.soft : E_PAL.textMute }}>S{idx + 1}</span>
+        </div>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ ...eStyles.display, fontSize: 17, lineHeight: 1.15, color: owned ? el.soft : E_PAL.textDim }}>{node.name}</div>
+          <div style={{ ...eStyles.mono, fontSize: 8.5, letterSpacing: 1.5, color: owned ? el.soft : E_PAL.textMute, marginTop: 4 }}>
+            {owned ? "◆ ACTIVE" : "◇ NOT OWNED"}
+          </div>
+        </div>
+      </div>
+      <div style={{ ...eStyles.body, fontSize: 12.5, marginTop: 11, lineHeight: 1.6, color: owned ? E_PAL.text : E_PAL.textDim, fontStyle: "italic" }}>
+        {highlightStats(node.take, { ...eStyles.mono, color: owned ? el.soft : E_PAL.textDim, fontWeight: 600, fontStyle: "normal" })}
+      </div>
+    </EPanel>
+  );
+}
+
 function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
   const icon = echoIcon(echo.name);
   const gc = gradeColor(ev.grade, ev.status);
@@ -368,9 +407,11 @@ function EEchoRow({ echo, ev }: { echo: Echo; ev: EchoVerdict }) {
 
 // OVERVIEW and TEAMS are live; the rest of the strip is static chrome until
 // their content exists (per the migration runway).
-type LiveTab = "OVERVIEW" | "STATS" | "FORTE" | "TEAMS";
-const TAB_STRIP = ["OVERVIEW", "STATS", "FORTE", "ECHOES", "WEAPON", "TEAMS"] as const;
-const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "STATS", "FORTE", "TEAMS"]);
+type LiveTab = "OVERVIEW" | "STATS" | "FORTE" | "CHAIN" | "TEAMS";
+// WEAPON was inert strip chrome (the weapon card lives on OVERVIEW) — its slot
+// now belongs to CHAIN, the sequence-node codex.
+const TAB_STRIP = ["OVERVIEW", "STATS", "FORTE", "ECHOES", "CHAIN", "TEAMS"] as const;
+const LIVE_TABS: ReadonlySet<string> = new Set(["OVERVIEW", "STATS", "FORTE", "CHAIN", "TEAMS"]);
 
 export function EmberlineResonator({ name }: { name: string }) {
   const { raw, roster, rosterByName } = useData();
@@ -797,6 +838,34 @@ export function EmberlineResonator({ name }: { name: string }) {
             <EPanel>
               <div style={{ ...eStyles.mono, fontSize: 9.5, color: E_PAL.textMute, lineHeight: 1.7 }}>
                 KIT BREAKDOWN NOT ENTERED — `npm run update -- fortekit`
+              </div>
+            </EPanel>
+          )}
+        </div>
+      )}
+
+      {/* CHAIN tab — the sequence-node codex. Six cards, S1..S6; owned nodes
+          (per r.sequence) wear the element, the rest wait dimmed. Data is the
+          `chain` array on the resonator; ownership is never stored. */}
+      {tab === "CHAIN" && (
+        <div style={{ padding: isMobile ? "18px 16px 10px" : "22px 34px 10px", flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ ...eStyles.display, fontSize: 17, color: el.soft }}>Resonance Chain</span>
+            <div style={tintRule(el)} />
+            <span style={{ ...eStyles.mono, fontSize: 10, letterSpacing: 2, color: seqNum > 0 ? el.soft : E_PAL.textDim }}>
+              {r.sequence} · {"◆".repeat(seqNum)}{"◇".repeat(Math.max(0, 6 - seqNum))} · {seqNum}/6 WOVEN
+            </span>
+          </div>
+          {r.chain?.length ? (
+            <div style={{ display: "grid", gridTemplateColumns: isTablet ? "1fr" : "1fr 1fr", gap: 18, alignItems: "start", alignContent: "start" }}>
+              {r.chain.map((node, i) => (
+                <EChainCard key={`${r.name}-s${i + 1}`} node={node} idx={i} owned={seqNum >= i + 1} el={el} />
+              ))}
+            </div>
+          ) : (
+            <EPanel>
+              <div style={{ ...eStyles.mono, fontSize: 9.5, color: E_PAL.textMute, lineHeight: 1.7 }}>
+                CHAIN DATA NOT ENTERED — `npm run update -- chain`
               </div>
             </EPanel>
           )}

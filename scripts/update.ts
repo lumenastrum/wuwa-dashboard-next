@@ -335,6 +335,11 @@ forte (tree investment; levels 1-10, nodes = unlocked side bonus nodes):
   fortekit <name> show                   list entries
   fortekit <name> clear                  remove the codex
 
+resonance chain (CHAIN tab; ownership lights up from the resonator's sequence):
+  chain <name> --file <chain.json>       exactly 6 nodes, S1 first: [ { name, take }, ... ]
+  chain <name> show                      list nodes
+  chain <name> clear                     remove the chain
+
 resonator rating (read-only, Optimizer weighting):
   rating <name>                                   echo+stats+sig+seq → one grade
 
@@ -928,6 +933,52 @@ async function main() {
       r.forteKit = kit;
       console.log(`${r.name} kit codex: ${kit.length} entries`);
       for (const e of kit) console.log(`  [${e.icon}] ${e.name} (${e.type})`);
+      break;
+    }
+    case "chain": {
+      // chain <name> --file <chain.json> | show | clear
+      // The CHAIN tab's six sequence nodes. Ownership renders from the
+      // resonator's sequence, so the file is pure lore+mechanics text.
+      const [name, sub, ...chainRest] = rest;
+      if (!name) throw new Error(`usage: chain <name> --file <chain.json> | chain <name> show | chain <name> clear`);
+      const r = findResonator(data, name);
+
+      if (sub === "show") {
+        const existing = r.chain as { name: string; take: string }[] | undefined;
+        if (!existing?.length) {
+          console.log(`${r.name}: no chain entered`);
+        } else {
+          existing.forEach((e, i) => {
+            console.log(`  S${i + 1} ${e.name}`);
+            console.log(`     ${e.take.slice(0, 120)}${e.take.length > 120 ? "…" : ""}`);
+          });
+        }
+        return; // read-only — skip the save
+      }
+      if (sub === "clear") {
+        delete r.chain;
+        console.log(`${r.name}: chain cleared`);
+        break;
+      }
+      if (sub !== "--file" || !chainRest[0]) {
+        throw new Error(
+          `usage: chain <name> --file <chain.json>\n` +
+            `  JSON: [ { name, take }, ... ] — exactly 6 entries, S1 first`,
+        );
+      }
+      const chainRaw = JSON.parse(await fs.readFile(path.resolve(chainRest[0]), "utf-8"));
+      if (!Array.isArray(chainRaw) || chainRaw.length !== 6) throw new Error(`chain file must be a JSON array of exactly 6 nodes (S1..S6), got ${Array.isArray(chainRaw) ? chainRaw.length : typeof chainRaw}`);
+      const chain = chainRaw.map((e, i) => {
+        for (const field of ["name", "take"] as const) {
+          if (typeof e[field] !== "string" || !e[field].trim()) {
+            throw new Error(`chain node S${i + 1}: missing/empty "${field}"`);
+          }
+        }
+        return { name: e.name.trim(), take: e.take.trim() };
+      });
+      r.chain = chain;
+      console.log(`${r.name} resonance chain: 6 nodes`);
+      chain.forEach((e, i) => console.log(`  S${i + 1} ${e.name}`));
       break;
     }
     case "echoweight": {
