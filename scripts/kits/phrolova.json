@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Movement of Life and Death",
+    "type": "Basic Attack",
+    "take": "Three-stage Havoc strings where Stage 3 both writes a Volatile Note - Strings onto her staff and drops her into Reincarnate for the Circuit follow-ups. The Heavy hides the real crescendo: with six Notes composed and the Compose timer up, it becomes Scarlet Coda — a 495% detonation that grows another 82% PER Aftersound stack, counts as Resonance Skill DMG and an Echo Skill cast, and flips her into Resolving Chord. The basic string is sheet music. The Coda is the performance."
+  },
+  {
+    "icon": "b1",
+    "name": "Whispers in a Fleeting Dream",
+    "type": "Resonance Skill",
+    "take": "A quick double-hit that writes a Volatile Note - Winds and sends her into Reincarnate. Deliberately small on its own — its job is to feed the staff and unlock Murmurs in a Haunting Dream, the enhanced follow-up. Every whisper is another bar of the piece she's been writing since Yuanwu's shop closed."
+  },
+  {
+    "icon": "y",
+    "name": "Rhapsody of a New World",
+    "type": "Forte Circuit",
+    "take": "The composition system. Reincarnate turns her next basic into Movement of Fate and Finality and her next skill into Murmurs in a Haunting Dream — both counted as Resonance Skill DMG, both writing more Notes. Six Volatile Notes fill the staff (Strings, Winds, and Cadenza, each cueing a different Hecate enhanced attack), and Aftersound stacks to 24 — with Octet converting every stack into Crit DMG. She isn't building resources. She's orchestrating them."
+  },
+  {
+    "icon": "c1",
+    "name": "Waltz of Forsaken Depths",
+    "type": "Resonance Liberation",
+    "take": "Her max Resonance Energy is ZERO — the ult costs nothing and answers only to Resolving Chord, earned by performing Scarlet Coda. Then 24s of Maestro: +120% ATK, and Hecate rises to fight — sharing her stats, her damage credited to her, playing the six Notes in turn. Off-field, Hecate answers every team Echo Skill cast with an enhanced attack, up to ten per waltz. Curtain Call ends it at 465%. The dead girl conducts; the phantom performs; the audience does not get an intermission."
+  },
+  {
+    "icon": "intro",
+    "name": "Suite of Quietus",
+    "type": "Intro Skill",
+    "take": "A swap-in strike that chains straight into Basic Stage 3 — the note-writing stage. In Maestro it becomes Suite of Immortality instead: a 596% Resonance Skill entrance that Stagnates the target. Quietus when she's composing, Immortality when the orchestra is already playing. The titles are not subtle and neither is she."
+  },
+  {
+    "icon": "t",
+    "name": "Unfinished Piece",
+    "type": "Outro Skill",
+    "take": "Hands the incoming Resonator 20% Havoc DMG Amplification and 25% Heavy Attack Amplification for 14s — and if she leaves mid-Maestro, Hecate plays two more enhanced attacks on her way out. Amplification, not a bonus: it multiplies at the end of the damage formula, which is why her handoff hits harder than the sheet suggests. The piece stays unfinished on purpose. Some promises are like that."
+  },
+  {
+    "icon": "d1",
+    "name": "Accidental",
+    "type": "Inherent Skill",
+    "take": "Echo Skill casts grant interruption resistance and 30% damage reduction for 15s — her armor is literally playing the set. And after her intro or any Echo cast, the next Volatile Note written becomes a Cadenza, the note that cues Hecate's best enhanced attack. In music, an accidental is a note outside the key signature. In her hands it's the one that hits hardest."
+  },
+  {
+    "icon": "d2",
+    "name": "Octet",
+    "type": "Inherent Skill",
+    "take": "Ten Aftersound stacks free on entering battle, and every stack pays 2.5% Crit DMG — that's +25% CD just for showing up, +60% at the 24-stack cap. Past the cap, overflow stacks keep paying 1% each up to another +100%. Her crit ceiling isn't on her echoes; it's in how long the performance has been running."
+  }
+]
