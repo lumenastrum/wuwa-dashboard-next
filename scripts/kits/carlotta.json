@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Silent Execution",
+    "type": "Basic Attack",
+    "take": "Two musket shots on the surface — but the real string is Necessary Measures, live whenever she's holding Moldable Crystals: a three-strike chain that spends one crystal per strike and hits considerably harder. The economy is rigged in her favor: Stage 2 of the plain string refunds 3 crystals, so do her Heavy, her skill, her intro, and a clean dodge — the enhanced string is basically always loaded. At full Substance the Heavy upgrades too, into Containment Tactics: dump the bar for a big Glacio hit and shave 6s off the skill cooldown. Even her jab is an invoice."
+  },
+  {
+    "icon": "b1",
+    "name": "Art of Violence",
+    "type": "Resonance Skill",
+    "take": "Press once: a Glacio shot that inflicts Dispersion, pinning the target in place for 1.5s. Press again: Chromatic Splendor — every Moldable Crystal she's holding goes into one shot, and each crystal spent converts into 10 points of Substance for the Forte bar. This is the crank on her entire engine: crystals in, Substance out, cooldown refunded by her Heavies. Never leave the second press on the table — the skill sulks into cooldown if you do, and the Montelli family does not forgive wasted capital."
+  },
+  {
+    "icon": "y",
+    "name": "Lethal Repertoire",
+    "type": "Forte Circuit",
+    "take": "Two payoffs from one 120-point Substance bar. The first is Imminent Oblivion: a heavy-slot execution worth north of 500% on the Tinted Crystal timer (every 22s) that also refunds 6s of skill cooldown. The second is the one that defines her — Final Bow. Walk into your Liberation with the bar full and the entire Twilight Tango suite gains an 80% DMG Multiplier: the opening slam, every Death Knell, the Fatal Finale. Ulting on an empty bar leaves nearly half the burst in the vault. Fill first. Then perform."
+  },
+  {
+    "icon": "c1",
+    "name": "Era of New Wave",
+    "type": "Resonance Liberation",
+    "take": "The curtain rises on an AoE Glacio slam that stamps Deconstruction — damage against marked targets ignores 18% of DEF — and then Twilight Tango begins. For 10s she dances: each press fires Death Knell, a musket shot trailed by four crystal shards, each cast banking a Meta Vector. At four Vectors the next press becomes Fatal Finale, a 644% area execution that drops the curtain. Every hit in the Tango is counted as Resonance Skill DMG — precisely the lane her sonata, her sig, and her S4 all pay into. Choreographed from overture to bow."
+  },
+  {
+    "icon": "intro",
+    "name": "Wintertime Aria",
+    "type": "Intro Skill",
+    "take": "A swap-in strike that arrives pre-funded: 3 Moldable Crystals and 30 points of Substance the moment she takes the stage. That's half a Chromatic Splendor and a quarter of the Forte bar, free, before the rotation even starts. An heiress does not begin at zero."
+  },
+  {
+    "icon": "t",
+    "name": "Closing Remark",
+    "type": "Outro Skill",
+    "take": "A 794.2% ATK parting shot delivered on her way out the door. At S3 it gains Kaleidoscope Sparks — an extra strike at 1032.18% bolted onto the remark proper — which turns her goodbye into a second ultimate. Nobody upstages her walking OFF the stage."
+  },
+  {
+    "icon": "d1",
+    "name": "Flawless Purity",
+    "type": "Inherent Skill",
+    "take": "After Chromatic Splendor she can take to the air and her Mid-air Attacks come out untouchable — immune to damage and interruption until the hit actually lands. Free aggressive plunges in the middle of a burst window. And a house perk: with her on the team, the active Resonator's flight stamina cost drops 20%. The family covers travel expenses."
+  },
+  {
+    "icon": "d2",
+    "name": "Ars Gratia Artis",
+    "type": "Inherent Skill",
+    "take": "Art for art's sake — the node that makes the DEF shred ambient. Wintertime Aria, Chromatic Splendor, Death Knell, and Imminent Oblivion all inflict Deconstruction, so the 18% DEF-ignore runs through essentially her entire damage script. She never chooses between doing damage and setting up damage. The setup IS the swing."
+  }
+]
