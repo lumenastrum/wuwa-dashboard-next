@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Dreamweaver's Banquet",
+    "type": "Basic Attack",
+    "take": "One button, two girls. Stagecraft Form plays the four-stage show — polished strings whose Stage 3 and Stage 4 finishers stamp Fusion Burst and whose normals bank Void Particles for later. Breakdown Form is what's underneath: rawer four-stage strings, a full mid-air combo, a Heavy that drags the room in close. Every normal she throws in Breakdown feeds Conformal Charge toward the next Final Act. The banquet is the same either way; only the hostess changes."
+  },
+  {
+    "icon": "b1",
+    "name": "Bubbles and Baits",
+    "type": "Resonance Skill",
+    "take": "Stagecraft: Phantom Bubble, a 20s crowd-gather that also pays 25 Void Particles. Breakdown: Beckon on a 4s loop — until she's holding Dark Cores, when it becomes Banish: a two-stage combo whose second hit consumes every Core for +150% multiplier EACH, counted as Resonance Liberation DMG, and refunds 40 Conformal Charge. Three Cores in the chamber turns a cooldown filler into one of her biggest buttons. The bait is the bubble. The trap is the girl holding it."
+  },
+  {
+    "icon": "y",
+    "name": "\"Flawless\"",
+    "type": "Forte Circuit",
+    "take": "The resource engine wearing a stage name — quotation marks doing the same work Cantarella's do. Stagecraft banks Void Particles; Breakdown spends them: each Particle-fueled normal is upgraded to Resonance Liberation DMG at +50% and doubles Conformal Charge regen. Full Charge unlocks Final Act - Breakdown Form, which drops the Erosion Field — a 30s zone pulsing 136% Liberation ticks that pull enemies back in every 4s. And her dual Resonance Modes decide what the whole team farms: Fusion Burst stacks for the explosion meta, or Tune Strain for the break economy. Nothing about the loop is flawless. That's why the name has quotes."
+  },
+  {
+    "icon": "c1",
+    "name": "Final Act",
+    "type": "Resonance Liberation",
+    "take": "Two curtain calls that trade places. Stagecraft's Final Act hits and hands her Entropy Shift — +30% ATK for 12s — then drops the mask into Breakdown Form. Breakdown's Final Act is the earned one: full Conformal Charge and every Void Particle spent on the big Fusion hit, the Erosion Field raised behind it, and Entropy Shift carrying her back into Stagecraft for 30s of Particle regen. She doesn't have an ult so much as a scene change with pyrotechnics."
+  },
+  {
+    "icon": "intro",
+    "name": "Formal Greetings",
+    "type": "Intro Skill",
+    "take": "Two doors onto the stage: It's Been A While! in Stagecraft (chains straight into the Stage 4 finisher) or Knock Knock in Breakdown (arrives already wearing the +30% ATK Entropy Shift). Both grant a Dark Core and 25 Void Particles on arrival — she walks in mid-performance with the props already loaded. The greeting is formal. The entrance is not."
+  },
+  {
+    "icon": "t",
+    "name": "Unfinished Lies",
+    "type": "Outro Skill",
+    "take": "Mode-keyed dowry. In Fusion Burst: the team's Burst detonations near the active Resonator are Amplified by 60% for 30s — which is the entire Aemeath partnership in one line. In Tune Strain: the incoming Resonator gets 15% All-DMG Amplification, upgraded to 40% once they inflict Shifting. Amplification, end-of-formula, the good kind. The lies stay unfinished; the handoff doesn't."
+  },
+  {
+    "icon": "d1",
+    "name": "Vestiges of Falsehood",
+    "type": "Inherent Skill",
+    "take": "Enter combat in Stagecraft and the props restock themselves: Dark Cores topped up to two and Void Particles to 20 points, once every 12s. The show never opens with an empty prop table — her worst-case rotation start is still half-loaded."
+  },
+  {
+    "icon": "d2",
+    "name": "Etched Colors",
+    "type": "Inherent Skill",
+    "take": "While Entropy Shift runs, her current mode pays the whole roster: Fusion Burst hands ALL Resonators 30% Fusion DMG Bonus — the team-wide amp that makes her the Fusion Burst meta's backbone — while Tune Strain hands out Tune Break Boost that scales with overcapped Off-Tune Buildup. She buffs by existing in the right mode. The colors are etched; pick the palette."
+  }
+]
