@@ -126,9 +126,13 @@ export function EmberlineCycles() {
           }}
           style={{
             position: "absolute",
-            right: isMobile ? -60 : -30,
-            top: isMobile ? -40 : -70,
+            // Tall sprites are alpha-trimmed (near-zero top/right padding), so any
+            // negative offset here beheads the ghost against overflow:hidden.
+            right: isMobile ? -20 : -10,
+            top: isMobile ? 2 : 4,
             height: isMobile ? 300 : 430,
+            width: "auto",
+            maxWidth: "none",
             opacity: 0.16,
             filter: "saturate(0.9)",
             maskImage: "linear-gradient(90deg, transparent, #000 40%)",
