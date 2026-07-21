@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Moon Steps",
+    "type": "Basic Attack",
+    "take": "Two weapons, one orbit. On the ground it's the Moonring — a three-stage Aero string with its own dodge counter, honest work that feeds the tide. But inside New Moon she draws the Moonbow, and here's the theological part: every Moonbow string, every Moonbow dodge counter, counts as Resonance Liberation DMG. Her enhanced basics are typed as borrowed light — the moon doesn't generate, she REFLECTS, and the game engine agrees. Both forms fire mid-air, because of course the moon doesn't touch the ground unless she chooses to."
+  },
+  {
+    "icon": "b1",
+    "name": "Foresight Fugue",
+    "type": "Resonance Skill",
+    "take": "One button, four movements — an actual fugue. Pulse of Origins is the dash that opens the piece. Closing Refrain answers it and raises the Lunar Cycle. In Half Moon the same slot plays Unfinished Refrain — the melody that keeps the tide coming in. And in New Moon it becomes Arc Beyond the Edge: two charges of a 220%×2 repositioning cut typed as Liberation DMG, steerable with directional input, castable mid-air — and if something knocks her flying, casting it snaps her out of the launch instantly. A mobility tool, a damage nuke, and an emergency exit sharing one cooldown family. The foresight is the point: she wrote the counter-melody before the boss wrote the attack."
+  },
+  {
+    "icon": "y",
+    "name": "Ebb and Flow",
+    "type": "Forte Circuit",
+    "take": "The tide engine, and it replaces her JUMP — Flux phase-shifts her between Half Moon and New Moon like the sky changing its mind. Half Moon banks: Moonring hits build Sentience toward 100. New Moon spends: Moonbow basics, Arc, and dodge counters burn Sentience for amped multipliers, bonus Concerto, and — this is the healer part — they heal the whole nearby team per hit. Damage that medicates. Then at full Concerto the heavy becomes Absolute Fullness: a 194% burst heal that ends the cycle and conjures the Full Moon Domain for 30s — HP and STA regen on a tick, and every shield gained inside converts to a stack of Blessing of the Wan Light, 4% all-DMG Amplification apiece up to 10 stacks. Read that again: the domain turns PROTECTION into WORSHIP. Stand in her light and getting shielded makes you hit 40% harder."
+  },
+  {
+    "icon": "c1",
+    "name": "Beneath Lunar Tides",
+    "type": "Resonance Liberation",
+    "take": "The moonrise, industrialized: a 1093% Aero crash for 125 energy, castable mid-air, that raises the Lunar Cycle and deposits 60 Sentience in one motion. No stances, no charge-up theater — the tide simply arrives and the battlefield adjusts. Most Liberations are a payoff; hers is an OPENING ARGUMENT, the button that starts the whole lunar economy spinning."
+  },
+  {
+    "icon": "intro",
+    "name": "Illuminated Manifestation",
+    "type": "Intro Skill",
+    "take": "A seven-hit shimmer into a finisher that deposits 40 Sentience the moment she manifests — nearly half the tank, free, for showing up. The name is doing exactly what it says: she doesn't walk on stage, she becomes visible, already mid-phase, already owed light. The tide was rising before you saw her."
+  },
+  {
+    "icon": "t",
+    "name": "From Gloom to Gleam",
+    "type": "Outro Skill",
+    "take": "The other half of the coin, minted: her exit hands the incoming Resonator 50% Heavy Attack DMG Amplification for 10s — and the roster's premier Heavy Attack payload is a certain Electro empress whose every Thunderoar, Plunge, and time-stopped Sunborne counts as Heavy DMG. The moon reflects her light BACK at the sun and the sun hits half again harder for it. It even casts without interrupting Absolute Fullness — she can bless the handoff mid-benediction. From gloom to gleam is a rotation instruction."
+  },
+  {
+    "icon": "d1",
+    "name": "Waxing Ascent",
+    "type": "Inherent Skill",
+    "take": "Nearly every button she owns — basics, heavies, dodge counters, skill, Liberation, Intro — wraps her in a shield worth 32% of her ATK for 15s. Perpetual waxing: she is always mid-crescent, always a little more armored than the last frame. And remember what her own domain does with shields — inside the Full Moon, this passive stops being defense and becomes an amp-stack DRIP FEED. She buffs the team by the mere act of playing herself."
+  },
+  {
+    "icon": "d2",
+    "name": "Derivation",
+    "type": "Inherent Skill",
+    "take": "Casting Intro or Liberation instantly grants her 5 stacks of Blessing of the Wan Light — the amp meter spawns half-full. The name is mathematics: she doesn't integrate her way up from zero like everyone else in the domain, she takes the derivative and skips to the interesting part of the curve. Half the worship, pre-paid, every rotation."
+  }
+]
