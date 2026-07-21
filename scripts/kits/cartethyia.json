@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Sword to Carve My Forms",
+    "type": "Basic Attack",
+    "take": "Four stages of Aero strings where every multiplier reads % of Max HP — the potato does not scale off ATK, she scales off how much of her there is to love. Stage 4 stamps Aero Erosion and plants the Sword of Divinity's Shadow in the ground; her Heavy plants the Sword of Discord's Shadow. Planted, not dropped — because her Plunging Attack RECALLS every sword on the field, changes its dive based on what answered, and banks the matching blessing for the next transformation. She's not fighting. She's setting the table."
+  },
+  {
+    "icon": "b1",
+    "name": "Sword to Bear Their Names",
+    "type": "Resonance Skill",
+    "take": "Launch the room, slam it back down, stamp 2 stacks of Aero Erosion — and plant the third sword, the Sword of Virtue's Shadow. That completes the set: Virtue, Divinity, Discord, three shadows standing in the dirt like promises waiting to be kept. Counts as Basic Attack DMG, so the whole basic-focused build feeds it. The names on the swords aren't hers. That's the point of the title."
+  },
+  {
+    "icon": "y",
+    "name": "Tempest",
+    "type": "Forte Circuit",
+    "take": "The goddess's entire moveset lives here. Five-stage basics, three-stage air combos, a heavy that chains into a blast-back and an upward cut, and a two-part Resonance Skill that ends with May Tempest Break the Tides — a giant Sword Shadow crushing the field into a vacuum that drags everything in. Every single hit restores Conviction, every multiplier still reads % Max HP, and she walks on water and thin air like the laws of the map are suggestions. The elf borrows a body; the body comes with a hurricane."
+  },
+  {
+    "icon": "c1",
+    "name": "A Knight's Heartfelt Prayers",
+    "type": "Resonance Liberation",
+    "take": "The transformation has a price and the price is HERSELF: half her Max HP, paid up front, to become Fleurdelys for 12s of Manifest. The blessings her plunge recalled become the mode: Virtue makes her unstoppable, Divinity amplifies Aero Erosion 50% and doubles its tick rate, Discord syncs every target's stacks to the highest count. Tap the ult below 120 Conviction and she hides back into the elf — and the Manifest timer PAUSES, waiting. At full Conviction the button becomes Blade of Howling Squall: end the storm, refund half her Max HP, and fire a seven-hit line nuke that strips Aero Erosion — every stack stripped amplifies the damage taken by 20%, five stacks deep. She bleeds to become the goddess and the goddess pays it all back on the way out."
+  },
+  {
+    "icon": "intro",
+    "name": "Sword to Mark Tide's Trace",
+    "type": "Intro Skill",
+    "take": "The entrance checks who's walking in. The elf arrives stamping 2 stacks of Aero Erosion and planting a Discord's Shadow — setup from the first frame. The goddess arrives as Sword to Call for Freedom, a single impaling thrust that banks Conviction instead. Same door, two silhouettes, and both of them are already working."
+  },
+  {
+    "icon": "t",
+    "name": "Wind's Divine Blessing",
+    "type": "Outro Skill",
+    "take": "Her parting gift: the next Resonator's Aero DMG against anything carrying a Negative Status gets Amplified 17.5% for 20s. She spent her whole rotation covering the field in Aero Erosion — which IS a negative status — so the buff is pre-armed by her own homework. The wind keeps blessing the room after the girl who prayed for it leaves."
+  },
+  {
+    "icon": "d1",
+    "name": "A Heart's Truest Wishes",
+    "type": "Inherent Skill",
+    "take": "Everyone in the team EXCEPT her receives 20% more healing and shrugs off interruption. Read that clause again: she buffs how well the world takes care of everyone but herself — the girl who pays HP for her ult made her passive about protecting the others. And if Aero Rover's in the party, Omega Storm refunds 25 Windstrings. The mom clause. It was always the mom clause."
+  },
+  {
+    "icon": "d2",
+    "name": "Wind's Indelible Imprint",
+    "type": "Inherent Skill",
+    "take": "Targets carrying 1-3 stacks of Aero Erosion take 30% more damage from her, and past three, every extra stack adds 10% more — another 30% at full depth. The debuff her basics, skill, and intro have been stamping all rotation is simultaneously her amp, Divinity's amplified tick, and the Squall's +20%-per-stack detonation fuel. One mark, four payouts. The wind doesn't forget where she's been."
+  }
+]
