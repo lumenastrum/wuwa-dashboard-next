@@ -1,0 +1,56 @@
+[
+  {
+    "icon": "basic",
+    "name": "Chroma Drift",
+    "type": "Basic Attack",
+    "take": "Two art styles, one trigger. On foot it's a three-stage pistol string that banks Overflow with every shot — normals, mid-airs, dodge counters, all of it feeding the meter. At 120 Overflow she holds the button and starts pouring: Overflow converts to Lumiflow in a charging stance where she's interrupt-immune and takes half damage, then releases Spark Collision at one of three levels depending on how full the tank got — the Lv.3 version doubles up at 277% each. That shot is the door into Kaleidoscopic Parade, where the whole moveset re-skins: a five-stage skating string, a Graffiti Blast heavy, mid-air heavies with charges. Same gun. Completely different painting."
+  },
+  {
+    "icon": "b1",
+    "name": "Lynae-Style Palettes",
+    "type": "Resonance Skill",
+    "take": "The signature brushstroke, sold in two finishes. Out of Parade it's a straight Spectro hit that feeds Overflow and chains into the Stage 2 normal. In Parade the same button becomes Additive Color — a sharper double-hit on the same shared 6s cooldown — and holding it instead is the exit ramp that ends the Parade on her terms. One cooldown, three verbs: build, spend, leave. She named the technique after herself because nobody else can do it."
+  },
+  {
+    "icon": "y",
+    "name": "Chromaticity Modeling",
+    "type": "Forte Circuit",
+    "take": "The skating engine, and it only pays you while you MOVE. Parade's Lumiflow ticks up 20% per second in motion and drains 20% per second standing still — a momentum economy with zero patience for camping. Jump becomes Polychrome Leap: a third of the tank per cast, three air stages, each one stamping Photochromic Flux and banking a True Color point. At 3 True Color the finishers unlock — Visual Impact, a 1216% mid-air nuke that also hands the whole team 40 Tune Break Boost for 30s, with Iridescent Splash covering its 25s cooldown. And her Resonance Mode toggle decides what the Flux inflicts: Tune Rupture - Shifting or Tune Strain - Shifting — she's the one Resonator who paints in both of the 3.x break colors. Physics says standing still is stable. Lynae disagrees."
+  },
+  {
+    "icon": "c1",
+    "name": "Prismatic Overblast",
+    "type": "Resonance Liberation",
+    "take": "A ten-round Spectro mag dump that doubles as the team meeting: casting it hands ALL nearby Resonators +24% DMG for a full 30s — not an element, not a skill type, everything. Then it offers To a Vivid Tomorrow! as the follow-up normal to keep the combo rolling. For a Sub-DPS this is the résumé line: her ult buffs the carry harder than it flexes for her. The overblast is prismatic because everyone standing near it gets a color."
+  },
+  {
+    "icon": "intro",
+    "name": "Time to Show Some Colors!",
+    "type": "Intro Skill",
+    "take": "She arrives tagging: the entrance hit stamps Photochromic Flux — so the mode-colored Shifting starts before she's even settled — and feeds the Overflow meter toward the next Parade. It's also the ignition key for her inherent: +25% Spectro DMG for 9s from the moment she's on stage. Swap her in and the first 9 seconds are the loudest."
+  },
+  {
+    "icon": "t",
+    "name": "Let's Hit the Road!",
+    "type": "Outro Skill",
+    "take": "The handoff dowry: the incoming Resonator gets 15% All DMG Amplification AND 25% Resonance Liberation DMG Amplification for 14s — end-of-formula amps, the good kind, and the Liberation lane makes ult-centric carries hit stupid. She leaves the Parade when she goes, which sounds like a cost until you remember the next Spark Collision starts the party again. The road doesn't end; she just changes drivers."
+  },
+  {
+    "icon": "d1",
+    "name": "Colors Never Fade!",
+    "type": "Inherent Skill",
+    "take": "Visual Impact leaves Spray Paint on the floor — a zone that re-stamps Photochromic Flux every 2s on whoever stands in it, and once it's down, flipping her Resonance Mode doesn't repaint it. Fire-and-forget debuff uptime from a mural. Also: with her in the team the expedition motorbike's tank grows by 600 and she auto-Parades on it, because of course the graffiti girl modded the bike."
+  },
+  {
+    "icon": "d2",
+    "name": "\"Adaptive Optics: Everyday Applications\"",
+    "type": "Inherent Skill",
+    "take": "The academic title is doing air quotes and both halves are quality-of-life turned weapon: her Intro grants +25% Spectro DMG for 9s — the burst window every rotation opens with — and out of combat, a neutral dodge in Parade cloaks her in Optic Camo, letting her skate straight through aggro ranges uncontested. One node for the DPS sheet, one for the speedrun. Everyday applications, indeed."
+  },
+  {
+    "icon": "tune",
+    "name": "Spectral Analysis",
+    "type": "Tune Break",
+    "take": "Her seventh node, and the reason the forte panel grew a new slot: she inflicts BOTH Shifting colors, and she answers both Interfered states. Rupture-Interfered triggers her response art — an automatic 1880% Tune AMP detonation per target every 8s, damage that happens because the TEAM broke the bar, not because she pressed anything. Strain-Interfered turns her Tune Break Boost into raw scaling — every point is +0.12% total DMG per stack, and her presence raises the target's stack ceiling by one. The analysis is spectral because she's reading the whole spectrum. Both channels. Simultaneously."
+  }
+]
