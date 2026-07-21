@@ -70,6 +70,13 @@ const ELEMENTS = ["Fusion", "Glacio", "Electro", "Spectro", "Havoc", "Aero"];
 const ROLES = ["Main DPS", "Sub-DPS", "Support"];
 const SEQUENCES = ["S0", "S1", "S2", "S3", "S4", "S5", "S6"];
 
+// Audit stat labels (mirrors the `StatLabel` union in src/lib/types.ts). The
+// tracked SET is per-resonator, not fixed: a CRIT DPS wants ATK/CR/CD/ER, an HP
+// scaler swaps ATK→HP, and a pure support wants HP/DEF/ER with crit dropped
+// entirely. Percentage stats carry `unit: "%"` so the render appends the sign.
+const STAT_LABELS = ["ATK", "HP", "DEF", "CR", "CD", "ER", "Team CR", "Team CD"];
+const PERCENT_STATS = new Set(["CR", "CD", "ER", "Team CR", "Team CD"]);
+
 type AnyRecord = Record<string, unknown>;
 interface Data {
   meta: { updated: string; [k: string]: unknown };
@@ -262,6 +269,9 @@ resonator:
   stat <name> <statLabel> <value>       set audit stat current value
   statopt <name> <statLabel> <text>     set stat optimal range
   statstatus <name> <statLabel> <st>    set stat _status (${STATUSES.join("|")})
+  statlabel <name> "<L1,L2,...>"        reshape WHICH stats are tracked; retained labels keep their
+                                        values (e.g. a support: "HP,DEF,ER")
+                                        valid: ${STAT_LABELS.join(", ")}
   notes <name> <text>                   set audit notes
   build <name> <text>                   set audit buildType
   prio <name> <status>                  set audit priorityStatus
@@ -423,8 +433,46 @@ async function main() {
       const [name, label, ...valueParts] = rest;
       const audit = findAudit(data, name);
       const stat = findStat(audit, label);
-      stat.optimal = valueParts.join(" ");
-      console.log(`${name} ${label} optimal: ${stat.optimal}`);
+      const optimal = valueParts.join(" ");
+      stat.optimal = optimal;
+      // The optimal TEXT is also the numeric band: `min`/`max` are what
+      // deriveStatStatus() judges `current` against, and nothing else in the CLI
+      // writes them. Without this parse a CLI-created resonator keeps
+      // `min: undefined` forever, deriveStatStatus returns null, and `_status`
+      // silently reverts to the frozen-manual field this module exists to kill.
+      // Shapes in use: "2,000-2,300" · "70-80%" · "100%+" · "45,000-50,000+" ·
+      // "70%+ (200 cap)" · "12.5% (maxed)" · "N/A".
+      //
+      // The grammar is ANCHORED and reads only the LEADING band expression, which
+      // matters twice over: prose like "priority #2 (...)" must yield NO band (a
+      // loose \d+ scan happily turns the "2" into min=2 and grades everything
+      // green), and a trailing parenthetical like "(200 cap)" is commentary — not
+      // the range ceiling (a loose scan reads it as max=200 and silently narrows
+      // the band). Anything not starting with a number is treated as prose.
+      const band = /^\s*([\d,]+(?:\.\d+)?)\s*%?\s*(?:[-–—]\s*([\d,]+(?:\.\d+)?)\s*%?)?/.exec(optimal);
+      const nums = band
+        ? [band[1], band[2]].filter((x): x is string => x != null).map((n) => parseFloat(n.replace(/,/g, "")))
+        : [];
+      if (nums.length) {
+        stat.min = nums[0];
+        if (nums.length > 1) stat.max = nums[1];
+        else delete stat.max; // "100%+" is an open-ended floor, not a range
+      } else {
+        // Non-numeric band (prose) → no basis to judge; drop it so
+        // deriveStatStatus bails and a hand-tuned _status survives.
+        delete stat.min;
+        delete stat.max;
+      }
+      console.log(
+        `${name} ${label} optimal: ${optimal}` +
+          (nums.length ? ` (band ${stat.min}${stat.max != null ? `-${stat.max}` : "+"})` : ` (no band)`),
+      );
+      // Re-derive: the band just moved, so the old status may now be wrong.
+      const rederived = deriveStatStatus(stat as unknown as AuditStat);
+      if (rederived && rederived !== stat._status) {
+        console.log(`${name} ${label} status: ${stat._status} → ${rederived} (auto)`);
+        stat._status = rederived;
+      }
       break;
     }
     case "statstatus": {
@@ -434,6 +482,49 @@ async function main() {
       const stat = findStat(audit, label);
       stat._status = value;
       console.log(`${name} ${label} status: ${value}`);
+      break;
+    }
+    case "statlabel": {
+      // Reshape which stats an audit TRACKS. The four-stat ATK/CR/CD/ER stub that
+      // `addresonator` creates fits a CRIT DPS; supports and HP scalers need a
+      // different lineup (Mornye runs DEF/ER/HP, Shorekeeper HP/ER/Team CR/Team CD).
+      // Those were hand-seeded before the CLI existed — this is the supported path.
+      const [name, ...labelParts] = rest;
+      const audit = findAudit(data, name);
+      const spec = labelParts.join(" ").split(",").map((s) => s.trim()).filter(Boolean);
+      if (!spec.length) {
+        throw new Error(`usage: statlabel <name> "<Label1,Label2,...>" — valid: ${STAT_LABELS.join(", ")}`);
+      }
+      for (const l of spec) {
+        if (!STAT_LABELS.includes(l)) {
+          throw new Error(`"${l}" is not a valid stat label. Valid: ${STAT_LABELS.join(", ")}`);
+        }
+      }
+      const dupes = [...new Set(spec.filter((l, i) => spec.indexOf(l) !== i))];
+      if (dupes.length) throw new Error(`duplicate stat label(s): ${dupes.join(", ")}`);
+
+      const existing = new Map(audit.stats.map((s) => [String(s.label), s]));
+      const before = audit.stats.map((s) => String(s.label));
+      const dropped = before.filter((l) => !spec.includes(l));
+      const added = spec.filter((l) => !existing.has(l));
+
+      // Retained labels keep their object wholesale (value, band, status, notes) —
+      // reshaping the lineup must never silently discard a stat you already entered.
+      audit.stats = spec.map((l) => {
+        const keep = existing.get(l);
+        if (keep) return keep;
+        const stub: AnyRecord = { label: l, current: "", optimal: "", _status: "neutral" };
+        if (PERCENT_STATS.has(l)) stub.unit = "%";
+        return stub;
+      });
+
+      console.log(`${name} stats: [${before.join(", ")}] -> [${spec.join(", ")}]`);
+      if (added.length) console.log(`  + added (blank): ${added.join(", ")}`);
+      for (const l of dropped) {
+        const lost = existing.get(l);
+        const val = String(lost?.current ?? "");
+        console.log(`  - dropped: ${l}${val ? ` (discarded value "${val}")` : ""}`);
+      }
       break;
     }
     case "notes": {

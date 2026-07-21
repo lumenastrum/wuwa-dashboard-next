@@ -106,6 +106,31 @@ stat archetypes (wutheringlab's weapon page said 500/72CD while its own characte
 588/24.3CR). Passive names come from wuthering.gg/weapons/<kebab>; break stat ties with the
 DB-style sources over blog guides, and get two agreeing sources before writing.
 
+### 4b. Stat bands are PER-RESONATOR — account for in-combat sonata sources
+
+`statopt` writes the numeric band (`min`/`max`) that `deriveStatStatus` grades against, so the
+band IS the target. Do not paste the generic CRIT-DPS `70-80%` onto a resonator whose set hands
+her crit in combat — a sheet stat that looks low can be correct, and cranking it higher is
+wasted investment.
+
+Proven cases (pak text, `PhantomFetter_*` / `ItemInfo_*_AttributesDescription`):
+
+| Resonator | Set | Grants | Sheet CR | Effective | Band used |
+|---|---|---|---|---|---|
+| Yangyang: Xuanling | Song of Feathered Trace 5pc | **+20% CR** on Havoc Bane | 65.5% | ~85% | `60-70%` |
+| Phrolova | Dream of the Lost 3pc | **+20% CR** at 0 Resonance Energy | 66.1% | ~86% | `60-70%` |
+
+Fix the **band**, never the status. `statstatus` is an override that the next `stat`/`statopt`
+call re-derives away — encoding the reason in the band survives, and the trailing parenthetical
+(`"60-70% (+20% CR from …)"`) documents *why* without affecting the parse.
+
+**Not every sub-band stat is this case.** Distinguish:
+- **self-sufficient set source** → recalibrate the band (Xuanling, Phrolova)
+- **team-dependent buff** (Carlotta: "SK buffs fix") → leave the band; the unit is genuinely
+  reliant on a partner
+- **deliberate tradeoff** (Zhezhi: "72% CD weapon tax") → leave it; the note carries the intent
+- **genuinely under** (Lucy, Camellya) → leave it red/yellow, that's the audit working
+
 ## 5. Echo build spec
 
 ```bash
@@ -157,12 +182,42 @@ What to rip (paths found in step 2's db_role probe):
 |---|---|---|
 | Bust portrait | `Image/IconRoleHead256/T_IconRoleHead256_<idx>_UI` | `public/portraits/<safe>.png` @256 PNG |
 | Tall sprite | `Image/IconRolePile/T_IconRole_Pile_<Codename>_UI` | `public/tall-portraits/<Safe>_Full_Sprite.webp` (floor alpha <8 → 0: BC7 junk pixels ride at alpha 1–4) |
-| Weapon | `Image/IconWeapon732/T_IconWeapon732_<id>_UI` | `public/weapons/Weapon_<Name>.webp` — **alpha-bbox crop + centered square pad → 256×256** (the raw icon is ~40% empty canvas; shipped raw it renders as a tiny distant weapon on the card) |
+| Weapon | `Image/IconWeapon732/T_IconWeapon732_<iconId>_UI` — **`<iconId>` is NOT the weapon's ItemId**, see below | `public/weapons/Weapon_<Name>.webp` — **alpha-bbox crop + centered square pad → 256×256** (the raw icon is ~40% empty canvas; shipped raw it renders as a tiny distant weapon on the card) |
 | Sonata icon | path in `db_phantom.db` `phantomfettergroup` blob (Id = PhantomFetter number) | `public/sonatas/<Set_Name>.webp` @64 |
 | Echo heads | `Image/IconMonsterHead732/T_IconMonsterHead732_<id>_UI` | `public/game/echoes/<id>.webp` @256 |
 | Forte icons | `texdir` the `Atlas/SkillIcon/SkillIcon<CodeName>/` atlas + `props` the TPI asset → `crop_lgui_sprites.py` | `public/game/forte/<safe-lower>/` @128 (B1→b1, Y→y, C1→c1, QTE→intro) |
 
 - Transform = `ship()` in `wuwa-extract/ship_to_public.py` (LANCZOS thumbnail, webp q90 m6).
+  **Weapons are NOT handled by `ship_to_public.py`** — their alpha-bbox+square-pad transform has
+  always been ad-hoc, which is how a wrong icon ships unnoticed. Eyeball the result.
+
+- ⚠️ **Weapon icon id ≠ weapon ItemId** (burned us 2026-07-21 on Red Spring). `Red Spring` is
+  ItemId `21020026`, but its art is `T_IconWeapon732_`**`21020017`**`_UI`. Ripping by ItemId
+  silently yields a *different real weapon's* icon — we shipped Bloodpact's Pledge art on
+  Camellya's card for a day. **11 of 120 weapons mismatch**, including two straight swaps
+  (Ocean's Gift ↔ Stellar Symphony, and Red Spring's ItemId is Bloodpact's Pledge's icon).
+  Always read the icon path out of the weapon's own row:
+
+```bash
+# ItemId -> true icon id, from the pak (never assume they're equal)
+python - <<'PY'
+import sqlite3, re
+w = sqlite3.connect("testout/db_weapon_35.db")
+t = sqlite3.connect("testout/lang_mt_en.db")
+names = {i.split("_")[1]: c for i, c in
+         t.execute("SELECT Id,Content FROM MultiText WHERE Id LIKE 'WeaponConf_%_WeaponName'")}
+for item, blob in w.execute("SELECT ItemId,BinData FROM weaponconf"):
+    b = blob if isinstance(blob, bytes) else str(blob).encode()
+    m = re.search(rb"T_IconWeapon732_(\d+)_UI", b)
+    if m and m.group(1).decode() != str(item):
+        print(f"{names.get(str(item),'?'):<26} item={item} icon={m.group(1).decode()}")
+PY
+```
+
+- **Verifying a weapon icon: do NOT pixel-diff shipped vs pak.** Most shipped weapon art is
+  **wiki-sourced** (different crop/zoom/render), so a diff flags ~25 of 26 as "wrong" and tells
+  you nothing. Only pak-ripped assets (Azure Oath, Red Spring) diff near zero. Build a
+  shipped-vs-pak contact sheet and **look at it** — identity is a visual question.
 - Xuanling's QTE sprite was NOT blank (Aimisi's was) — always alpha-count before assuming
   the intro icon needs the screenshot route. `basic` still falls back to the shared
   per-weapon glyph.
