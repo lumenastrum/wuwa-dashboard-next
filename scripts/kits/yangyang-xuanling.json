@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Succor and Smite",
+    "type": "Basic Attack",
+    "take": "Two four-stage strings — Azure stance and Feather stance — and a metronome called Melody (cap 100) that her Basic Attacks SPEND as they deal damage. While the gauge holds, Azure hits pay her +20% Energy Regen; Azure stage 4 stamps a stack of Havoc Bane. Read that again: her basics don't build the resource, they drain it. The entire kit is a countdown to empty — and running dry is the plan, not the failure state."
+  },
+  {
+    "icon": "b1",
+    "name": "Feather's Edge",
+    "type": "Resonance Skill",
+    "take": "Mid-string, the skill button swaps her stance and swings a Sword Stance Switch that counts as Heavy Attack DMG — and the combo cycle does NOT reset. Azure into Feather into Azure again, one unbroken sentence in two dialects, with a dodge-cancel window baked into every swap for 50 Melody. Two stances that never stop being one girl. The dance IS the damage type."
+  },
+  {
+    "icon": "y",
+    "name": "The Way of Ten Thousand Voices",
+    "type": "Forte Circuit",
+    "take": "The payoff for running the tank dry. When Melody hits zero, the skill transforms into Sword Stance Flow — a stance-crossing strike that counts as Heavy Attack DMG, refills all 100 Melody, banks an Azure Plume, and eats a Havoc Bane stack on the way through. Two Plumes banked lets her hold the attack button for the cyclone: a massive heavy that stamps 2 more Havoc Bane and rides Bated Breath — +160% Crit DMG on that one swing, once per 25s. Hold the note. Spend the storm. The 1M screenshots live HERE."
+  },
+  {
+    "icon": "c1",
+    "name": "Hush of a Thousand Voices",
+    "type": "Resonance Liberation",
+    "take": "A 1000% Havoc nuke that counts as Heavy Attack DMG, drinks every drop of Melody, and maxes the target's Havoc Bane stacks on impact. It also leaves Voice upon Voice behind: her next Sword Stance Flow summons a Shadow of Xuanling to echo the strike. The ult isn't a finisher — it's a debt collector. It slams every debuff to the ceiling and then the rest of the kit spends the ledger."
+  },
+  {
+    "icon": "intro",
+    "name": "Skybound Feather",
+    "type": "Intro Skill",
+    "take": "Tag in, deal Havoc DMG, bank an Azure Plume, stamp a Havoc Bane — three currencies in one entrance. Half a heavy-attack cyclone is already funded before her feet touch the ground. The feather lands before the sword does."
+  },
+  {
+    "icon": "t",
+    "name": "As the Wind Wills",
+    "type": "Outro Skill",
+    "take": "She leaves with a 300% ATK parting cut and hands every other Resonator Tonal Switch for 20s: inflict Havoc Bane and your Havoc DMG gets Amplified 20%. It's a Havoc-team pact — she teaches the room her own language on the way out, and anyone who speaks it hits harder. Wind doesn't stop when the girl steps off stage."
+  },
+  {
+    "icon": "d1",
+    "name": "Unbroken Vow",
+    "type": "Inherent Skill",
+    "take": "Havoc Bane isn't just a 2%-per-stack DEF shred — for HER it's a personal Amplifier. Stacks one through three each boost her damage 10% (up to 30%); stacks four through six are worth 12% apiece (another 36%). A fully-marked target at 6 stacks is eating both brackets at once. Every stamp from every skill in this codex was a deposit; this is the interest rate."
+  },
+  {
+    "icon": "d2",
+    "name": "One Life, One Blade",
+    "type": "Inherent Skill",
+    "take": "The team clause. Her Liberation slams Havoc Bane to max on hit — and every time a TEAMMATE inflicts Havoc Bane, she gains Windbound (one per second, six cap). At six, she becomes One with the Wind: her next Sword Stance Flow summons Feather Release: Xuanling, which applies SIX Havoc Bane stacks in one motion. Run her with Havoc Bane friends and the debuff economy compounds itself. One life, one blade, one very crowded ledger."
+  }
+]
