@@ -1,0 +1,33 @@
+{
+  "date": "2026-07-26",
+  "label": "The Solo Overture",
+  "window": "Rotation 7/20 - 8/17",
+  "crestTarget": 36,
+  "floors": [
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 1, "boss": "",
+      "members": ["Carlotta"], "crests": 3, "time": "",
+      "notes": "THE SOLOIST TAKES THE STAGE. Carlotta walks in alone, three crests, no accompaniment — and only spends her own vigor doing it."
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 2, "boss": "",
+      "members": ["Carlotta"], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 3, "boss": "",
+      "members": ["Carlotta"], "crests": 3, "time": "",
+      "notes": "Third solo floor, third perfect. The bench hasn't moved. Six vigor total for nine crests."
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "Chop Chop + Dragon of Dirge",
+      "members": ["Phrolova", "Cantarella", "Roccia"], "crests": 3, "time": "4:02",
+      "notes": "FIFTY-EIGHT SECONDS. The all-Havoc echo core met a Havoc-shred interference and deleted a Lv90 double boss with 4:02 still on a 5:00 clock — the third crest only asked for 3:00."
+    }
+  ],
+  "lessons": [
+    "Solo clears are vigor arbitrage: Carlotta's F1-3 recital cost 6 vigor from ONE pool instead of ~18 across three resonators — the whole roster walks into Echoing and Hazard Tower untouched.",
+    "Match the core to the Interference, not the habit: Havoc RES shred + basic-attack stacking pointed at the Phrolova/Cantarella/Roccia engine and it cashed out at 12/12.",
+    "Since this rotation, Resonant/Echoing F1-3 clears PERSIST — only each tower's F4 and all of Hazard Tower re-earn. The recurring chase is 18 crests, not 36."
+  ]
+}
