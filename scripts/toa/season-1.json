@@ -23,11 +23,33 @@
       "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "Chop Chop + Dragon of Dirge",
       "members": ["Phrolova", "Cantarella", "Roccia"], "crests": 3, "time": "4:02",
       "notes": "FIFTY-EIGHT SECONDS. The all-Havoc echo core met a Havoc-shred interference and deleted a Lv90 double boss with 4:02 still on a 5:00 clock — the third crest only asked for 3:00."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 1, "boss": "",
+      "members": ["Lupa"], "crests": 3, "time": "",
+      "notes": "THE HUNT OPENS ALONE. Lupa takes the first floor solo — the Echoing recital begins."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 2, "boss": "",
+      "members": ["Lupa"], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 3, "boss": "",
+      "members": ["ChangLi"], "crests": 3, "time": "",
+      "notes": "One floor, one flame. ChangLi's solo cameo keeps the streak perfect."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "Lampylumen Myriad",
+      "members": ["Cartethyia"], "crests": 3, "time": "4:05",
+      "notes": "FIFTY-FIVE SECONDS, ALONE. The interference's Intro Skill rider is dead weight for a soloist — Cartethyia took only the Aero shred and still out-timed Resonant's full trio against a Lv90 Lampylumen Myriad."
     }
   ],
   "lessons": [
     "Solo clears are vigor arbitrage: Carlotta's F1-3 recital cost 6 vigor from ONE pool instead of ~18 across three resonators — the whole roster walks into Echoing and Hazard Tower untouched.",
     "Match the core to the Interference, not the habit: Havoc RES shred + basic-attack stacking pointed at the Phrolova/Cantarella/Roccia engine and it cashed out at 12/12.",
+    "Echoing went 12/12 on four SOLO runs — Lupa, ChangLi, and Cartethyia spent 10 vigor combined, so the entire roster reaches Hazard Tower's Lv100 floors fresh.",
+    "Intro-Skill interference riders are dead for soloists (no swap, no Intro) — price a solo run on the flat modifiers only. Cartethyia's 55s says the flat shred can be enough.",
     "Since this rotation, Resonant/Echoing F1-3 clears PERSIST — only each tower's F4 and all of Hazard Tower re-earn. The recurring chase is 18 crests, not 36."
   ]
 }
