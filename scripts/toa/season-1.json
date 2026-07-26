@@ -43,6 +43,26 @@
       "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "Lampylumen Myriad",
       "members": ["Cartethyia"], "crests": 3, "time": "4:05",
       "notes": "FIFTY-FIVE SECONDS, ALONE. The interference's Intro Skill rider is dead weight for a soloist — Cartethyia took only the Aero shred and still out-timed Resonant's full trio against a Lv90 Lampylumen Myriad."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 1, "boss": "Feilian Beringal",
+      "members": ["Aemeath", "Lynae", "Mornye"], "crests": 3, "time": "",
+      "notes": "THE LV100 GAUNTLET OPENS. The Tune Rupture engine walks into an interference built for it — Fusion/Spectro shred, +30% DMG, and a Tunability-Shifting ATK rider — and takes all three crests off the Aero ape."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 2, "boss": "Violet-Feathered Heron + Vitreum Dancer + Nameless Explorer",
+      "members": ["Aemeath", "Lynae", "Mornye"], "crests": 3, "time": "",
+      "notes": "TRIPLE THREAT, SAME ENGINE. Three Lv100 bosses share one floor and the Tune Rupture core doesn't blink — perfect crests, back to back."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
     }
   ],
   "lessons": [
