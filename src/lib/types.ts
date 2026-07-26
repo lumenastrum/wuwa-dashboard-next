@@ -5,7 +5,7 @@ export type Sequence = "S0" | "S1" | "S2" | "S3" | "S4" | "S5" | "S6";
 export type WeaponType = "Sword" | "Pistols" | "Broadblade" | "Gauntlets" | "Rectifier";
 export type Rating = "" | "B" | "A" | "S" | "SS" | "SSS" | "CROWNED" | "IRIDESCENT";
 
-export type PageId = "roster" | "resonator" | "teams" | "cycles" | "convene";
+export type PageId = "roster" | "resonator" | "teams" | "cycles" | "toa" | "wastes" | "convene";
 
 export interface DashboardMeta {
   title: string;
@@ -161,6 +161,88 @@ export interface EndstateMatrix {
   cycles: Cycle[];
 }
 
+// --- Tower of Adversity ---------------------------------------------------
+// The classic tower climb. Zone vocabulary is the in-game set (pak
+// NewTower_Diffcult_1..4); floors are recorded per zone with the crests the
+// clear earned (0-3 per floor). Resonators lock per zone in-game, so the
+// floor rows double as a deployment ledger.
+export type ToaZone = "Stable" | "Experiment" | "Hazard" | "Overdrive";
+export const TOA_ZONES: ToaZone[] = ["Stable", "Experiment", "Hazard", "Overdrive"];
+// In-game tower names within each zone (Text_TowerOne/Two/Three_Text). The
+// rotating Hazard Zone runs all three ×4 floors (36 crests since v2.6);
+// Stable runs Resonant only, Experiment runs Resonant+Echoing, Overdrive
+// runs all three ×2 stages.
+export type ToaTower = "Resonant" | "Echoing" | "Hazard";
+export const TOA_TOWERS: ToaTower[] = ["Resonant", "Hazard", "Echoing"];
+export const TOA_CRESTS_PER_FLOOR = 3;
+
+export interface ToaFloorRow {
+  zone: ToaZone;
+  tower: ToaTower;
+  floor: number;        // floor number within its tower (1-based)
+  boss: string;         // headline enemy ("" = unrecorded)
+  members: string[];    // the team that cleared it
+  crests: number;       // 0..TOA_CRESTS_PER_FLOOR
+  time: string;         // time REMAINING on the floor clock, e.g. "2:41" ("" = untimed)
+  notes: string;        // kicker convention: first short sentence = headline
+}
+
+export interface ToaSeason {
+  id: number;
+  date: string;         // record date YYYY-MM-DD
+  label: string;        // flavor name, same register as cycle labels
+  window: string;       // in-game phase window label ("" ok)
+  crestTarget: number;  // the chase, e.g. 30
+  totalCrests: number;  // derived: sum of floor crests
+  floors: ToaFloorRow[];
+  lessons: string[];
+}
+
+export interface TowerOfAdversity {
+  seasons: ToaSeason[];
+}
+
+// --- Whimpering Wastes ----------------------------------------------------
+// The drowned score-attack. Twelve stages across three Waters; every stage is
+// two halves, each with its own trio + equipped Token. Stage grades are the
+// in-game ladder (B/A/S — Infinite Torrents alone extends to SS/SSS).
+export type WastesWaters = "Forbidden" | "Chasm" | "Torrents";
+export const WASTES_WATERS: WastesWaters[] = ["Forbidden", "Chasm", "Torrents"];
+export type WastesGrade = "" | "B" | "A" | "S" | "SS" | "SSS";
+
+export interface WastesStageRow {
+  stage: number;        // 1-12
+  name: string;         // in-game stage name, e.g. "Siren's Boneyard"
+  waters: WastesWaters;
+  teamA: string[];      // First Half trio
+  teamB: string[];      // Second Half trio
+  tokenA: string;       // equipped Token name ("" = unrecorded)
+  tokenB: string;
+  tokenAIcon?: number;  // public/game/wastes/tokens/<n>.webp — absent = text chip
+  tokenBIcon?: number;
+  score: number;        // stage total (both halves summed, in-game display)
+  grade: WastesGrade;
+  notes: string;        // kicker convention applies
+}
+
+export interface WastesSeason {
+  id: number;
+  date: string;           // record date YYYY-MM-DD
+  label: string;          // flavor name
+  window: string;         // in-game cycle label, e.g. "Respawning Waters July, 2026"
+  chasmTarget: number;    // the point chase, e.g. 15000
+  torrentsTarget: number; // e.g. 4500 (S) — or 5500 for the SSS hunt
+  forbiddenPoints: number; // derived per-Waters sums
+  chasmPoints: number;
+  torrentsPoints: number;
+  stages: WastesStageRow[];
+  lessons: string[];
+}
+
+export interface WhimperingWastes {
+  seasons: WastesSeason[];
+}
+
 export interface SignatureWeapon {
   name: string;          // matches Resonator.weapon — the link key
   type: WeaponType;
@@ -230,6 +312,9 @@ export interface DashboardData {
   actionItems: ActionItem[];
   keyFindings: string[];
   endstateMatrix: EndstateMatrix;
+  // Optional on old Supabase rows — ensureEndgameModes() defaults them at load.
+  towerOfAdversity?: TowerOfAdversity;
+  whimperingWastes?: WhimperingWastes;
   signatureWeapons: SignatureWeapon[];
   echoBuilds: EchoBuild[];
 }

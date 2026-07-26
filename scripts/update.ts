@@ -56,7 +56,7 @@ import type {
   Sequence,
   StatWeights,
 } from "../src/lib/types";
-import { FORTE_NODE_MAX } from "../src/lib/types";
+import { FORTE_NODE_MAX, TOA_CRESTS_PER_FLOOR, TOA_TOWERS, TOA_ZONES, WASTES_WATERS } from "../src/lib/types";
 import { rateResonator } from "../src/lib/resonator-rating";
 import { deriveStatStatus } from "../src/lib/stat-audit";
 import { durationToSec } from "../src/lib/duration";
@@ -109,6 +109,8 @@ interface Data {
   actionItems: AnyRecord[];
   keyFindings: string[];
   endstateMatrix: { cycles: { id: number; teams: AnyRecord[]; [k: string]: unknown }[] };
+  towerOfAdversity?: { seasons: AnyRecord[] };
+  whimperingWastes?: { seasons: AnyRecord[] };
   signatureWeapons?: { name: string; [k: string]: unknown }[];
   echoBuilds?: EchoBuild[];
   [k: string]: unknown;
@@ -240,10 +242,40 @@ function findStat(audit: ReturnType<typeof findAudit>, label: string) {
 function assertStatus(v: string) {
   if (!STATUSES.includes(v)) throw new Error(`Status must be one of: ${STATUSES.join(", ")} (got "${v}")`);
 }
+// --- Endgame modes --------------------------------------------------------
+const WASTES_GRADES = ["", "B", "A", "S", "SS", "SSS"];
+
+// Canonical in-game stage names (pak GhostShipLevelName_Text1..12) so a season
+// file only has to say { "stage": 7 } and the ledger stays on-model.
+const WASTES_STAGE_NAMES: Record<number, string> = {
+  1: "Siren's Boneyard", 2: "Darkblight Ruins", 3: "Mistbound Lair",
+  4: "Weeping Walkway", 5: "Starfall Expanse", 6: "Burial Bay",
+  7: "Doomstrand", 8: "Whirlpool", 9: "Riptide", 10: "Tempest",
+  11: "Seabane", 12: "Infinite Torrents",
+};
+
+function wastesWatersOf(stage: number): string {
+  return stage <= 6 ? "Forbidden" : stage <= 11 ? "Chasm" : "Torrents";
+}
+
+function ensureToa(data: Data) {
+  const toa = (data.towerOfAdversity ??= { seasons: [] }) as { seasons: AnyRecord[] };
+  if (!Array.isArray(toa.seasons)) toa.seasons = [];
+  return toa as { seasons: (AnyRecord & { id: number; floors: AnyRecord[]; lessons: string[] })[] };
+}
+
+function ensureWastes(data: Data) {
+  const ww = (data.whimperingWastes ??= { seasons: [] }) as { seasons: AnyRecord[] };
+  if (!Array.isArray(ww.seasons)) ww.seasons = [];
+  return ww as { seasons: (AnyRecord & { id: number; stages: AnyRecord[]; lessons: string[] })[] };
+}
+
 function parseIntOrThrow(v: string, label = "value") {
-  const n = parseInt(v, 10);
-  if (Number.isNaN(n)) throw new Error(`Expected integer for ${label}, got "${v}"`);
-  return n;
+  // Scores get pasted with thousands separators ("14,975") — strip them, since
+  // bare parseInt would silently truncate at the comma (14,975 → 14).
+  const cleaned = v.replace(/,/g, "");
+  if (!/^-?\d+$/.test(cleaned)) throw new Error(`Expected integer for ${label}, got "${v}"`);
+  return parseInt(cleaned, 10);
 }
 
 // --- Benchmarks -----------------------------------------------------------
@@ -369,6 +401,25 @@ cycle:
   cycle <id> team <order> over5k <true|false>
   cycleTotal <id> <int>                   override totalPoints
 
+tower of adversity (crest ledger; floors keyed zone+tower+floor):
+  addtoa --file <season.json>              append a whole ToA season (floors + lessons; totalCrests derives)
+    JSON: { id?, date, label, window?, crestTarget?, floors[], lessons[] }
+    floor: { zone, tower, floor, boss?, members[]|"A,B,C", crests, time?, notes? }
+    zone: Stable|Experiment|Hazard|Overdrive · tower: Resonant|Hazard|Echoing · crests 0-3
+    time = time REMAINING on the floor clock ("2:41"), the crest currency
+  toa <id> floor <zone> <tower> <n> <crests|time|boss|notes|members> <value>
+  rmtoa <id>                               remove a whole ToA season
+
+whimpering wastes (score ledger; stages 1-12, two trios per stage):
+  addwastes --file <season.json>           append a whole WhiWa season (stages + lessons; per-Waters points derive)
+    JSON: { id?, date, label, window?, chasmTarget?, torrentsTarget?, stages[], lessons[] }
+    stage: { stage, name?, waters?, teamA[]|"A,B,C", teamB[], tokenA?, tokenB?,
+             tokenAIcon?, tokenBIcon?, score, grade?, notes? }
+    waters + in-game name derive from the stage number (1-6 Forbidden, 7-11 Chasm, 12 Torrents)
+    grade: B|A|S (stage 12 alone extends to SS|SSS)
+  wastes <id> stage <n> <score|grade|notes|name|teama|teamb|tokena|tokenb|tokenaicon|tokenbicon> <value>
+  rmwastes <id>                            remove a whole Wastes season
+
 misc:
   action <idx> <task|detail|status> <value>
   finding <idx> <text>
@@ -406,6 +457,8 @@ async function main() {
     console.log(`resonators: ${data.resonators.length}`);
     console.log(`benchmarks: ${data.benchmarks.length}`);
     console.log(`cycles: ${data.endstateMatrix.cycles.length}`);
+    console.log(`toa seasons: ${ensureToa(data).seasons.length}`);
+    console.log(`wastes seasons: ${ensureWastes(data).seasons.length}`);
     console.log(`action items: ${data.actionItems.length}`);
     console.log(`key findings: ${data.keyFindings.length}`);
     console.log("\nResonators:");
@@ -1170,8 +1223,16 @@ async function main() {
         cycle.teamsOver5k = cycle.teams.filter((t) => t.over5k).length;
         console.log(`cycle ${cycleId} team ${order} score → ${value} (totalPoints recomputed to ${cycle.totalPoints})`);
       } else if (field === "rating") {
-        team.rating = value;
-        console.log(`cycle ${cycleId} team ${order} rating → ${value}`);
+        // Same gate as addcycle — a typo'd rating ("Crowned", "SS+") would
+        // otherwise slip past every renderer's lookup and land on fallbacks.
+        let rating = value.trim();
+        if (rating === "—" || rating === "-") rating = "";
+        const VALID = ["", "B", "A", "S", "SS", "SSS", "CROWNED", "IRIDESCENT"];
+        if (!VALID.includes(rating)) {
+          throw new Error(`rating "${value}" invalid — use one of: ${VALID.filter(Boolean).join(", ")} (or empty)`);
+        }
+        team.rating = rating;
+        console.log(`cycle ${cycleId} team ${order} rating → ${rating || "—"}`);
       } else if (field === "buff" || field === "notes") {
         team[field] = value;
         console.log(`cycle ${cycleId} team ${order} ${field} → ${value}`);
@@ -1280,6 +1341,293 @@ async function main() {
           `  #${t.order} ${t.members.join(" / ")} — ${t.score.toLocaleString()}` +
             `${t.rating ? ` · ${t.rating}` : ""}${t.over5k ? " · 5K+" : ""} · ${t.buff}`,
         );
+      }
+      break;
+    }
+    case "addtoa": {
+      const fileIdx = rest.indexOf("--file");
+      const filePath = fileIdx !== -1 ? rest[fileIdx + 1] : undefined;
+      if (!filePath) {
+        throw new Error(
+          `usage: addtoa --file <path-to-season.json>\n` +
+            `  JSON: { id?, date, label, window?, crestTarget?, floors[], lessons[] }\n` +
+            `  floor: { zone, tower, floor, boss?, members[]|"A,B,C", crests, time?, notes? }\n` +
+            `  totalCrests derives from floor crests`,
+        );
+      }
+      const raw = JSON.parse(await fs.readFile(path.resolve(filePath), "utf-8")) as AnyRecord;
+      const toa = ensureToa(data);
+      const id =
+        raw.id != null
+          ? parseIntOrThrow(String(raw.id), "season id")
+          : toa.seasons.reduce((m, s) => Math.max(m, s.id as number), 0) + 1;
+      if (toa.seasons.some((s) => s.id === id)) {
+        throw new Error(`ToA season id ${id} already exists — omit "id" to auto-assign`);
+      }
+      if (!raw.label) throw new Error(`season JSON needs a "label"`);
+      if (!raw.date) throw new Error(`season JSON needs a "date" (YYYY-MM-DD)`);
+      if (!Array.isArray(raw.floors) || raw.floors.length === 0) {
+        throw new Error(`season JSON needs a non-empty "floors" array`);
+      }
+
+      const floors = (raw.floors as AnyRecord[]).map((f, i) => {
+        const zone = String(f.zone ?? "");
+        if (!TOA_ZONES.includes(zone as (typeof TOA_ZONES)[number])) {
+          throw new Error(`floor[${i}] zone "${zone}" invalid — use ${TOA_ZONES.join("|")}`);
+        }
+        const tower = String(f.tower ?? "");
+        if (!TOA_TOWERS.includes(tower as (typeof TOA_TOWERS)[number])) {
+          throw new Error(`floor[${i}] tower "${tower}" invalid — use ${TOA_TOWERS.join("|")}`);
+        }
+        const floor = parseIntOrThrow(String(f.floor ?? 0), `floor[${i}] floor`);
+        const crests = parseIntOrThrow(String(f.crests ?? 0), `floor[${i}] crests`);
+        if (crests < 0 || crests > TOA_CRESTS_PER_FLOOR) {
+          throw new Error(`floor[${i}] crests ${crests} out of range 0-${TOA_CRESTS_PER_FLOOR}`);
+        }
+        const members = Array.isArray(f.members)
+          ? (f.members as unknown[]).map((m) => String(m).trim()).filter(Boolean)
+          : String(f.members ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+        return {
+          zone,
+          tower,
+          floor,
+          boss: String(f.boss ?? ""),
+          members,
+          crests,
+          time: String(f.time ?? ""),
+          notes: String(f.notes ?? ""),
+        };
+      });
+      const dupe = new Set<string>();
+      for (const f of floors) {
+        const key = `${f.zone}/${f.tower}/${f.floor}`;
+        if (dupe.has(key)) throw new Error(`duplicate floor ${key} in season file`);
+        dupe.add(key);
+      }
+
+      const totalCrests = floors.reduce((acc, f) => acc + f.crests, 0);
+      if (raw.totalCrests != null && Number(raw.totalCrests) !== totalCrests) {
+        console.warn(`  ⚠ file totalCrests ${raw.totalCrests} ≠ sum ${totalCrests} — using computed ${totalCrests}`);
+      }
+      const season = {
+        id,
+        date: String(raw.date),
+        label: String(raw.label),
+        window: String(raw.window ?? ""),
+        crestTarget: parseIntOrThrow(String(raw.crestTarget ?? 36), "crestTarget"),
+        totalCrests,
+        floors,
+        lessons: Array.isArray(raw.lessons) ? (raw.lessons as unknown[]).map(String) : [],
+      };
+      toa.seasons.push(season);
+      toa.seasons.sort((a, b) => (a.id as number) - (b.id as number));
+      console.log(
+        `added ToA season ${id} "${season.label}" (${season.date}) — ${floors.length} floors · ` +
+          `${totalCrests}/${season.crestTarget} crests${season.window ? ` · ${season.window}` : ""}`,
+      );
+      for (const f of floors) {
+        console.log(
+          `  ${f.zone}/${f.tower} F${f.floor} — ${"✦".repeat(f.crests)}${"·".repeat(TOA_CRESTS_PER_FLOOR - f.crests)}` +
+            `${f.time ? ` · ${f.time} left` : ""} · ${f.members.join(" / ") || "—"}${f.boss ? ` · vs ${f.boss}` : ""}`,
+        );
+      }
+      break;
+    }
+    case "toa": {
+      const [seasonIdStr, sub, zone, tower, floorStr, field, ...valueParts] = rest;
+      if (sub !== "floor") throw new Error(`usage: toa <id> floor <zone> <tower> <n> <field> <value>`);
+      const toa = ensureToa(data);
+      const season = toa.seasons.find((s) => s.id === parseIntOrThrow(seasonIdStr, "season id"));
+      if (!season) throw new Error(`No ToA season with id ${seasonIdStr}`);
+      const floors = season.floors as AnyRecord[];
+      const f = floors.find(
+        (x) => x.zone === zone && x.tower === tower && x.floor === parseIntOrThrow(floorStr, "floor"),
+      );
+      if (!f) throw new Error(`No floor ${zone}/${tower}/${floorStr} in season ${seasonIdStr}`);
+      const value = valueParts.join(" ");
+      if (field === "crests") {
+        const crests = parseIntOrThrow(value, "crests");
+        if (crests < 0 || crests > TOA_CRESTS_PER_FLOOR) {
+          throw new Error(`crests ${crests} out of range 0-${TOA_CRESTS_PER_FLOOR}`);
+        }
+        f.crests = crests;
+        season.totalCrests = floors.reduce((acc, x) => acc + (x.crests as number), 0);
+        console.log(`toa ${seasonIdStr} ${zone}/${tower} F${floorStr} crests → ${crests} (season ${season.totalCrests}/${season.crestTarget})`);
+      } else if (field === "members") {
+        f.members = value.split(",").map((s) => s.trim()).filter(Boolean);
+        console.log(`toa ${seasonIdStr} ${zone}/${tower} F${floorStr} members → ${JSON.stringify(f.members)}`);
+      } else if (field === "time" || field === "boss" || field === "notes") {
+        f[field] = value;
+        console.log(`toa ${seasonIdStr} ${zone}/${tower} F${floorStr} ${field} → ${value}`);
+      } else {
+        throw new Error(`toa floor field must be one of: crests, time, boss, notes, members`);
+      }
+      break;
+    }
+    case "rmtoa": {
+      const toa = ensureToa(data);
+      const id = parseIntOrThrow(rest[0], "season id");
+      const idx = toa.seasons.findIndex((x) => x.id === id);
+      if (idx === -1) throw new Error(`No ToA season with id ${id}`);
+      const [gone] = toa.seasons.splice(idx, 1);
+      console.log(`removed ToA season ${id} "${gone.label}" (${(gone.floors as AnyRecord[]).length} floors)`);
+      break;
+    }
+    case "rmwastes": {
+      const ww = ensureWastes(data);
+      const id = parseIntOrThrow(rest[0], "season id");
+      const idx = ww.seasons.findIndex((x) => x.id === id);
+      if (idx === -1) throw new Error(`No Wastes season with id ${id}`);
+      const [gone] = ww.seasons.splice(idx, 1);
+      console.log(`removed Wastes season ${id} "${gone.label}" (${(gone.stages as AnyRecord[]).length} stages)`);
+      break;
+    }
+    case "addwastes": {
+      const fileIdx = rest.indexOf("--file");
+      const filePath = fileIdx !== -1 ? rest[fileIdx + 1] : undefined;
+      if (!filePath) {
+        throw new Error(
+          `usage: addwastes --file <path-to-season.json>\n` +
+            `  JSON: { id?, date, label, window?, chasmTarget?, torrentsTarget?, stages[], lessons[] }\n` +
+            `  stage: { stage, name?, waters?, teamA, teamB, tokenA?, tokenB?, tokenAIcon?, tokenBIcon?, score, grade?, notes? }\n` +
+            `  waters/name derive from the stage number; per-Waters points derive from scores`,
+        );
+      }
+      const raw = JSON.parse(await fs.readFile(path.resolve(filePath), "utf-8")) as AnyRecord;
+      const ww = ensureWastes(data);
+      const id =
+        raw.id != null
+          ? parseIntOrThrow(String(raw.id), "season id")
+          : ww.seasons.reduce((m, s) => Math.max(m, s.id as number), 0) + 1;
+      if (ww.seasons.some((s) => s.id === id)) {
+        throw new Error(`Wastes season id ${id} already exists — omit "id" to auto-assign`);
+      }
+      if (!raw.label) throw new Error(`season JSON needs a "label"`);
+      if (!raw.date) throw new Error(`season JSON needs a "date" (YYYY-MM-DD)`);
+      if (!Array.isArray(raw.stages) || raw.stages.length === 0) {
+        throw new Error(`season JSON needs a non-empty "stages" array`);
+      }
+
+      const stages = (raw.stages as AnyRecord[]).map((s, i) => {
+        const stage = parseIntOrThrow(String(s.stage ?? 0), `stage[${i}] stage`);
+        if (stage < 1 || stage > 12) throw new Error(`stage[${i}] number ${stage} out of range 1-12`);
+        const waters = String(s.waters ?? wastesWatersOf(stage));
+        if (!WASTES_WATERS.includes(waters as (typeof WASTES_WATERS)[number])) {
+          throw new Error(`stage[${i}] waters "${waters}" invalid — use ${WASTES_WATERS.join("|")}`);
+        }
+        let grade = String(s.grade ?? "").trim();
+        if (grade === "—" || grade === "-") grade = "";
+        if (!WASTES_GRADES.includes(grade)) {
+          throw new Error(`stage[${i}] grade "${grade}" invalid — use ${WASTES_GRADES.filter(Boolean).join(", ")} (or empty)`);
+        }
+        if ((grade === "SS" || grade === "SSS") && stage !== 12) {
+          console.warn(`  ⚠ stage ${stage} grade ${grade} — only Infinite Torrents (12) awards SS/SSS in-game`);
+        }
+        const team = (v: unknown) =>
+          Array.isArray(v)
+            ? (v as unknown[]).map((m) => String(m).trim()).filter(Boolean)
+            : String(v ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+        const iconOf = (v: unknown, label: string) =>
+          v == null || v === "" ? undefined : parseIntOrThrow(String(v), label);
+        return {
+          stage,
+          name: String(s.name ?? WASTES_STAGE_NAMES[stage] ?? ""),
+          waters,
+          teamA: team(s.teamA),
+          teamB: team(s.teamB),
+          tokenA: String(s.tokenA ?? ""),
+          tokenB: String(s.tokenB ?? ""),
+          tokenAIcon: iconOf(s.tokenAIcon, `stage[${i}] tokenAIcon`),
+          tokenBIcon: iconOf(s.tokenBIcon, `stage[${i}] tokenBIcon`),
+          score: parseIntOrThrow(String(s.score ?? 0), `stage[${i}] score`),
+          grade,
+          notes: String(s.notes ?? ""),
+        };
+      });
+      const seen = new Set<number>();
+      for (const s of stages) {
+        if (seen.has(s.stage)) throw new Error(`duplicate stage ${s.stage} in season file`);
+        seen.add(s.stage);
+      }
+      stages.sort((a, b) => a.stage - b.stage);
+
+      const sumOf = (w: string) => stages.filter((s) => s.waters === w).reduce((acc, s) => acc + s.score, 0);
+      const season = {
+        id,
+        date: String(raw.date),
+        label: String(raw.label),
+        window: String(raw.window ?? ""),
+        chasmTarget: parseIntOrThrow(String(raw.chasmTarget ?? 15000), "chasmTarget"),
+        torrentsTarget: parseIntOrThrow(String(raw.torrentsTarget ?? 4500), "torrentsTarget"),
+        forbiddenPoints: sumOf("Forbidden"),
+        chasmPoints: sumOf("Chasm"),
+        torrentsPoints: sumOf("Torrents"),
+        stages,
+        lessons: Array.isArray(raw.lessons) ? (raw.lessons as unknown[]).map(String) : [],
+      };
+      ww.seasons.push(season);
+      ww.seasons.sort((a, b) => (a.id as number) - (b.id as number));
+      console.log(
+        `added Wastes season ${id} "${season.label}" (${season.date}) — ${stages.length} stages · ` +
+          `Chasm ${season.chasmPoints.toLocaleString()}/${season.chasmTarget.toLocaleString()} · ` +
+          `Torrents ${season.torrentsPoints.toLocaleString()}/${season.torrentsTarget.toLocaleString()}` +
+          `${season.forbiddenPoints ? ` · Forbidden ${season.forbiddenPoints.toLocaleString()}` : ""}`,
+      );
+      for (const s of stages) {
+        console.log(
+          `  #${String(s.stage).padStart(2, "0")} ${s.name} [${s.waters}] — ${s.score.toLocaleString()}` +
+            `${s.grade ? ` · ${s.grade}` : ""} · I: ${s.teamA.join("/") || "—"} · II: ${s.teamB.join("/") || "—"}`,
+        );
+      }
+      break;
+    }
+    case "wastes": {
+      const [seasonIdStr, sub, stageStr, field, ...valueParts] = rest;
+      if (sub !== "stage") throw new Error(`usage: wastes <id> stage <n> <field> <value>`);
+      const ww = ensureWastes(data);
+      const season = ww.seasons.find((s) => s.id === parseIntOrThrow(seasonIdStr, "season id"));
+      if (!season) throw new Error(`No Wastes season with id ${seasonIdStr}`);
+      const stages = season.stages as AnyRecord[];
+      const s = stages.find((x) => x.stage === parseIntOrThrow(stageStr, "stage"));
+      if (!s) throw new Error(`No stage ${stageStr} in season ${seasonIdStr}`);
+      const value = valueParts.join(" ");
+      const resum = () => {
+        const sumOf = (w: string) =>
+          stages.filter((x) => x.waters === w).reduce((acc, x) => acc + (x.score as number), 0);
+        season.forbiddenPoints = sumOf("Forbidden");
+        season.chasmPoints = sumOf("Chasm");
+        season.torrentsPoints = sumOf("Torrents");
+      };
+      if (field === "score") {
+        s.score = parseIntOrThrow(value, "score");
+        resum();
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} score → ${s.score} (Chasm ${season.chasmPoints} · Torrents ${season.torrentsPoints})`);
+      } else if (field === "grade") {
+        let grade = value.trim();
+        if (grade === "—" || grade === "-") grade = "";
+        if (!WASTES_GRADES.includes(grade)) {
+          throw new Error(`grade "${grade}" invalid — use ${WASTES_GRADES.filter(Boolean).join(", ")} (or empty)`);
+        }
+        s.grade = grade;
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} grade → ${grade || "—"}`);
+      } else if (field === "teama" || field === "teamb") {
+        const key = field === "teama" ? "teamA" : "teamB";
+        s[key] = value.split(",").map((x) => x.trim()).filter(Boolean);
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} ${key} → ${JSON.stringify(s[key])}`);
+      } else if (field === "tokenaicon" || field === "tokenbicon") {
+        const key = field === "tokenaicon" ? "tokenAIcon" : "tokenBIcon";
+        if (value === "" || value === "-") delete s[key];
+        else s[key] = parseIntOrThrow(value, key);
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} ${key} → ${s[key] ?? "—"}`);
+      } else if (field === "tokena" || field === "tokenb") {
+        const key = field === "tokena" ? "tokenA" : "tokenB";
+        s[key] = value === "-" ? "" : value;
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} ${key} → ${s[key] || "—"}`);
+      } else if (field === "notes" || field === "name") {
+        s[field] = value;
+        console.log(`wastes ${seasonIdStr} stage ${stageStr} ${field} → ${value}`);
+      } else {
+        throw new Error(`wastes stage field must be one of: score, grade, notes, name, teama, teamb, tokena, tokenb, tokenaicon, tokenbicon`);
       }
       break;
     }

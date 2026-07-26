@@ -79,6 +79,19 @@ export function ensureEchoBuilds(data: DashboardData): DashboardData {
   return data;
 }
 
+// Default the endgame-mode blocks on rows saved before they existed. Additive
+// + idempotent like the other ensure* passes — never touches recorded seasons.
+// A non-array `seasons` (corrupt row) normalizes to [], never passes through.
+export function ensureEndgameModes(data: DashboardData): DashboardData {
+  if (!Array.isArray(data.towerOfAdversity?.seasons)) {
+    data.towerOfAdversity = { seasons: [] };
+  }
+  if (!Array.isArray(data.whimperingWastes?.seasons)) {
+    data.whimperingWastes = { seasons: [] };
+  }
+  return data;
+}
+
 function deriveRoster(raw: DashboardData) {
   const roster: RosterEntry[] = raw.resonators.map((r) => ({
     ...r,
@@ -135,6 +148,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         if (!mounted) return;
         ensureSignatureWeapons(data);
         ensureEchoBuilds(data);
+        ensureEndgameModes(data);
         latestRaw.current = data;
         setRaw(data);
         setSyncStatus(supa ? "live" : "local");
@@ -203,6 +217,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       const data = row.data as DashboardData;
       ensureSignatureWeapons(data);
       ensureEchoBuilds(data);
+      ensureEndgameModes(data);
       latestRaw.current = data;
       setRaw(data);
       setSyncStatus("live");

@@ -10,7 +10,7 @@ A personal gacha-tracker dashboard, single-themed as **Emberline** (the earlier 
 
 All writes are **CLI-only** — the browser is read-only on every page.
 
-Four pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`), **Cycles** (`/cycles`).
+Seven pages: **Roster** (`/`), **Resonator** (`/r/[name]`), **Teams** (`/teams`), **Cycles** (`/cycles` — Endstate Matrix: Singularity Expansion), **Tower** (`/toa` — Tower of Adversity crest ledger), **Wastes** (`/wastes` — Whimpering Wastes score ledger), **Convene** (`/convene` — pull history). The endgame pages wear assets ripped from the game's own UI: crest spires and zone banners on Tower, ghost ships / Token art / the B-to-SSS score letters on Wastes, and the KingGold/KingColor crown medals on Cycles.
 
 ## Stack
 
@@ -74,6 +74,18 @@ npm run update -- cycle 2 team 7 rating CROWNED
 npm run update -- cycle 2 team 7 buff "Solar Burst"
 npm run update -- cycle 2 team 7 notes "Aemeath carry, no deaths"
 npm run update -- cycle 2 team 7 members "Aemeath,Lynae,Mornye"
+
+# Tower of Adversity seasons (crest ledger — see scripts/toa/season-template.json)
+npm run update -- addtoa --file scripts/toa/season-1.json
+npm run update -- toa 1 floor Hazard Resonant 3 crests 3     # re-derives the season total
+npm run update -- toa 1 floor Hazard Hazard 4 time "1:30"
+npm run update -- rmtoa 1
+
+# Whimpering Wastes seasons (score ledger — see scripts/wastes/season-template.json)
+npm run update -- addwastes --file scripts/wastes/season-1.json
+npm run update -- wastes 1 stage 12 score 5500               # re-derives per-Waters points
+npm run update -- wastes 1 stage 12 grade SSS
+npm run update -- rmwastes 1
 
 # Action items + key findings
 npm run update -- action 0 status green

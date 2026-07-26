@@ -124,3 +124,50 @@ export function forteKitIcon(resonator: string, stem: string): string {
 export function chainIcon(resonator: string, node: number): string {
   return `${BASE_PATH}/game/chain/${routeName(resonator).toLowerCase()}/s${node}.webp`;
 }
+
+// ── Endgame modes (ripped from UiDailyTower / ActivityMowingTower) ────
+// Same degrade policy as everything above: all callers wire onError-hide.
+
+/** Tower of Adversity art: crest | crest-red | star | star-alt | star-bg |
+ *  emblem | emblem-alt | zone-1..4 | bg-1 | bg-2 (public/game/toa/). */
+export function toaAsset(name: string): string {
+  return `${BASE_PATH}/game/toa/${name}.webp`;
+}
+
+// Zone banner strips ship as zone-<n>.webp in the game's difficulty order
+// (T_DailyTowerL1..L4, indexed by difficulty tier in towerconfig).
+const TOA_ZONE_BANNER: Record<string, number> = {
+  Stable: 1, Experiment: 2, Hazard: 3, Overdrive: 4,
+};
+
+export function toaZoneBanner(zone: string): string | null {
+  const n = TOA_ZONE_BANNER[zone];
+  return n ? `${BASE_PATH}/game/toa/zone-${n}.webp` : null;
+}
+
+/** Whimpering Wastes art: ship-a | ship-b | ship-reward | anchor |
+ *  anchor-base | wheel-alt | flame | flame-max | tide (public/game/wastes/). */
+export function wastesAsset(name: string): string {
+  return `${BASE_PATH}/game/wastes/${name}.webp`;
+}
+
+/** WhiWa stage-grade letters in the game's own art (T_Score*): B teal-green,
+ *  A blue, S/SS/SSS flame-gold. Empty/unknown → null (render nothing). */
+export function wastesGradeIcon(grade: string | undefined): string | null {
+  const key = grade ? { B: "b", A: "a", S: "s", SS: "ss", SSS: "sss" }[grade] : undefined;
+  return key ? `${BASE_PATH}/game/wastes/score-${key}.webp` : null;
+}
+
+/** WhiWa Token painted-artifact icon by rip id (public/game/wastes/tokens/
+ *  <n>.webp, ids 01-52 from Common/Image/IconMowing160). */
+export function tokenIcon(id: number | undefined): string | null {
+  return id ? `${BASE_PATH}/game/wastes/tokens/${String(id).padStart(2, "0")}.webp` : null;
+}
+
+/** Endstate Matrix top-tier medals in the game's own art (KingGold /
+ *  KingColor crowns) — letter tiers keep gradeIcon()'s medal plates. */
+export function matrixCrown(rating: string | undefined): string | null {
+  if (rating === "CROWNED") return `${BASE_PATH}/game/matrix/crowned.webp`;
+  if (rating === "IRIDESCENT") return `${BASE_PATH}/game/matrix/iridescent.webp`;
+  return null;
+}

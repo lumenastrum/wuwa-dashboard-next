@@ -1,0 +1,56 @@
+{
+  "date": "2026-07-26",
+  "label": "The Maiden Voyage",
+  "window": "Respawning Waters July, 2026",
+  "chasmTarget": 15000,
+  "torrentsTarget": 4500,
+  "stages": [
+    {
+      "stage": 7,
+      "teamA": ["Carlotta", "Zhezhi", "Shorekeeper"], "tokenA": "Eroded Coin: Glacio", "tokenAIcon": 3,
+      "teamB": ["Camellya", "Sanhua", "Verina"], "tokenB": "Eroded Coin: Havoc", "tokenBIcon": 1,
+      "score": 2350, "grade": "A",
+      "notes": "Sample entry — replace with the real run. 150 short of the S line."
+    },
+    {
+      "stage": 8,
+      "teamA": ["Aemeath", "Denia", "Lupa"], "tokenA": "Inscriber", "tokenAIcon": 13,
+      "teamB": ["Zani", "Phoebe", "Mornye"], "tokenB": "Hopebearer", "tokenBIcon": 16,
+      "score": 2500, "grade": "S",
+      "notes": "S ON THE NOSE. Whirlpool never stood a chance."
+    },
+    {
+      "stage": 9,
+      "teamA": ["Cartethyia", "Ciaccona", "Chisa"], "tokenA": "Fabricator", "tokenAIcon": 15,
+      "teamB": ["Phrolova", "Cantarella", "Roccia"], "tokenB": "Solacer", "tokenBIcon": 17,
+      "score": 3500, "grade": "S",
+      "notes": ""
+    },
+    {
+      "stage": 10,
+      "teamA": ["Augusta", "Iuno", "Shorekeeper"], "tokenA": "Golden Token", "tokenAIcon": 20,
+      "teamB": ["Jinhsi", "Zhezhi", "Verina"], "tokenB": "Drifting Token", "tokenBIcon": 21,
+      "score": 3120, "grade": "A",
+      "notes": "Tempest lives up to the name. 380 to the S line."
+    },
+    {
+      "stage": 11,
+      "teamA": ["Camellya", "Sanhua", "Chisa"], "tokenA": "Worn Token", "tokenAIcon": 25,
+      "teamB": ["Carlotta", "Lynae", "Mornye"], "tokenB": "Exquisite Token", "tokenBIcon": 27,
+      "score": 3505, "grade": "S",
+      "notes": ""
+    },
+    {
+      "stage": 12,
+      "teamA": ["Aemeath", "Denia", "Shorekeeper"], "tokenA": "The Mirror Reflecting the Beyond", "tokenAIcon": 36,
+      "teamB": ["Cartethyia", "Ciaccona", "Chisa"], "tokenB": "Whispers of an Undying Grudge", "tokenBIcon": 39,
+      "score": 4980, "grade": "S",
+      "notes": "TWENTY POINTS FROM SS. The Burning Waves window on wave nine is the whole ballgame."
+    }
+  ],
+  "lessons": [
+    "Sample season — import with addwastes, then edit stages with `wastes <id> stage 12 score 5500` as reruns land.",
+    "Stages 9-11 want 3,500 for S while 7-8 want 2,500 — budget the strongest trios for the back half.",
+    "Tokens reset with the cycle; the unlimited Eroded Coins are the floor, the Golden rotation is the ceiling."
+  ]
+}

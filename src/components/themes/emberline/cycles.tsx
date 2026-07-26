@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useData } from "@/lib/data-context";
 import type { CycleTeamRow, Rating } from "@/lib/types";
 import { portrait, splashArt, tallPortrait } from "@/lib/portraits";
-import { gradeIcon } from "@/lib/game-icons";
+import { gradeIcon, matrixCrown } from "@/lib/game-icons";
+import { splitNote } from "@/lib/notes";
 import { E_PAL, eStyles } from "./styles";
 import { EFooter, EKicker, ESectionTitle, EShell } from "./primitives";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
@@ -17,16 +18,48 @@ const SCORE_SCALE = 15000;
 const IRID_GRAD = "linear-gradient(100deg, #ffb3d9, #ffd36e 35%, #9fe8ff 68%, #c9a7ff)";
 const GOLD_GRAD = `linear-gradient(90deg, ${E_PAL.gold}, ${E_PAL.emberSoft})`;
 
-// Letter grades (B/A/S/SS/SSS) render as the ripped in-game medal art;
-// CROWNED and IRIDESCENT have no medal file, so they keep the pill treatment.
+// Letter grades (B/A/S/SS/SSS) render as the ripped in-game medal art; CROWNED
+// and IRIDESCENT wear the game's own KingGold / KingColor crowns (ripped from
+// the Endstate Matrix score screen). A failed art load falls back to the pill
+// via state (NOT display:none — that renders nothing), and the flag resets
+// when the rating changes since cycle switches reuse component instances.
 function MedalBadge({ rating, size = 30 }: { rating: Rating; size?: number }) {
+  const [failed, setFailed] = useState(false);
+  const [prevRating, setPrevRating] = useState(rating);
+  if (prevRating !== rating) {
+    // Cycle switches reuse instances — reset the failure flag during render
+    // (the React-endorsed adjust-on-prop-change pattern; effects can't setState).
+    setPrevRating(rating);
+    setFailed(false);
+  }
   if (!rating) return null;
+  const crown = matrixCrown(rating);
+  if (crown && !failed) {
+    return (
+      <img
+        src={crown}
+        alt={rating}
+        title={rating}
+        onError={() => setFailed(true)}
+        style={{
+          width: Math.round(size * 1.25),
+          height: Math.round(size * 1.25),
+          objectFit: "contain",
+          filter:
+            rating === "IRIDESCENT"
+              ? "drop-shadow(0 0 8px rgba(255,179,217,0.7))"
+              : `drop-shadow(0 0 8px ${E_PAL.gold}90)`,
+        }}
+      />
+    );
+  }
   const icon = gradeIcon(rating);
-  if (icon) {
+  if (icon && !failed) {
     return (
       <img
         src={icon}
         alt={rating}
+        onError={() => setFailed(true)}
         style={{ width: size, height: size, objectFit: "contain", filter: `drop-shadow(0 0 6px ${E_PAL.gold}80)` }}
       />
     );
@@ -53,14 +86,6 @@ function MedalBadge({ rating, size = 30 }: { rating: Rating; size?: number }) {
   );
 }
 
-// A note's first sentence (when short and punchy) becomes a bold kicker
-// headline; the remainder renders as the clamped field-log body. Notes
-// without an early sentence break render whole as the body.
-function splitNote(note: string): [string | null, string] {
-  const m = note.match(/^(.{4,90}?[.!])\s+([\s\S]*)$/);
-  if (m) return [m[1], m[2]];
-  return [null, note];
-}
 
 function teamFrame(t: CycleTeamRow) {
   const iridescent = t.rating === "IRIDESCENT";
@@ -140,7 +165,7 @@ export function EmberlineCycles() {
             pointerEvents: "none",
           }}
         />
-        <EKicker spacing={3} style={{ marginBottom: 8 }}>ENDSTATE MATRIX · WHIMPERING WASTES ARCHIVE</EKicker>
+        <EKicker spacing={3} style={{ marginBottom: 8 }}>ENDSTATE MATRIX · SINGULARITY EXPANSION ARCHIVE</EKicker>
         <div style={{ ...eStyles.display, fontSize: isMobile ? 32 : 46, lineHeight: 1.05 }}>
           {c.teams.length} teams. One run each.{" "}
           <span style={{ fontStyle: "italic", color: E_PAL.emberSoft }}>No mulligans.</span>
@@ -574,7 +599,7 @@ export function EmberlineCycles() {
       </div>
 
       <EFooter
-        factoid={`WHIMPERING WASTES · ${c.teams.length} STAGES · ONE ATTEMPT PER TEAM · ${
+        factoid={`ENDSTATE MATRIX · SINGULARITY EXPANSION · ${c.teams.length} DEPLOYMENTS · ${
           dayOneCount === cycles.length ? "ALL CYCLES CLEARED DAY ONE" : `${dayOneCount}/${cycles.length} CYCLES CLEARED DAY ONE`
         }`}
         updated={raw.meta.updated}

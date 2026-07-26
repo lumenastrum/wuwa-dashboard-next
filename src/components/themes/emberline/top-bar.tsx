@@ -24,6 +24,8 @@ const NAV: { id: PageId; label: string; href: string }[] = [
   { id: "resonator", label: "RESONATOR", href: "" }, // dynamic, filled in below
   { id: "teams",     label: "TEAMS",     href: "/teams" },
   { id: "cycles",    label: "CYCLES",    href: "/cycles" },
+  { id: "toa",       label: "TOWER",     href: "/toa" },
+  { id: "wastes",    label: "WASTES",    href: "/wastes" },
   { id: "convene",   label: "CONVENE",   href: "/convene" },
 ];
 
@@ -32,6 +34,8 @@ function activePage(pathname: string): PageId {
   if (pathname.startsWith("/r/")) return "resonator";
   if (pathname.startsWith("/teams")) return "teams";
   if (pathname.startsWith("/cycles")) return "cycles";
+  if (pathname.startsWith("/toa")) return "toa";
+  if (pathname.startsWith("/wastes")) return "wastes";
   if (pathname.startsWith("/convene")) return "convene";
   return "roster";
 }

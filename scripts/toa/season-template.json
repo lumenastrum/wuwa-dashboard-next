@@ -1,0 +1,73 @@
+{
+  "date": "2026-07-26",
+  "label": "The First Ascent",
+  "window": "Rotation 7/20 - 8/17",
+  "crestTarget": 36,
+  "floors": [
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 1, "boss": "Tempest Mephis",
+      "members": ["Carlotta", "Zhezhi", "Shorekeeper"], "crests": 3, "time": "2:41",
+      "notes": "CLEAN OPENER. Sample entry — replace with the real run."
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 2, "boss": "Crownless",
+      "members": ["Carlotta", "Zhezhi", "Shorekeeper"], "crests": 3, "time": "2:10",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 3, "boss": "Sentry Construct",
+      "members": ["Camellya", "Sanhua", "Verina"], "crests": 2, "time": "1:44",
+      "notes": "One crest short. The 3:00 tier wants a faster phase-two."
+    },
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "Fenrico",
+      "members": ["Camellya", "Sanhua", "Verina"], "crests": 2, "time": "2:05",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 1, "boss": "Nightmare: Mourning Aix",
+      "members": ["Aemeath", "Denia", "Lupa"], "crests": 3, "time": "1:58",
+      "notes": "THE WALL HOLDS. Lv100 floor, zero deaths."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 2, "boss": "Reactor Husk",
+      "members": ["Aemeath", "Denia", "Lupa"], "crests": 2, "time": "1:12",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "Fleurdelys",
+      "members": ["Cartethyia", "Ciaccona", "Chisa"], "crests": 3, "time": "2:20",
+      "notes": "HER OWN SHADOW. Cartie deletes the mirror match."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "Matrix Mimic",
+      "members": ["Cartethyia", "Ciaccona", "Chisa"], "crests": 2, "time": "0:58",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 1, "boss": "Impermanence Heron",
+      "members": ["Phrolova", "Cantarella", "Roccia"], "crests": 3, "time": "2:33",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 2, "boss": "Mech Abomination",
+      "members": ["Phrolova", "Cantarella", "Roccia"], "crests": 3, "time": "2:01",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 3, "boss": "Lampylumen Myriad",
+      "members": ["Zani", "Phoebe", "Shorekeeper"], "crests": 2, "time": "1:37",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "Dragon of Dirge",
+      "members": ["Augusta", "Iuno", "Mornye"], "crests": 2, "time": "1:15",
+      "notes": "Augusta walks out of the fire. Two crests, one grudge."
+    }
+  ],
+  "lessons": [
+    "Sample season — import with addtoa, then edit floors with `toa <id> floor Hazard Resonant 3 crests 3` as the reruns land.",
+    "Crest tiers are TIME REMAINING: the side towers want 90s/150s left on F1-F2 and 120s/180s on F3-F4.",
+    "Hazard Tower floors cost 5 Vigor each — plan the roster before the first key turns."
+  ]
+}
