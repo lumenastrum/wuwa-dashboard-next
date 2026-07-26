@@ -55,14 +55,14 @@
       "notes": "TRIPLE THREAT, SAME ENGINE. Three Lv100 bosses share one floor and the Tune Rupture core doesn't blink — perfect crests, back to back."
     },
     {
-      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "",
-      "members": [], "crests": 3, "time": "",
-      "notes": ""
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "Spacetrek Explorer + Mining Reindeer + Questless Knight + Tempest Mephis",
+      "members": ["Yangyang: Xuanling", "Rebecca", "Chisa"], "crests": 3, "time": "",
+      "notes": "FOUR BOSSES. ONE KEY. The interference walls the floor behind +15% all-RES that only negative statuses strip — so the Bane crew, whose entire existence is negative statuses, unlocks it and collects the Havoc Bane +45% rider on the way through."
     },
     {
       "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "",
-      "members": [], "crests": 3, "time": "",
-      "notes": ""
+      "members": ["Yangyang: Xuanling", "Rebecca", "Chisa"], "crests": 3, "time": "",
+      "notes": "The Bane crew runs it back. Summit taken, same three names on the plaque."
     }
   ],
   "lessons": [
