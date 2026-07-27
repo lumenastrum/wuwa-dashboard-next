@@ -12,6 +12,11 @@ import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 
 const GOLD_GRAD = `linear-gradient(90deg, ${E_PAL.gold}, ${E_PAL.emberSoft})`;
 
+// Forbidden Waters wears the sea-blue of the ghost-ship glows (94,180,211) —
+// gold on its cards is reserved for the score, the grade badge, and the bar.
+const WATERS_BLUE = "#5eb4d3";
+const WATERS_BLUE_PALE = "#b7e0f0";
+
 // Per-stage grade thresholds (points → B/A/S; Infinite Torrents alone extends
 // to SS/SSS) — the 3.5 ladder from the in-game challenge goals. Render-side
 // truth only; scores above the ladder simply overflow the bar.
@@ -137,11 +142,11 @@ function FleetRow({ label, members, token, icon }: { label: string; members: str
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
       <span style={{ ...eStyles.mono, fontSize: 8.5, color: E_PAL.textMute, width: 12, flexShrink: 0 }}>{label}</span>
-      <div style={{ display: "flex", paddingLeft: 7, flexShrink: 0 }}>
+      <div style={{ display: "flex", paddingLeft: 8, flexShrink: 0 }}>
         {members.length ? (
-          members.map((n) => <EFace key={n} name={n} size={26} radius={7} style={{ marginLeft: -7 }} />)
+          members.map((n) => <EFace key={n} name={n} size={34} radius={8} style={{ marginLeft: -8 }} />)
         ) : (
-          <span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textFaint, marginLeft: -7 }}>—</span>
+          <span style={{ ...eStyles.mono, fontSize: 9, color: E_PAL.textFaint, marginLeft: -8 }}>—</span>
         )}
       </div>
       {(token || art) && (
@@ -150,9 +155,9 @@ function FleetRow({ label, members, token, icon }: { label: string; members: str
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 5,
+            gap: 6,
             marginLeft: "auto",
-            padding: "2px 8px 2px 3px",
+            padding: "3px 10px 3px 4px",
             borderRadius: 999,
             border: `1px solid ${E_PAL.borderSoft}`,
             background: "rgba(140,220,225,0.05)",
@@ -166,19 +171,19 @@ function FleetRow({ label, members, token, icon }: { label: string; members: str
               onError={(e) => {
                 e.currentTarget.style.display = "none";
               }}
-              style={{ width: 18, height: 18, objectFit: "contain" }}
+              style={{ width: 26, height: 26, objectFit: "contain" }}
             />
           )}
           <span
             style={{
               ...eStyles.mono,
-              fontSize: 7.5,
+              fontSize: 8.5,
               letterSpacing: 0.5,
               color: E_PAL.textDim,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              maxWidth: 110,
+              maxWidth: 150,
             }}
           >
             {(token || "TOKEN").toUpperCase()}
@@ -189,10 +194,14 @@ function FleetRow({ label, members, token, icon }: { label: string; members: str
   );
 }
 
-function StageCard({ s, torrents, isMobile }: { s: WastesStageRow; torrents?: boolean; isMobile: boolean }) {
+function StageCard({ s, torrents, blue, isMobile }: { s: WastesStageRow; torrents?: boolean; blue?: boolean; isMobile: boolean }) {
   const [kicker, body] = s.notes ? splitNote(s.notes) : [null, ""];
   const { points } = stageTiers(s.stage);
   const sGrade = s.score >= points[2];
+  // Gold on standard cards is reserved for the score, the grade badge, and the
+  // tier bar — the chrome stays sea-toned (blue for Forbidden, teal elsewhere).
+  const nameColor = torrents && sGrade ? E_PAL.gold : blue ? WATERS_BLUE_PALE : E_PAL.text;
+  const kickerColor = torrents && sGrade ? E_PAL.gold : blue ? WATERS_BLUE : E_PAL.tide;
   return (
     <div
       style={{
@@ -202,10 +211,10 @@ function StageCard({ s, torrents, isMobile }: { s: WastesStageRow; torrents?: bo
         overflow: "hidden",
         background: torrents
           ? "linear-gradient(100deg, rgba(245,201,122,0.07), rgba(94,180,211,0.04) 60%, transparent)"
-          : sGrade
-            ? "rgba(245,201,122,0.04)"
+          : blue
+            ? "rgba(94,180,211,0.06)"
             : E_PAL.inset,
-        border: `1px solid ${torrents ? "rgba(245,201,122,0.4)" : sGrade ? "rgba(245,201,122,0.3)" : "rgba(140,220,225,0.1)"}`,
+        border: `1px solid ${torrents ? "rgba(245,201,122,0.4)" : blue ? "rgba(94,180,211,0.35)" : "rgba(140,220,225,0.14)"}`,
       }}
     >
       {torrents && (
@@ -218,18 +227,18 @@ function StageCard({ s, torrents, isMobile }: { s: WastesStageRow; torrents?: bo
           style={{ position: "absolute", right: 10, bottom: -18, height: 130, opacity: 0.14, pointerEvents: "none" }}
         />
       )}
-      <div style={{ position: "absolute", right: 8, top: -14, ...eStyles.display, fontSize: 54, color: "rgba(140,220,225,0.05)" }}>
+      <div style={{ position: "absolute", right: 8, top: -14, ...eStyles.display, fontSize: 54, color: blue ? "rgba(94,180,211,0.1)" : "rgba(140,220,225,0.05)" }}>
         {String(s.stage).padStart(2, "0")}
       </div>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
         <div style={{ minWidth: 0 }}>
           <EKicker size={8} spacing={1.5}>STAGE {String(s.stage).padStart(2, "0")}{torrents ? " · ENDLESS" : ""}</EKicker>
-          <div style={{ ...eStyles.display, fontSize: torrents ? (isMobile ? 22 : 28) : 17, marginTop: 2, color: sGrade ? E_PAL.gold : E_PAL.text }}>
+          <div style={{ ...eStyles.display, fontSize: torrents ? (isMobile ? 22 : 28) : 17, marginTop: 2, color: nameColor }}>
             {s.name}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          <GradeBadge grade={s.grade} size={torrents ? 42 : 30} />
+          <GradeBadge grade={s.grade} size={torrents ? 42 : 34} />
           <span style={{ ...eStyles.display, fontSize: torrents ? (isMobile ? 30 : 40) : 24, color: sGrade ? E_PAL.gold : E_PAL.text }}>
             {s.score.toLocaleString()}
           </span>
@@ -238,12 +247,12 @@ function StageCard({ s, torrents, isMobile }: { s: WastesStageRow; torrents?: bo
       <div style={{ marginTop: torrents ? 12 : 9 }}>
         <TierBar stage={s.stage} score={s.score} />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 9 }}>
         <FleetRow label="I" members={s.teamA} token={s.tokenA} icon={s.tokenAIcon} />
         <FleetRow label="II" members={s.teamB} token={s.tokenB} icon={s.tokenBIcon} />
       </div>
       {kicker && (
-        <div style={{ marginTop: 9, ...eStyles.display, fontSize: torrents ? 14 : 12, letterSpacing: 0.4, color: sGrade ? E_PAL.gold : E_PAL.tide }}>
+        <div style={{ marginTop: 9, ...eStyles.display, fontSize: torrents ? 14 : 12, letterSpacing: 0.4, color: kickerColor }}>
           {kicker}
         </div>
       )}
@@ -448,8 +457,8 @@ export function EmberlineWastes() {
                   borderRadius: 10,
                   overflow: "hidden",
                   opacity: logged ? 1 : 0.5,
-                  background: E_PAL.panel,
-                  border: `1px solid ${made ? "rgba(245,201,122,0.4)" : E_PAL.border}`,
+                  background: w === "Forbidden" ? "rgba(94,180,211,0.05)" : E_PAL.panel,
+                  border: `1px solid ${w === "Forbidden" ? "rgba(94,180,211,0.4)" : made ? "rgba(245,201,122,0.4)" : E_PAL.border}`,
                 }}
               >
                 <img
@@ -504,7 +513,7 @@ export function EmberlineWastes() {
             />
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 13 }}>
               {rows.map((x) => (
-                <StageCard key={x.stage} s={x} isMobile={isMobile} />
+                <StageCard key={x.stage} s={x} blue={w === "Forbidden"} isMobile={isMobile} />
               ))}
             </div>
           </div>

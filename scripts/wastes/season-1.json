@@ -1,0 +1,96 @@
+{
+  "id": 1,
+  "date": "2026-07-26",
+  "label": "The Maiden Voyage",
+  "stages": [
+    {
+      "stage": 1,
+      "teamA": ["Verina", "Carlotta", "Zhezhi"], "tokenA": "Eroded Coin: Glacio", "tokenAIcon": 3,
+      "teamB": ["Sanhua", "Phoebe", "Nyx"], "tokenB": "Eroded Coin: Spectro", "tokenBIcon": 2,
+      "score": 1690, "grade": "S",
+      "notes": "S ON THE MAIDEN STAGE. Halves split 710 / 980 — Nyx's Spectro crew out-scored the Glacio half on a board that buffed both elements +10%."
+    },
+    {
+      "stage": 2,
+      "teamA": ["Verina", "Carlotta", "Zhezhi"], "tokenA": "Eroded Coin: Glacio", "tokenAIcon": 3,
+      "teamB": ["Sanhua", "Phoebe", "Nyx"], "tokenB": "Eroded Coin: Spectro", "tokenBIcon": 2,
+      "score": 1630, "grade": "S",
+      "notes": "SAME CREWS, SECOND S. Halves 750 / 880 on a board buffing Fusion and Electro — neither of which these teams run. Suggested Lv.55: the account was so little back then."
+    },
+    {
+      "stage": 3,
+      "teamA": ["Verina", "Carlotta", "Zhezhi"], "tokenA": "Eroded Coin: Glacio", "tokenAIcon": 3,
+      "teamB": ["Sanhua", "Phoebe", "Nyx"], "tokenB": "Eroded Coin: Spectro", "tokenBIcon": 2,
+      "score": 1600, "grade": "S",
+      "notes": "S ON THE NOSE. 1,600 exactly — halves 750 / 850, zero points to spare on an Aero/Havoc board. Same two crews bulldozing the baby stretch, 3 for 3."
+    },
+    {
+      "stage": 4,
+      "teamA": ["Verina", "Carlotta", "Zhezhi"], "tokenA": "Judgement Lost Flag", "tokenAIcon": 7,
+      "teamB": ["Sanhua", "Phoebe", "Nyx"], "tokenB": "Hunting Lost Flag", "tokenBIcon": 10,
+      "score": 1620, "grade": "S",
+      "notes": "THE FLAGS COME OUT. Halves 770 / 850 on a coordinated-attack board — same two crews, 4 for 4, and the game itself stamped both halves Record Synced."
+    },
+    {
+      "stage": 5,
+      "teamA": ["Verina", "Carlotta", "Zhezhi"], "tokenA": "Eroded Coin: Glacio", "tokenAIcon": 3,
+      "teamB": ["Sanhua", "Phoebe", "Nyx"], "tokenB": "Eroded Coin: Spectro", "tokenBIcon": 2,
+      "score": 1620, "grade": "S",
+      "notes": "THE COINS RETURN. Halves 830 / 790 — first stage where the Glacio half out-scored Nyx's crew, riding a basic-attack stacking board. 5 for 5."
+    },
+    {
+      "stage": 6,
+      "teamA": ["Verina", "Camellya", "Sanhua"], "tokenA": "Assistance: Rare Pact", "tokenAIcon": 12,
+      "teamB": ["Cantarella", "Carlotta", "ChangLi"], "tokenB": "Judgement Lost Flag", "tokenBIcon": 7,
+      "score": 1730, "grade": "S",
+      "notes": "THE CHAOS COMPS TOP THE CHART. 1,730 — the best Forbidden score of the stretch, halves 870 / 860, from two improvised lineups nobody can explain. Forbidden Waters closed 6 for 6, all S."
+    },
+    {
+      "stage": 7,
+      "teamA": ["Phrolova", "Cantarella", "Roccia"], "tokenA": "Judgement Lost Flag", "tokenAIcon": 7,
+      "teamB": ["Cartethyia", "Ciaccona", "Shorekeeper"], "tokenB": "Judgement Lost Flag", "tokenBIcon": 7,
+      "score": 2900, "grade": "S",
+      "notes": "RESPAWNING WATERS, REAL CREWS. 2,900 on a 2,500 S line, halves 1,410 / 1,490, double Judgement flags on an Ember/Burning Waves board — this S is what keeps the stage auto-completing every rotation."
+    },
+    {
+      "stage": 8,
+      "teamA": ["Phrolova", "Cantarella", "Roccia"], "tokenA": "Judgement Lost Flag", "tokenAIcon": 7,
+      "teamB": ["Cartethyia", "Ciaccona", "Shorekeeper"], "tokenB": "Judgement Lost Flag", "tokenBIcon": 7,
+      "score": 3000, "grade": "S",
+      "notes": "THREE THOUSAND FLAT. Same crews, same double Judgement flags — halves 1,420 / 1,580, 500 clear of the S line. With 7 and 8 both S'd, the auto-complete tier is sealed."
+    },
+    {
+      "stage": 9,
+      "teamA": ["Yangyang: Xuanling", "Lynae", "Chisa"], "tokenA": "Judgement Lost Flag", "tokenAIcon": 7,
+      "teamB": ["Aemeath", "Denia", "Lupa"], "tokenB": "Judgement Lost Flag", "tokenBIcon": 7,
+      "score": 3908, "grade": "S",
+      "notes": "THE RECURRING POOL OPENS. 3,908 against a 3,500 S line into double Aero RES — Aemeath's Fire Burst half alone posted 2,220. Riptide is where the manual re-clears start every rotation; this one's on the books."
+    },
+    {
+      "stage": 10,
+      "teamA": ["Augusta", "Iuno", "Shorekeeper"], "tokenA": "Judgement Lost Flag", "tokenAIcon": 7,
+      "teamB": ["Aemeath", "Denia", "Lupa"], "tokenB": "Judgement Lost Flag", "tokenBIcon": 7,
+      "score": 4044, "grade": "S",
+      "notes": "AEMEATH POSTS 2,220. AGAIN. Same Fire Burst crew, identical half-score two stages running — with Augusta's 1,824 front half punching through double Havoc RES for 4,044 total."
+    },
+    {
+      "stage": 11,
+      "teamA": ["Yangyang: Xuanling", "Lynae", "Chisa"], "tokenA": "The Mirror Reflecting the Beyond", "tokenAIcon": 43,
+      "teamB": ["Lucy", "Rebecca", "Mornye"], "tokenB": "Whispers of an Undying Grudge", "tokenBIcon": 40,
+      "score": 4100, "grade": "S",
+      "notes": "A THIRD 2,220 — XUANLING'S TURN. The cursed half-score jumps teams for the season high of 4,100 into double Electro RES, with the Edgerunners crew (Lucy/Rebecca/Mornye) debuting at 1,880 under the gramophone. Chasm closed 5 for 5."
+    },
+    {
+      "stage": 12,
+      "teamA": ["Phrolova", "Cantarella", "Shorekeeper"], "tokenA": "Fabricator - Lone Light in the Long Night", "tokenAIcon": 41,
+      "teamB": ["Aemeath", "Denia", "Chisa"], "tokenB": "Solacer - Lone Light in the Long Night", "tokenBIcon": 51,
+      "score": 7520, "grade": "SSS",
+      "notes": "SSS — TWO THOUSAND PAST THE CEILING. 7,520 in the vortex, halves 3,430 / 4,090, two Lone Lights burning through unlimited tokens and a 30% universal damage board. Aemeath's Fire Burst crew shattered her own 2,220 pattern for the finale. The Maiden Voyage ends 12 for 12."
+    }
+  ],
+  "lessons": [
+    "Shill Havoc Bane buffs for Yapyap: Xuanling don't overperform Phrolova + Cantarella's Echo Skill DMG engine. SuiSui (her supposed BiS support) might change that — retest when she drops.",
+    "Phrolova + Cantarella + Shorekeeper outperformed Phrolova + Cantarella + Roccia, interestingly.",
+    "Aemeath is FUCKING CRACKED. As expected."
+  ]
+}
