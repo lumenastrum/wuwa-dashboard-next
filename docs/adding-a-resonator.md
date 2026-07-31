@@ -168,6 +168,19 @@ weapon type blocks: 2101=Broadblade 2102=Sword 2103=Pistols 2104=Gauntlets 2105=
 
 ## 7. Rip + ship assets (all from the character's pak data)
 
+**Release-day shortcut (proven on Suisui, 2026-07-30):** before firing up the extractor,
+check **wuthering.gg** — it self-hosts pak icons under Kuro's real asset names, served
+unproxied at `https://wuthering.gg/images/<dir>/<file>.png`:
+
+- Forte glyphs: `iconskill/SP_Icon<Codename>B1|Y|C1|QTE|T|D1|D2.png` (a character with no
+  personal A1 uses the shared `SP_IconNorMagic.png` — Denia/Suisui case)
+- Chain medallions: `icondevice/T_IconDevice_<Codename>M1..M6_UI.png`
+- Verify slot mapping (§7b spirit) without the pak: each icon's `alt`/adjacent text on
+  their character page names the skill — this DOM check caught Suisui's Liberation being
+  "Song of Thoroughfare" (Ceaseless Landscape is the *field* it deploys, a distinction
+  every guide missed). The fandom wiki redlinks new characters' skill icons for days
+  after release, so don't wait on it.
+
 **3.5+ texture gotcha:** new-patch 2D textures are BC7Prep-packed behind an
 `OodleTextureStorageProviderFactory` — stock nuget CUE4Parse mounts them but `decode
 returned null`. Fix (done 2026-07-12): `wuwa-extract.csproj` now ProjectReferences the
