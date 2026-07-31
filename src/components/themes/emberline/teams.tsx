@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "@/lib/data-context";
 import { ELEMENTS } from "@/lib/elements";
 import { durationToSec } from "@/lib/duration";
@@ -9,6 +9,7 @@ import { elementBadge } from "@/lib/game-icons";
 import type { ElementName } from "@/lib/types";
 import { useDashboardViewport } from "@/lib/use-dashboard-viewport";
 import { CoverPortrait } from "@/components/cover-portrait";
+import { preloadSpineBundle } from "@/components/spine-portrait";
 import { E_PAL, eStyles } from "./styles";
 import { EDiamond, EFace, EFooter, EKicker, EShell } from "./primitives";
 
@@ -24,6 +25,14 @@ export function EmberlineTeams() {
   const minSec = Math.min(...benches.map((b) => durationToSec(b.best)));
   const meta = raw.benchmarkMeta;
   const totalDeaths = benches.reduce((acc, b) => acc + b.deaths, 0);
+
+  // The cover strip can't even mount until Supabase answers, so the instant we
+  // know who's featured, start pulling their bundles — this runs in the same tick
+  // the panel first renders rather than after the cells mount and observe.
+  const featured = team?.team;
+  useEffect(() => {
+    featured?.forEach(preloadSpineBundle);
+  }, [featured]);
 
   return (
     <EShell>
@@ -111,6 +120,9 @@ export function EmberlineTeams() {
                 }}
                 onMouseEnter={(e) => {
                   if (!selected) e.currentTarget.style.background = "rgba(140,220,225,0.05)";
+                  // warm this row's portraits while the cursor is still travelling
+                  // to the click — by the time it's selected the bundles are in cache
+                  b.team.forEach(preloadSpineBundle);
                 }}
                 onMouseLeave={(e) => {
                   if (!selected) e.currentTarget.style.background = "transparent";

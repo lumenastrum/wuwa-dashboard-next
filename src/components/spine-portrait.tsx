@@ -3,6 +3,66 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { withBase } from "@/lib/base-path";
+import { SPINE_PAGES, spinePortraitOf } from "@/lib/spine-portraits";
+
+/**
+ * Start fetching the spine-player chunk the moment this module is evaluated,
+ * instead of on first cell mount. The Teams page can't render its cover strip
+ * until Supabase answers, so kicking the import off here overlaps ~200KB of JS
+ * with the data round trip that was previously blocking it — the import used to
+ * be the first link in a four-hop serial chain
+ * (data → mount → import → skel/atlas → pages).
+ *
+ * Module scope, not top-level `import`, so it stays out of the SSR bundle and
+ * off the critical path of every other route.
+ */
+let spineLib: Promise<typeof import("@esotericsoftware/spine-player")> | null = null;
+function loadSpineLib() {
+  if (!spineLib) spineLib = import("@esotericsoftware/spine-player");
+  return spineLib;
+}
+if (typeof window !== "undefined") {
+  // idle so it never competes with first paint
+  const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
+  idle(() => void loadSpineLib());
+}
+
+const preloaded = new Set<string>();
+
+/**
+ * Warm a resonator's Spine bundle: skel + atlas + every atlas page, all issued
+ * at once. spine-player would otherwise fetch the pages only after the atlas
+ * landed and parsed, so this collapses two network hops into one — the pages are
+ * the heavy part (600KB–1.2MB) and no longer wait on a 4KB file.
+ *
+ * Safe to call repeatedly; each bundle is only ever warmed once per session, and
+ * the browser cache serves the player's own later requests.
+ */
+export function preloadSpineBundle(name: string) {
+  if (typeof document === "undefined") return;
+  const cfg = spinePortraitOf(name);
+  if (!cfg || preloaded.has(cfg.bundle)) return;
+  preloaded.add(cfg.bundle);
+
+  const add = (href: string, as: "fetch" | "image") => {
+    const l = document.createElement("link");
+    l.rel = "preload";
+    l.as = as;
+    l.href = href;
+    // MUST match how spine-player itself requests these, or the preload is
+    // discarded and the asset downloads TWICE ("preload ... not used because the
+    // request credentials mode does not match"). It loads texture pages via an
+    // Image with crossOrigin="anonymous", so anonymous is the matching mode for
+    // pages and for the skel/atlas fetches alike.
+    l.crossOrigin = "anonymous";
+    document.head.appendChild(l);
+  };
+  const dir = withBase(`/spine/${cfg.bundle}`);
+  add(`${dir}/${cfg.bundle}.skel`, "fetch");
+  add(`${dir}/${cfg.bundle}.atlas`, "fetch");
+  for (const page of SPINE_PAGES[cfg.bundle] ?? []) add(`${dir}/${page}`, "image");
+  void loadSpineLib();
+}
 
 type Props = {
   /** bundle folder name under public/spine/, e.g. "Portraits_Aimisi" */
@@ -67,7 +127,7 @@ export function SpinePortrait({ bundle, animation, viewport, fallback, height = 
 
     (async () => {
       try {
-        const spine = await import("@esotericsoftware/spine-player");
+        const spine = await loadSpineLib();
         if (cancelled || !ref.current) return;
         // re-arm on bundle/viewport change (no-op on first run)
         setFailed(false);
@@ -155,7 +215,11 @@ export function SpinePortrait({ bundle, animation, viewport, fallback, height = 
             position: "absolute",
             inset: 0,
             opacity: live && !failed ? 0 : 1,
-            transition: "opacity 400ms ease",
+            // Short: the underlay and the skeleton are framed alike but not
+            // pixel-identical, so a long crossfade reads as a double-image
+            // wobble rather than a dissolve. Quick hand-off looks like one image
+            // sharpening, which is what we want.
+            transition: "opacity 180ms ease-out",
           }}
         >
           {fallback}
