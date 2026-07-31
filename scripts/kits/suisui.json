@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Unraveled Spring",
+    "type": "Basic Attack",
+    "take": "A four-hit Glacio fan dance that exists to shovel Cloud Breath into the tank (max 120) — dodge counters and mid-air plunges feed the same meter. The damage is polite chip; the POINT is that every swing in Zephyr Stance is fuel for the stance flip."
+  },
+  {
+    "icon": "b1",
+    "name": "Vernal Screen",
+    "type": "Resonance Skill",
+    "take": "Her tempo button, and the first thing Andres maxed. In Zephyr it refunds 40 Cloud Breath on cast; once the tank is full, Awakening Spring flips her into Drizzle Stance — painting Glacio Chafe on the field and handing Enrichment to the team. One cast is a whole gear change."
+  },
+  {
+    "icon": "y",
+    "name": "Lambent Gold",
+    "type": "Forte Circuit",
+    "take": "The two-stance engine everything else plugs into. Zephyr Stance banks Cloud Breath; Awakening Spring converts it into Drizzle Stance, where she builds Floral Epistle toward the 600 cap. Think of it as charging the Outro in two currencies — the whole kit is a savings account for Rippling Waters."
+  },
+  {
+    "icon": "c1",
+    "name": "Ceaseless Landscape",
+    "type": "Resonance Liberation",
+    "take": "Drops the field that makes her a Bane-crew citizen: Negative Status stack caps +3 for Frazzle, Burst, Chafe, Erosion, Flare and Rage — Havoc Bane is pointedly NOT invited, which is why Chisa keeps her job — plus 6% DEF ignore and 12% Havoc RES ignore for the carry. With the herald equipped the cast also refunds 8 Concerto."
+  },
+  {
+    "icon": "intro",
+    "name": "Tinkling Jade",
+    "type": "Intro Skill",
+    "take": "The secret nuke. Once per 25s the intro hit rides in with +80% Crit Rate and +240% Glacio DMG plus Concerto and Resonance refunds — a healer whose swap-in genuinely slaps. This rider is the entire reason half the tier guides rank her Intro above her Basic."
+  },
+  {
+    "icon": "t",
+    "name": "Rippling Waters",
+    "type": "Outro Skill",
+    "take": "THE payload. Eats every point of Floral Epistle, opens 30s of Roaming Transcendent, and hands the whole team 25% All-DMG Amplification. Consume the full 600 and the incoming carry also gets the ER-scaled ATK gift — 0.1% ATK per 0.12% ER above 200%, capping at +50% exactly at 260% ER. At her 281% the cap is cleared with room to breathe."
+  },
+  {
+    "icon": "d1",
+    "name": "Sky Over Water",
+    "type": "Inherent Skill",
+    "take": "Where the healing actually lives: consuming Enrichment grants 10 stacks of Spring's Birth, and any ally under full HP sips 62 + 0.34% of Suisui's Max HP every 2s per stack. Off her 36k HP that's a steady IV drip, not a burst heal — she keeps the crew topped while they play."
+  },
+  {
+    "icon": "d2",
+    "name": "Glimmering Gold",
+    "type": "Inherent Skill",
+    "take": "The cheat-death clause. An ally's fatal blow becomes a transfusion instead of a KO — they regain 50% of Suisui's current HP and she pays the same out of her own bar, floored at 1. One proc per long cooldown, and one more reason her HP stat is load-bearing."
+  }
+]
