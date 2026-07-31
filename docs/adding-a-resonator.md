@@ -278,6 +278,49 @@ Older characters like Chun use `AtlasTextures[].ObjectName` = `"Texture2D'T_Foo'
 and blew up with `KeyError: 'SoftAtlasTextures'`. The script now accepts **both** — if a new
 rip dies on a missing key, check which schema that character's TPI uses before patching.
 
+### 7d. Spine formation portrait — the Teams cover strip (DON'T SKIP)
+
+Easy step to forget, and it fails **silently and ugly**: with no entry in `SPINE_PORTRAITS`
+*and* none in `TEAM_FRAME`, a benched resonator falls all the way to `DEFAULT_FRAME` on a
+tall sprite. That default is only safe by accident — the sprites aren't composed alike, so
+a half-body sprite renders as a giant cropped face and one with a long trailing hem becomes
+a marooned figure. This is exactly how Lucy/Rebecca/Suisui/Xuanling shipped wrong until
+2026-07-31. **Do this the day a resonator first appears in a benchmark team.**
+
+```bash
+# 1. carve the bundle out of the paks (codename folder from `list Portraits_`)
+cd wuwa-extract
+B=Client/Content/Aki/UI/UIResources/Common/Spine/Portraits/Portraits_<Codename>
+./bin/Release/net10.0/wuwa-extract.exe cat    "$B/<Asset>.uexp"  stage/Portraits_<Codename>/<Asset>.uexp
+./bin/Release/net10.0/wuwa-extract.exe texdir "$B/Textures/"     stage/Portraits_<Codename>/Textures
+py carve_spine.py stage out              # -> <bundle>.atlas + .skel + page PNGs
+py webpify_spine.py out                  # pages -> WebP + atlas repointed (~4x smaller;
+                                         # equivalent to cwebp -q 90 -alpha_q 100 -m 6,
+                                         # which isn't on PATH on this box)
+# 3. copy the folder to public/spine/, then add the SPINE_PORTRAITS entry
+```
+
+The `.uexp` is the whole Spine bundle; `cat` dumps raw package bytes, which is what
+`carve_spine.py` wants. Animation is `idle` for every formation portrait so far.
+
+**Framing is measured, not guessed.** The house standard, read off the shipped roster:
+**eye-line at 40% of the cell height, face centred on 50%, standard `BUST_ZOOM`** — only
+`viewport.x`/`y` vary per character. Dial it with the harnesses in `wuwa-extract/spine_out/`
+(`node server.mjs`, then `dial.html` for Spine and `tall.html` for the static frame):
+
+- Both take `?only=A,B,C` and `?v=Name:x,y,w,h` so a pass needs no file edit — and `only=`
+  matters, since **more than ~14 cells blows Chrome's WebGL context cap** and the oldest
+  players die with "Unable to render skeleton".
+- `dial.html` prints each skeleton's bounds + bone-derived head anchors. Characters with a
+  named face bone (`脸`, `Head`, `眼球`) can be solved arithmetically instead of nudged:
+  `vp.y = eyeWorldY − 0.6 × 1848`, `vp.x = faceWorldX − 693`.
+- Keep the shipped configs on screen as reference cells — matching them is the whole goal.
+
+Then give `TEAM_FRAME` an entry too. Spine covers it, but it's the underlay during the
+skel/atlas fetch and the permanent fallback if WebGL fails, so a bad one is a visible flash.
+Zoom it by **head size**, not the sprite's alpha height — that's what makes the `height`
+values vary so widely (Xuanling 135 vs Suisui 375).
+
 ## 8. Ship + verify
 
 1. `npm run build` locally (Windows path-bug tripwire; CI is Linux and won't catch them).

@@ -58,14 +58,24 @@ const TEAM_FRAME: Record<string, PortraitFrame> = {
   Encore: { top: -3, left: 58.6, height: 254.2 },
   Iuno: { top: 1.3, left: 58.7, height: 243.8 },
   Jinhsi: { top: 5.7, left: 51.5, height: 240.5 },
+  // Dialed 2026-07-31 alongside their Spine bundles. These four had been
+  // riding DEFAULT_FRAME, which read very wrong: a half-body sprite (Xuanling)
+  // blew up into a cropped giant face, while a sprite with a long trailing hem
+  // (Suisui) shrank to a marooned figure. Note the spread in `height` — the
+  // zoom has to key off HEAD size, not the sprite's alpha height, because the
+  // sprites aren't composed alike. Now the Spine underlay/WebGL-fail fallback.
+  Lucy: { top: -6.2, left: 52.2, height: 276 },
   Lupa: { top: -40.5, left: 34, height: 285 },
   Lynae: { top: 5.8, left: 88, height: 236 },
   Mornye: { top: 5.6, left: 44.4, height: 239.5 },
   Phoebe: { top: 3.1, left: 34, height: 240.2 },
   Phrolova: { top: 5.4, left: 47.6, height: 270.2 },
+  Rebecca: { top: -10, left: 37.7, height: 300 },
   Roccia: { top: 1.6, left: 65.3, height: 243.3 },
   Rover: { top: 7, left: 46.7, height: 243.1 },
   Shorekeeper: { top: -6.1, left: 12, height: 252.1 },
+  Suisui: { top: -7.4, left: 26.4, height: 375 },
+  "Yangyang: Xuanling": { top: -2.4, left: 50, height: 135 },
   Zani: { top: -1.1, left: 52.3, height: 244.6 },
   Zhezhi: { top: -14, left: 66, height: 280 },
 };
