@@ -684,7 +684,11 @@ async function main() {
       const [name, ...valueParts] = rest;
       const r = findResonator(data, name);
       const field = cmd === "seq" ? "sequence" : cmd === "rank" ? "weaponRank" : cmd === "echo" ? "echoSet" : "weapon";
-      r[field] = valueParts.join(" ");
+      const value = valueParts.join(" ");
+      // A bare "6" stores fine but misses every Sequence-keyed lookup (rating
+      // falls to the S0 floor, CHAIN unlights) — reject anything non-canonical.
+      if (cmd === "seq" && !SEQUENCES.includes(value)) throw new Error(`sequence must be one of: ${SEQUENCES.join(", ")} (got "${value}")`);
+      r[field] = value;
       console.log(`${name} ${field}: ${r[field]}`);
       break;
     }
