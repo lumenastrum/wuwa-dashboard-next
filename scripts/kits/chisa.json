@@ -1,0 +1,56 @@
+[
+  {
+    "icon": "basic",
+    "name": "Reign of Silence",
+    "type": "Basic Attack",
+    "take": "Scissor strings that exist to feed the Ring of Chainsaw meter (cap 100) — every snip is fuel. The finisher matters more than the string: Death Snip closes the combo AND heals for 1140 plus 50.40% ATK. A support whose basic attack rotation is also her medkit. Heavy Attacks are locked out in Chainsaw Mode, so the scissors are where she lives between power-ups."
+  },
+  {
+    "icon": "b1",
+    "name": "Fractured Composition",
+    "type": "Resonance Skill",
+    "take": "The mark button. Eye of Unraveling tags the target with Unseen Snare and Stagnates on a 12s cooldown — and Inescapable Fate resets that cooldown every time the team kills a marked target, so in wave content it's basically always lit. At full Ring it becomes Serrated Loop instead: an eight-hit shredder that vacuums the room together and drops her into Chainsaw Mode."
+  },
+  {
+    "icon": "y",
+    "name": "Sight of Unraveling - Oblivion",
+    "type": "Forte Circuit",
+    "take": "THE support engine. Unseen Snare marks last 30s and convert the whole team into Havoc Bane appliers: any Resonator's direct damage on a marked target stacks Bane every 2s — each stack shaves 2% DEF off the enemy. The other half is Chainsaw Mode: Sawring damage counts as Resonance Liberation DMG (Kumokiri feeds it), Eradication spends the whole Ring for a payout that grows per point consumed plus a fat shield — but stop hitting things and Chainsaw Fever burns out. The chainsaw demands commitment."
+  },
+  {
+    "icon": "c1",
+    "name": "Moment of Nihility",
+    "type": "Resonance Liberation",
+    "take": "A 954.29% Havoc slam that also heals the whole team for 2660 plus 117.60% ATK — violence and triage in one cast. Grants Woven Myriad for 15s (Sawring multipliers +120%) and refunds 40 Ring of Chainsaw to restart the engine. Costs 125 Resonance Energy on a 25s cooldown, so it shows up every rotation like clockwork."
+  },
+  {
+    "icon": "intro",
+    "name": "Reverberance - Return",
+    "type": "Intro Skill",
+    "take": "Swap in, slice once, chain straight into Basic Stage 2 with 20 Ring already banked. Via All Ends Here the entrance also self-buffs 20% Havoc DMG and 20% Healing Bonus for 12s — her tag-in windows are when both the damage and the heals hit hardest. Kumokiri stacks start counting from this exact moment."
+  },
+  {
+    "icon": "t",
+    "name": "Unraveling - Law Zero",
+    "type": "Outro Skill",
+    "take": "THE payload, and it's all defender-side math — zero percentage amp, all DEF demolition. Resonant Thread of Closure covers the team for 20s: Negative Status stack caps rise by +3 (her own Havoc Bane goes 3 to 6 — a 12% DEF shred), and any teammate who inflicts a status converts it into Thread of Bane — 18% DEF ignore against marked targets for 15s. Element-agnostic, works for every crew she visits. This Outro is why three teams fight over one woman."
+  },
+  {
+    "icon": "d1",
+    "name": "Inescapable Fate",
+    "type": "Inherent Skill",
+    "take": "The chain-kill loop: a team kill on any Unseen Snare target resets Eye of Unraveling's cooldown (once per 3s). In boss fights it's quiet; in wave content it turns her mark into a rolling plague — kill, re-mark, kill. The reason her Tower floors feel smoother than her kit reads."
+  },
+  {
+    "icon": "d2",
+    "name": "All Ends Here",
+    "type": "Inherent Skill",
+    "take": "Two gifts in one clause. Casting Intro or Liberation grants 20% Havoc DMG Bonus and 20% Healing Bonus for 12s — the self-steroid that keeps her personal damage honest. And when a Thread of Bane teammate kills a marked target, she enters Sight of Unraveling: for 3s her marks auto-spread to everything the team touches. The Snare stops being a debuff and becomes an epidemic."
+  },
+  {
+    "icon": "tunebreak",
+    "name": "Tune Break",
+    "type": "Tune Break",
+    "take": "The 3.5 boss-breaker system, retro-fitted onto the scissors queen: max out a boss's Off-Tune gauge and she performs the Tune Break counter for a fat stagger window. Her follow-up choreography is hers alone — the wiki hasn't even documented it yet. The icon says everything: a girl mid-burst, completely unbothered."
+  }
+]
