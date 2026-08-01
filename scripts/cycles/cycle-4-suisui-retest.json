@@ -1,0 +1,153 @@
+{
+  "id": 4,
+  "date": "2026-07-19",
+  "label": "The Power Circuit Gambit",
+  "teams": [
+    {
+      "buff": "Negative Damage Enhancement",
+      "notes": "SUISUI RETEST 7/31 — full-board rerun, the second date. Suisui (BiS support, Firstlight's Herald) takes Rebecca's slot in the Triple Bane opener and the ceiling MOVES: 8,505 day-one → 10,046 (+18%), the first five-digit opener in cycle history. DOUBLE KILL — Matrix Swarm R1 and Mourning Aix R1 both deleted, Fleurdelys chipped to 85.42%. Day-one only wounded the Aix (18.36% left); the BiS build finished the job with a boss to spare. Chisa's enhanced vigor anchors the third slot again.",
+      "order": 1,
+      "score": 10046,
+      "over5k": true,
+      "rating": "",
+      "members": [
+        "Yangyang: Xuanling",
+        "Chisa",
+        "Suisui"
+      ]
+    },
+    {
+      "buff": "General Enhancement",
+      "notes": "SUISUI RETEST 7/31 — deployed 2nd, five slots early, on wall doctrine: Fleurdelys resists Aero, so Iuno's crew stood down and the Spectro core took the segment instead. Fleurdelys finished clean (85.42% → 0, the exact chip team 1 left behind) and Reactor Husk pushed to 67.09%. 5,538 vs day-one's 5,940 — but that number came 7th in the order against R2-scaled bosses; different job, not a potato-arc regression. B badge minted at 15,584 cumulative. Phoebe wore the enhancement arrow this run.",
+      "order": 2,
+      "score": 5538,
+      "over5k": true,
+      "rating": "B",
+      "members": [
+        "Zani",
+        "Phoebe",
+        "Shorekeeper"
+      ]
+    },
+    {
+      "buff": "General Enhancement",
+      "notes": "SUISUI RETEST 7/31 — the day-one double-kill crew redeployed 3rd once the Aero wall was dead. Reactor Husk finished (67.09% → 0, Zani's exact chip) and Matrix Mimic — R1's fifth and final boss — pushed to 36.13%. 6,759 beats their day-one 6,315 (+7%), and the badge SKIPPED: B → S in one deployment, 22,343 cumulative crossing the 16k A line and the 21k S line in the same run. Shorekeeper's second vigor spent back-to-back (rows 2 and 3).",
+      "order": 3,
+      "score": 6759,
+      "over5k": true,
+      "rating": "S",
+      "members": [
+        "Augusta",
+        "Iuno",
+        "Shorekeeper"
+      ]
+    },
+    {
+      "buff": "Enhancement: Tune Break",
+      "notes": "SUISUI RETEST 7/31 — THE EXTRA TEAM THAT DIDN'T EXIST. Suisui freeing Rebecca put the C3 Edgerunners crew back on the board as pure surplus — a whole deployment day-one couldn't field. 8,218 vs their C3 debut 7,029 (+17%): ate the Mimic (36.13% → 0, +1,000 bounty) to close Round 1, then deleted over half of R2's fresh Matrix Swarm (43.54% left). SS minted at 30,561 cumulative. Mornye spent her first vigor here — the second stays banked, because Suisui's spare covers the other old double-duty slot.",
+      "order": 4,
+      "score": 8218,
+      "over5k": true,
+      "rating": "SS",
+      "members": [
+        "Lucy",
+        "Rebecca",
+        "Mornye"
+      ]
+    },
+    {
+      "buff": "General Enhancement",
+      "notes": "SUISUI RETEST 7/31 — the Glacio synergy test: Suisui's second vigor spent on Carlotta's crew (day-one this slot ran Mornye). 6,703 vs day-one's 6,064 (+11%), earned on R2-scaled bosses where day-one's number came on R1: Matrix Swarm finished (43.54% → 0) and R2 Mourning Aix pushed to 70.35%. SSS minted at 37,264 cumulative — over the 37k line by 264, the first SSS this cycle's board has EVER worn (day-one skipped it, SS straight to CROWNED). Carlotta wore the enhancement arrow.",
+      "order": 5,
+      "score": 6703,
+      "over5k": true,
+      "rating": "SSS",
+      "members": [
+        "Carlotta",
+        "Lynae",
+        "Suisui"
+      ]
+    },
+    {
+      "buff": "Enhancement: Negative Status",
+      "notes": "SUISUI RETEST 7/31 — S6 AEMEATH'S MATRIX DEBUT: 17,424. THE ALL-TIME SINGLE-TEAM RECORD. Beats Cartethyia's day-one 14,499 crown by 20% AND clears the C1 ancients-era 14,844 outlier — the biggest deployment ever ledgered, any cycle, any era. Her own crew's day-one 12,156 → 17,424 (+43%) on full chain. Sent ahead of Cartethyia on wall doctrine (R2 Fleurdelys resists Aero): R2 Mourning Aix finished (70.35% → 0), R2 Fleurdelys DELETED WHOLE (-100%), and the Reactor Husk that walls all three of them — untouchable by doctrine day-one — chipped 19.89% anyway. S6 Fire Burst does not respect walls. CROWNED at 54,688 cumulative; IRIDESCENT sits 3,312 away.",
+      "order": 6,
+      "score": 17424,
+      "over5k": true,
+      "rating": "CROWNED",
+      "members": [
+        "Aemeath",
+        "Denia",
+        "Lupa"
+      ]
+    },
+    {
+      "buff": "Enhancement: Negative Status",
+      "notes": "SUISUI RETEST 7/31 — THE QUEEN ANSWERS: 14,777, her personal best, beating her own day-one 14,499 crown on fully R2-scaled bosses (the old number came on a mixed R1/R2 segment). Reactor Husk finished (80.11% → 0) and R2 Matrix Mimic — the last boss on the board — pushed to 44.72%. Aemeath's 17,424 keeps the single-team record, but the queen took the history book: IRIDESCENT minted at 69,465 cumulative, and with it THE ALL-TIME CYCLE RECORD — day-one's full nine-team 67,987 passed at team SEVEN with three teams still in the hangar. Rainbow minted in slot 7 both runs. Chisa's second vigor spent, enhancement arrow and all.",
+      "order": 7,
+      "score": 14777,
+      "over5k": true,
+      "rating": "IRIDESCENT",
+      "members": [
+        "Cartethyia",
+        "Ciaccona",
+        "Chisa"
+      ]
+    },
+    {
+      "buff": "Enhancement: Echo Skill",
+      "notes": "SUISUI RETEST 7/31 — HAVOC FIRE. 12,051 from the echo-skill core: +62% over their day-one 7,437 and +53% over their all-time crew ceiling (C2's unscaled 7,876) — the first five-digit echo-scaler run ever ledgered. Ate the R2 Matrix Mimic (44.72% → 0, claiming the bounty day-one's closer couldn't reach) to shut Round 2, then sailed past the edge of the day-one map entirely: ROUND 3 EXISTS, and they carved 24.89% off its first Swarm before the bell. Cantarella AND Roccia both wore enhancement arrows — a double-enhanced deployment. IRIDESCENT holds at 81,516 cumulative.",
+      "order": 8,
+      "score": 12051,
+      "over5k": true,
+      "rating": "IRIDESCENT",
+      "members": [
+        "Phrolova",
+        "Cantarella",
+        "Roccia"
+      ]
+    },
+    {
+      "buff": "General Enhancement",
+      "notes": "SUISUI RETEST 7/31 — the closer closes, as is tradition, with Mornye's banked second vigor deployed exactly as planned. 3,427 against an R3-SCALED Matrix Swarm — the hardest content the board has ever served — pushing it 75.11% → 58.16% with no bounty in reach. The arc reads 3,421 → 3,646 → 3,994 → 3,890 → 3,427: down on paper, but this one came three rounds deep in territory day-one never saw (the -41.84% on her results screen is cumulative board damage, not hers alone — survivor rows track total chip). Jinhsi and Zhezhi both wore enhancement arrows. IRIDESCENT holds at 84,943 — the old record buried by 6,956 with the encore still in the wings.",
+      "order": 9,
+      "score": 3427,
+      "over5k": false,
+      "rating": "IRIDESCENT",
+      "members": [
+        "Jinhsi",
+        "Zhezhi",
+        "Mornye"
+      ]
+    },
+    {
+      "buff": "General Enhancement",
+      "notes": "SUISUI RETEST 7/31 — ONE FINAL RIDE. The off-ledger legends answered the encore call to complete the first TEN-team board in cycle history: 3,578 vs their day-one 3,181 (+12%), earned against R3 scaling with Verina still Lv.80 and Camellya wearing the enhancement arrow. R3 Swarm carved 58.16% → 40.47%. FINAL TOTAL: 88,521 — day-one's 67,987 all-time record buried by 20,534 (+30%), on a board Suisui grew from nine teams to ten.",
+      "order": 10,
+      "score": 3578,
+      "over5k": false,
+      "rating": "IRIDESCENT",
+      "members": [
+        "Camellya",
+        "Sanhua",
+        "Verina"
+      ]
+    }
+  ],
+  "dayOne": true,
+  "target": 58000,
+  "lessons": [
+    "SUISUI RETEST 7/31 — this lessons block supersedes day-one's (preserved in scripts/cycles/cycle-4-the-power-circuit-gambit.json). Full-board rerun with Suisui: 67,987 → 88,521, nine teams → TEN.",
+    "Suisui's real value was board GEOMETRY, not just numbers — freeing Rebecca from the opener materialized a whole extra team (the Edgerunners' 8,218, pure surplus day-one couldn't field). A BiS support changes the roster, not one slot.",
+    "S6 Aemeath 17,424 = the all-time single-team record, any cycle, any era — full chain turned the zero-sustain crew into something that deletes a boss whole and chips the wall that walls it. Chain completion on a cracked DPS outscales everything else you can buy.",
+    "Wall doctrine graduated into dispatch order, three times in one run: Zani over Iuno into Aero-resist Fleurdelys, Augusta redeployed post-wall, Aemeath sent ahead so Cartethyia never met her wall at all. Zero points fed to walls, again.",
+    "The badge ladder, decoded from the game UI: B 12k / A 16k / S 21k / SS 29k / SSS 37k / CROWNED 45k / IRIDESCENT 58k — the 58,000 'target' was the rainbow line all along, and ratings are now derivable from the running total.",
+    "Round 3 exists — the day-one map wasn't the whole map. R3 scaling is brutal (closer and encore carved ~17% each); plan the endgame segments for it next cycle instead of discovering it live.",
+    "Results-screen literacy: surviving bosses display CUMULATIVE damage-from-full, kills display the finishing team's own bite. Read handoffs accordingly before crediting a team.",
+    "Five 2-vigor supports (Shorekeeper, Chisa, Mornye, Suisui, Verina) fully funded a TEN-team board — the C3 vigor crisis is formally dead, and Verina did it at Lv.80.",
+    "A retest is a controlled experiment: same bosses, same buff pool, one variable changed. 67,987 → 88,521 (+30%) is measured Suisui, not vibes."
+  ],
+  "teamTarget": 6,
+  "teamsOver5k": 8,
+  "totalPoints": 88521
+}
