@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Like Clouds That Meet and Drift Apart",
+    "take": "+16% Crit Rate flat, Swordlight Ward cap raised to two (and Heavy Stringblade grants an extra stack) — and then the real node: 25 stacks of Exorcising Seal on combat entry. Every Stringblade, mid-air or Transcendence basic that lands while she holds Seal consumes one and fires Juque Perdition — a 400% ATK Aero strike counted as Basic DMG, once per second — and each Seal consumed makes the target take 4% more from the next one for 2s. Twenty-five free sword-ghosts per fight, plus the 16% CR that lets the 4-cost go Crit DMG."
+  },
+  {
+    "name": "Like Petals That Fall Without a Sound",
+    "take": "Heavy Stringblade +40% multiplier, and the Mindlock cap rises from 15 to 25 (Gathered Mind's cap too). Heaven's Clarity now stamps 6 Mindlock on every Heavy Stringblade cast — she opens the Transcendence window already well up the ramp. At 25 stacks the Forte amp alone reads +85%; this is the node that turns a good ramp into a wall."
+  },
+  {
+    "name": "Dreams Fade, Sword Abides",
+    "take": "Liberation Crit DMG +100%, and during Heavy Stringblade she banks World in Chorus equal to the highest nearby Mindlock count — +3% Heaven's Reckoning multiplier per stack, spent on the cast. At the S2 cap that's +75% on the finisher. Gathered Mind also now applies 2 Tune Strain – Interfered, which feeds Mindlock right back into the loop. The guides' consensus best-value node."
+  },
+  {
+    "name": "Wherever the Road Leads, Side by Side",
+    "take": "The team node. Any Resonator who inflicts Tune Strain – Shifting gets +20% ATK for 8s — her, Denia and Mornye all qualify, all rotation long. Not flashy. Just 20% ATK to the whole crew for doing what they were already doing."
+  },
+  {
+    "name": "Cold Steel That Longs to Warm the Snow",
+    "take": "Severing Note: Judgement multiplier +100% — the gauge-filler becomes a real hit — and Sword Flight costs 30% less Flight Qi, which is a quality-of-life gift for the overworld more than the tower."
+  },
+  {
+    "name": "Cleanse This Tarnished Age, Till All Runs Clear",
+    "take": "Targets take 40% more from Heavy Stringblade, Heaven's Reckoning and the Liberation — her three biggest numbers, amplified again. Her Interfered response gets 20% stronger. And Juque Perdition from S1 gets the full Mindlock treatment: during Heavy Stringblade she gains Exorcising Seal equal to the highest nearby Mindlock, and each stack amplifies Perdition by 2% (+5% on the first seven) — twice over, once from the Forte layer and once from To Know, To Banish. The sword-ghosts stop being chip and become a second damage profile."
+  }
+]

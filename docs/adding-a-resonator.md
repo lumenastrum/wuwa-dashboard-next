@@ -334,3 +334,45 @@ values vary so widely (Xuanling 135 vs Suisui 375).
 
 Data-only edits after this (stats, notes, echo rolls) go live via Supabase instantly — no
 rebuild.
+
+## Addendum — 3.6 Qingxiao run (2026-08-22): new gotchas, all hit for real
+
+Everything above held. These are the places the runbook was silent and the session had to find out:
+
+- **`list <DisplayName>` can return NOTHING for Role/SkillIcon paths.** Pak codenames aren't
+  case-consistent across asset families — Qingxiao is `T_IconRole_Pile_qingxiao_UI` (lowercase),
+  `SkillIcon/SkillIconQingxiao/` and `Spine/Portraits/Portraits_Qingxiao` (capitalised). When the
+  display-name grep comes back empty, list `IconRole_Pile_` / `Atlas/SkillIcon/SkillIcon` /
+  `Spine/Portraits/Portraits_` and diff the basenames against the known roster — the new one pops.
+- **The wiki is NOT a kit source on release week.** `Qingxiao/Combat` didn't exist (API
+  `missingtitle`) and the main page said "doesn't have any Sequence Nodes yet" two days after
+  launch. The pak lang db has every skill name / description / chain node (`Skill_<id>_SkillDescribe`,
+  `ResonantChain_<id>_NodeName|AttributesDescription`, `Term<roleid>NN_Title|Desc` for the glossary)
+  but with `{n}` placeholders — the numbers live in binary param blobs. Two agreeing guides
+  (lootbar kit page + wutheringlab) filled the numbers; the pak settled every NAME.
+- **Fandom MediaWiki API 402s WebFetch** but answers `curl -A "<browser UA>"` fine — use curl
+  for `action=parse` / `imageinfo` (that's also how the splash art URL was resolved).
+- **`build_echo_names.py` reads `db_phantom.db` from the cwd, not `testout/`.** On a new patch
+  the regen silently maps nothing new until you swap the fresh dump in (`cp db_phantom.db
+  db_phantom_<old>_backup.db && cp testout/db_phantom_<new>.db db_phantom.db`). Calamity Effigy
+  only mapped (→ `34032`) after that.
+- **A signature sonata set's icon can be named after the CHARACTER**, not the set:
+  Heart of Evil's Purge (`PhantomFetter_34`) ships as `T_IconElementAttri128_Qingxiao`. Read it
+  out of the `phantomfettergroup` blob, don't guess a set-name path.
+- **`npm run update` needs `node_modules`** — a fresh clone / wiped tree says
+  `'tsx' is not recognized`; `npm install` first.
+- **Skill-icon letters beyond the standard set exist** (Qingxiao's atlas has A1–A3, B1–B3, C1,
+  D1–D2, E1, QTE, T, Y). Only rows in `db_skill` tell you which are real slots; E1 was her
+  Sword-Flight movement glyph, NOT the Tune Break. Tune Break codex entries use icon stem
+  `tunebreak` with no file (letter-tile fallback — Denia/Aemeath/Chisa precedent); never borrow
+  another character's `tune.webp`, they're personal art.
+- **Spine viewport can be solved from eye bones when there's no `脸`/`Head`:** Qingxiao has
+  `左眼眼珠` / `右眼珠`. `vp.y = eyeY − 0.6·1848`, `vp.x = mean(eyeX) − 693` reproduced Lucy's and
+  Xuanling's shipped x within 6 units, and landed her at `(-443, 611)` first try. Bone dump:
+  `Object.entries(window.PLAYERS)` in `dial.html` → `p.skeleton.bones[].worldX/worldY` after
+  `setToSetupPose()` + `updateWorldTransform()`.
+- **Bust-composition tall sprites want a Xuanling-class zoom.** Her pile art is 696×960 with the
+  head ≈ 23% of sprite height (vs ~12% on a full-body sprite), so `TEAM_FRAME` landed at
+  `height: 155` with `left: 41` for the three-quarter turn. `tall.html` takes
+  `?v=Label:top,left,height` for the pass; `?only=` matches on label *prefix*, so
+  "Yangyang: Xuanling" must be asked for as `Yangyang`.

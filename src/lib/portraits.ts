@@ -76,6 +76,10 @@ const TEAM_FRAME: Record<string, PortraitFrame> = {
   Shorekeeper: { top: -6.1, left: 12, height: 252.1 },
   Suisui: { top: -7.4, left: 26.4, height: 375 },
   "Yangyang: Xuanling": { top: -2.4, left: 50, height: 135 },
+  // Dialed 2026-08-22 in tall.html against Lucy/Denia/Suisui: her sprite is a bust
+  // composition (head ≈ 23% of sprite height), so the zoom sits near Xuanling's, and
+  // the three-quarter turn pushes `left` well under 50 to centre the face.
+  Qingxiao: { top: -9.5, left: 41, height: 155 },
   Zani: { top: -1.1, left: 52.3, height: 244.6 },
   Zhezhi: { top: -14, left: 66, height: 280 },
 };

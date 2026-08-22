@@ -59,6 +59,7 @@ export const SPINE_PORTRAITS: Record<string, SpinePortraitConfig> = {
   Rebecca:              { bundle: "Portraits_Rebecca",  animation: "idle", viewport: { x: -490, y: 784, ...BUST_ZOOM } }, // left9 down5 — her pose is turned + gun-side heavy
   Suisui:               { bundle: "Portraits_SuiSui",   animation: "idle", viewport: { x: -556, y: 637, ...BUST_ZOOM } }, // right4 up3 (Head bone)
   "Yangyang: Xuanling": { bundle: "Portraits_XuanLing", animation: "idle", viewport: { x: -586, y: 655, ...BUST_ZOOM } }, // right2 up2 (脸 bone)
+  Qingxiao:             { bundle: "Portraits_Qingxiao", animation: "idle", viewport: { x: -443, y: 611, ...BUST_ZOOM } }, // solved off her 左眼眼珠/右眼珠 bones (eye-line 1720, face x 250) — 2026-08-22
 
   Augusta:     { bundle: "Portraits_Aogusita",   animation: "idle", viewport: { x: -580, y: 646, width: 1317, height: 1756 } }, // up5 zoom-in5 (center-locked)
   Cantarella:  { bundle: "Portraits_Kanteleila", animation: "idle", viewport: { x: -648, y: 738, width: 1455, height: 1940 } }, // zoom-out5 down5 (center-locked)
@@ -108,6 +109,7 @@ export const SPINE_PAGES: Record<string, string[]> = {
   Portraits_Lupa      : ["Portraits_Lupa.webp"],
   Portraits_Moning    : ["Portraits_Moning.webp"],
   Portraits_Qianxiao  : ["Portraits_Qianxiao.webp"],
+  Portraits_Qingxiao  : ["Portraits_Qingxiao.webp", "Portraits_Qingxiao_2.webp"],
   Portraits_Rebecca   : ["Portraits_Rebecca.webp"],
   Portraits_Shouanren : ["Portraits_Shouanren.webp"],
   Portraits_SuiSui    : ["Portraits_Suisui.webp", "Portraits_Suisui_2.webp"],

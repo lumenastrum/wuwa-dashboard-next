@@ -2,7 +2,7 @@
   "meta": {
     "title": "A.'s WuWa Dashboard",
     "updated": "2026-05-23",
-    "totalResonators": 27,
+    "totalResonators": 28,
     "maxLevel": 90
   },
   "resonators": [
@@ -329,6 +329,18 @@
       "weaponRank": "",
       "echoSet": "",
       "level": 0,
+      "notes": ""
+    },
+    {
+      "name": "Qingxiao",
+      "element": "Aero",
+      "weaponType": "Sword",
+      "role": "Main DPS",
+      "sequence": "S0",
+      "weapon": "",
+      "weaponRank": "",
+      "echoSet": "",
+      "level": 90,
       "notes": ""
     }
   ],
@@ -1387,6 +1399,42 @@
     },
     {
       "name": "Suisui",
+      "buildType": "",
+      "stats": [
+        {
+          "label": "ATK",
+          "current": "",
+          "optimal": "",
+          "_status": "neutral"
+        },
+        {
+          "label": "CR",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "CD",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        },
+        {
+          "label": "ER",
+          "current": "",
+          "optimal": "",
+          "unit": "%",
+          "_status": "neutral"
+        }
+      ],
+      "notes": "",
+      "priorityStatus": "neutral",
+      "_calcPriority": "neutral"
+    },
+    {
+      "name": "Qingxiao",
       "buildType": "",
       "stats": [
         {
@@ -4061,6 +4109,72 @@
     },
     {
       "resonator": "Suisui",
+      "echoes": [
+        {
+          "cost": 4,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 3,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "cost": 1,
+          "mainStat": "",
+          "mainValue": 0,
+          "substats": [
+            {
+              "stat": "",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "Energy Regen": 0.8,
+        "HP%": 0.7,
+        "DEF%": 0.5,
+        "Crit Rate": 0.4
+      }
+    },
+    {
+      "resonator": "Qingxiao",
       "echoes": [
         {
           "cost": 4,

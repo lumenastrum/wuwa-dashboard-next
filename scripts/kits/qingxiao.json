@@ -1,0 +1,56 @@
+[
+  {
+    "icon": "basic",
+    "name": "Strings to Steel",
+    "type": "Basic Attack",
+    "take": "Two stances hiding inside one string. Stages 1 and 4 are Sheathed (the qin side — they bank Qin Heart); stages 2 and 3 are Drawn (the sword side — they bank Sword Cadence), and mid-air strings, dodge counters and Sword Glide all count as Drawn. Fill both 100-point gauges and the hold-attack becomes Heavy Attack – Stringblade: it dumps both bars, stamps Mindlock on everything nearby and launches her into Ephemeral Transcendence. The basics aren't the damage — they're the two coins you feed the machine."
+  },
+  {
+    "icon": "b1",
+    "name": "Severing Note",
+    "type": "Resonance Skill",
+    "take": "Judgement is the grounded version — an Aero hit plus a fat chunk of Qin Heart (and with Resonant Chime up from the intro, another 30 on top). Ascendant takes over the same button mid-string during Stringblade stages 2–3 or a dodge counter: a Drawn-stance flourish that also lifts her into Sword Flight. Two skills on one key; which one you get depends on what you were already doing. Press it early — it's the fastest gauge filler she has."
+  },
+  {
+    "icon": "y",
+    "name": "Formless Heart Sword",
+    "type": "Forte Circuit",
+    "take": "The engine. Mindlock IS the character: every Tune Strain – Interfered a teammate lands stamps it on the target (capped at 15 stacks), and each stack amplifies her big five — Heavy Stringblade, the Transcendence basic and dodge counter, Heaven's Reckoning, and the Liberation — by 2% per stack with an extra 5% on the first seven. That's +49% at seven stacks and +65% at the cap before anyone else touches her. Ephemeral Transcendence is the payoff window: Transcendence basics build Heart Sword Intent to 100 and Heaven's Reckoning cashes the whole bar and ends the state. Heaven's Clarity (up on entry and after every Liberation) speeds both gauges and makes the next Reckoning hit for +100% multiplier with extra Off-Tune buildup. Swordlight Ward is the bodyguard — a 60% damage-reduction poise shield granted by the intro and by Heavy Stringblade so nobody knocks her out of the big swing."
+  },
+  {
+    "icon": "c1",
+    "name": "Billows Beneath Heaven",
+    "type": "Resonance Liberation",
+    "take": "A one-line skill on paper — Aero DMG, castable from low altitude — and one of the five Mindlock-amplified hits in practice. It also re-arms Heaven's Clarity, so the natural sequence is Lib → Heavy Stringblade → Transcendence → enhanced Reckoning. At S3 its Crit DMG doubles; at S0 it's the reliable big number that also reloads the gun."
+  },
+  {
+    "icon": "intro",
+    "name": "Tonality Shift",
+    "type": "Intro Skill",
+    "take": "Swap in with 30 Sword Cadence already banked and Resonant Chime armed — the next Severing Note: Judgement pays out an extra 30 Qin Heart. One intro plus one skill press and both gauges are most of the way to the Heavy. It also hands her Swordlight Ward and drops her straight into Sword Flight. The Glint of Clouds passive starts stacking from her very first hit here."
+  },
+  {
+    "icon": "t",
+    "name": "Lingering Song",
+    "type": "Outro Skill",
+    "take": "A clean 800% ATK Aero slap on the way out. No buff, no field, no strings attached — which is fine, because she's the carry; Denia and Mornye bring the buffs in. Swap her out right after Heaven's Reckoning lands and let the Outro pad the rotation."
+  },
+  {
+    "icon": "d1",
+    "name": "Sea of Thought, World of Dust",
+    "type": "Inherent Skill",
+    "take": "The multi-wave memory. She enters combat with one stack of Gathered Mind; when the team kills a Mindlocked target she inherits that target's stack count. From then on any damage the team deals to a fresh enemy applies Mindlock equal to her Gathered Mind — the ramp she built on wave one carries straight into wave two. And when a teammate casts Tune Break on a Shifting target, it tacks on extra Tune Strain – Interfered, which is more Mindlock. Whimpering Wastes and multi-wave ToA floors are exactly where this quietly prints."
+  },
+  {
+    "icon": "d2",
+    "name": "To Know, To Banish",
+    "type": "Inherent Skill",
+    "take": "Mindlock, doubled. On top of the Forte's amplification, the same five skills also deal 2% more DMG per stack (plus 5% on the first seven) — a second, separately-multiplying layer on the same debuff. And against Overlord or Calamity class bosses, every Tune Strain – Interfered a teammate inflicts adds one extra Mindlock on top. Bosses are where her ramp is fastest, not slowest."
+  },
+  {
+    "icon": "tunebreak",
+    "name": "Draw and Sunder",
+    "type": "Tune Break",
+    "take": "Her Tune Strain contract. Every skill inflicts Tune Strain – Shifting on its first hit per target — and Shifting is the trigger for both the Glint of Clouds stacks AND the Heart of Evil's Purge 5pc (+20% Crit DMG, +30% Aero for 15s). She also responds to Tune Strain – Interfered: for each Interfered stack on the target, every point of her Tune Break Boost becomes +0.12% total DMG against it, and her presence raises the Interfered cap by one. When Off-Tune fills she can cast Tune Break herself and flow straight into Stringblade stage 3 after."
+  }
+]
