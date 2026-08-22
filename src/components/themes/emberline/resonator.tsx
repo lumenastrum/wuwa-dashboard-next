@@ -29,7 +29,7 @@ import {
   forteKitIcon,
   type ForteSlot,
 } from "@/lib/game-icons";
-import { tallPortrait } from "@/lib/portraits";
+import { tallPortrait, heroPortraitFrame } from "@/lib/portraits";
 import { rateResonator, type RatingSub } from "@/lib/resonator-rating";
 import { resonatorPath } from "@/lib/route-name";
 import { parseEchoSets, sonataIcon } from "@/lib/sonata";
@@ -461,6 +461,7 @@ export function EmberlineResonator({ name }: { name: string }) {
   const sonatas = parseEchoSets(r.echoSet);
   const overallGc = echoVerdict ? gradeColor(echoVerdict.grade, echoVerdict.status) : null;
   const statusHex = E_STATUS[r.audit?.priorityStatus ?? "neutral"];
+  const hero = heroPortraitFrame(r.name);
 
   useEffect(() => {
     setLastResonator(r.name);
@@ -486,7 +487,7 @@ export function EmberlineResonator({ name }: { name: string }) {
             position: "absolute",
             ...(isMobile
               ? { left: "50%", transform: "translateX(-50%)", right: "auto", top: "auto", bottom: -16, height: "110%" }
-              : { right: 110, top: 14, height: "172%" }),
+              : { right: hero.right, top: hero.top, height: hero.height }),
             width: "auto",
             maxWidth: "none",
             filter: `drop-shadow(0 24px 50px ${el.glow})`,

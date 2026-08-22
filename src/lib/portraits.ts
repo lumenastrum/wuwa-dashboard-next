@@ -90,6 +90,28 @@ export function teamPortraitFrame(name: string): PortraitFrame {
   return TEAM_FRAME[name] ?? DEFAULT_FRAME;
 }
 
+// Per-character placement of the tall sprite in the Emberline resonator HERO
+// (desktop branch). The default assumes a full-body pile sprite — head in the
+// top ~12%, so 172% tall with the top pinned near the band edge. Bust-composed
+// pile art (Qingxiao, 696×960 with the head at ~25%) renders twice the head
+// size and a band too low on those numbers, so it gets its own top/height.
+// Dial against the live hero at 1280: eye-line ≈ 30% of the 420px band.
+export interface HeroFrame {
+  top: number;
+  height: string;
+  right?: number;
+}
+
+const DEFAULT_HERO: HeroFrame = { top: 14, height: "172%", right: 110 };
+
+const HERO_FRAME: Record<string, HeroFrame> = {
+  Qingxiao: { top: -58, height: "105%", right: 130 }, // bust composition — dialed 2026-08-22 vs Suisui's hero
+};
+
+export function heroPortraitFrame(name: string): HeroFrame {
+  return { ...DEFAULT_HERO, ...(HERO_FRAME[name] ?? {}) };
+}
+
 // Official splash art (public/splash/, sourced from the wiki's
 // "<Name> Splash Art" set, alpha-trimmed + webp'd at q90). The FLEX card's
 // vanity canvas — rendered whole, never cover-cropped (the splashes are
