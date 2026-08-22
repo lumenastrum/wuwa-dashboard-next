@@ -423,6 +423,8 @@ whimpering wastes (score ledger; stages 1-12, two trios per stage):
 misc:
   action <idx> <task|detail|status> <value>
   finding <idx> <text>
+  addfinding <text>                       append a key finding
+  rmfinding <idx>                         remove a key finding
   list                                    print summary
   help                                    this message
 
@@ -1656,6 +1658,23 @@ async function main() {
       }
       data.keyFindings[idx] = valueParts.join(" ");
       console.log(`finding[${idx}]: ${data.keyFindings[idx]}`);
+      break;
+    }
+    case "addfinding": {
+      const text = rest.join(" ").trim();
+      if (!text) throw new Error(`usage: addfinding <text>`);
+      data.keyFindings.push(text);
+      console.log(`finding[${data.keyFindings.length - 1}]: ${text}`);
+      break;
+    }
+    case "rmfinding": {
+      const [idxStr] = rest;
+      const idx = parseIntOrThrow(idxStr, "idx");
+      if (idx < 0 || idx >= data.keyFindings.length) {
+        throw new Error(`finding idx must be 0..${data.keyFindings.length - 1}`);
+      }
+      const [gone] = data.keyFindings.splice(idx, 1);
+      console.log(`removed finding[${idx}]: ${gone}`);
       break;
     }
     default:
