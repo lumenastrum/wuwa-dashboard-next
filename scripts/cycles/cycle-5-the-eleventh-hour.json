@@ -1,0 +1,106 @@
+{
+  "date": "2026-08-29",
+  "label": "The Eleventh Hour",
+  "target": 58000,
+  "teamTarget": 6,
+  "dayOne": true,
+  "teams": [
+    {
+      "order": 1,
+      "members": ["Cartethyia", "Ciaccona", "Suisui"],
+      "buff": "Negative Status Enhancement",
+      "score": 10318,
+      "rating": "",
+      "notes": "THE BOLD OPENER — the PB holder spent at slot one and she paid double: R1 Mourning Aix AND Rustfire Chassis both killed, Sentry chipped to 79.52%. Permanent Aero Erosion fed the +25%-taken clause wall-to-wall (buff flipped off General pre-launch — his catch, vulnerability is the empty bucket). A wonky first take re-run tighter for +958. New opener record: 10,046 → 10,318, and the old one needed a retest to set."
+    },
+    {
+      "order": 2,
+      "members": ["Yangyang: Xuanling", "Chisa", "Suisui"],
+      "buff": "Negative Status Enhancement",
+      "score": 6718,
+      "rating": "A",
+      "notes": "Bane crew on leftovers — served a pre-chewed Sentry (79.52%), killed it with the +50% neg-status vibration clause flipped, then carved Mephis to 35.98%. Roughly 1.4 bosses of available food; table cleared. Chisa's ONLY vigor this cycle (the enhancement rotated off her) spent exactly where it belonged."
+    },
+    {
+      "order": 3,
+      "members": ["Phrolova", "Cantarella", "Roccia"],
+      "buff": "Echo Skill Enhancement",
+      "score": 10103,
+      "rating": "S",
+      "notes": "THE PINATA POP — finished Mephis, killed Matrix Mimic OUTRIGHT (1.1x points + 1,000 bounty), bit 19% off the R2 bird. Quadruple-stacked: Echo Skill lane (+30% echo / +20% Havoc on an all-Havoc core) + Cantarella's +25% team boost + Roccia's post-Lib Havoc window. Second five-digit run of the night; Mimic Cycle Task cleared on the way out."
+    },
+    {
+      "order": 4,
+      "members": ["Camellya", "Sanhua", "Verina"],
+      "buff": "Echo Skill Enhancement",
+      "score": 3013,
+      "rating": "SS",
+      "notes": "The R2 toll booth — walked into the escalated bird ramping +6% ATK/5s and carved a third off it (80.86% → 47.96%). 3,013 on the steepest per-point stretch of the map, and the board's only sub-3,500 row — which quietly made row 11 load-bearing for the 10x3,500 Cycle Task."
+    },
+    {
+      "order": 5,
+      "members": ["Carlotta", "Lynae", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 8510,
+      "rating": "SSS",
+      "notes": "Desu wa~ delivered — the +25% cycle boost carried: R2 bird executed before its stacks got rude (47.96% → 0), Chassis carved to 55.05%. SSS minted, over-5k #4 banked, water gun holstered."
+    },
+    {
+      "order": 6,
+      "members": ["Zani", "Phoebe", "Verina"],
+      "buff": "General Enhancement",
+      "score": 5612,
+      "rating": "SSS",
+      "notes": "Heavy-ATK double dip — General's +20% dealt AND +20% heavy taken are both her whole kit, on the dodge-counter boss: Chassis killed, Sentry bitten to 93.78%. Verina's second shift (she trumps Rover here: the outro deepen is the empty bucket, Frazzle is already saturated by Phoebe). Zani went back to her nap on the results screen."
+    },
+    {
+      "order": 7,
+      "members": ["Lucy", "Rebecca", "Mornye"],
+      "buff": "General Enhancement",
+      "score": 5988,
+      "rating": "CROWNED",
+      "notes": "CROWNED minted mid-combo, over-5k task (6/6) completed — and the buff fix landed pre-launch: Rebecca has NO negative statuses (the old Bane-crew credit was always Xuanling's; she's the Heavy ATK buffer), so General's heavy clause replaced a dead Neg Status pick. Sentry R2 carved 93.78% → 28.4%, and Lucy's results screen put her on the moon. She made it, David."
+    },
+    {
+      "order": 8,
+      "members": ["Qingxiao", "Denia", "Mornye"],
+      "buff": "Tune Break Enhancement",
+      "score": 11322,
+      "rating": "IRIDESCENT",
+      "notes": "THE DEBUT RECORD — 8,505 → 11,322 (+33%), biggest debut in board history, IRIDESCENT minted ON her first deployment as the total crossed 58k. Sentry finished with her own Tunability-Shifting flipping its +50% clause, Mephis carved to 4.79% with his R2 enrage DISABLED under Denia's Tune Strain — the enrage-delete tech, proven live. Denia vigor 1 of 2, TS mode. Mornye's back-to-back second shift, heart hands both times."
+    },
+    {
+      "order": 9,
+      "members": ["Aemeath", "Denia", "Lupa"],
+      "buff": "Negative Status Enhancement",
+      "score": 21208,
+      "rating": "IRIDESCENT",
+      "notes": "FIRST 20K DEPLOYMENT IN HISTORY — 21,208, +22% over her own 17,424 crown. The all-pink squadron: Mephis finished, R2 Matrix Mimic KILLED (1.1x + 1,000), a 31% bite of the R3 bird as a parting gift. Denia vigor 2 of 2 swapped to Fusion Burst — whose inflicts ARE negative statuses, so the +25% vulnerability clause ran wall-to-wall and Foam's 5pc finally woke up. His buff pick, unprompted, third quiet fix of the night. The day-one record (67,987) died mid-run and nobody noticed until the dust settled."
+    },
+    {
+      "order": 10,
+      "members": ["Augusta", "Iuno", "Changli"],
+      "buff": "General Enhancement",
+      "score": 5051,
+      "rating": "IRIDESCENT",
+      "notes": "THE RANDOM BULLSHIT TEAM (his words, on the record) — the support barn was empty, Changli was snacking on her own card art, and they posted 5,051 IN ROUND 3 where C4's encore band was ~3.5k. Augusta led per his slot-one instinct — the Ephor-slayer swings, never ramps, and needs no insurance. Bird carved 68.78% → 43.8%. The uninsured row out-scored the toll."
+    },
+    {
+      "order": 11,
+      "members": ["Jinhsi", "Zhezhi", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 3880,
+      "rating": "IRIDESCENT",
+      "notes": "The closer, as is her duty — needed 678 for the all-time record and posted 3,880 THROUGH the Spectro RES wall (General over Echo Skill on purpose: feed the unwalled lanes when the carry's axis is walled). R3 bird left at 24.62%, the cycle's only survivor. 88,521 — the two-session retest crown — buried by a day-one board. 5/5 closes. The Magistrate has never missed the number, and this time the number was history."
+    }
+  ],
+  "lessons": [
+    "Vigor rotation IS the draft — the enhancement rotated off Chisa (1 use) and onto Denia (2), and Denia is the only support with a mode switch: TS at Qingxiao, FB at Aemeath, echoes untouched both times. The double landed exactly where both her engines needed her. Read the vigor screen before drafting anything.",
+    "Read what the comp INFLICTS, then pick the buff — three pre-deployment fixes, all his: Cartethyia's Aero Erosion and Denia's Fusion Burst are negative statuses (the +25% TAKEN clause is a fresh vulnerability bucket — multiplicative, near-100% uptime), and Rebecca has no statuses at all (her Bane-crew credit was always Xuanling's; General's heavy clause was her real lane). The spreadsheet proposes, the gut disposes.",
+    "Kills are optional, damage isn't — the all-time chase needed 5,729 from two support-less rows against a Spectro-walled R3 bird, and they posted 8,931 without killing it. Points are damage; stop drafting for executions.",
+    "The eleventh row paid twice — the support barn empties at ten teams, so row 11 fought uninsured and still posted 5,051 in R3 AND was the tenth team over 3,500, single-handedly completing a Cycle Task a ten-row board couldn't touch. Surplus rows are free real estate.",
+    "Feed the crown queen the Mimic — Aemeath's 21,208 (first 20k ever) was pinata math: 1.1x points + 1,000 bounty + FB vulnerability + S6 chain on an R2-fattened HP pool. This is doctrine now, not luck.",
+    "Qingxiao's premium team was waiting for her before she was pulled, and now the Matrix knows it too — debut record +33% (11,322), IRIDESCENT minted on her first deployment, Mephis enrage-delete (R2 +30% ATK off under Tune Strain-Shifting) proven live.",
+    "Full sweep, six records — 11/11 stage rewards, 8/8 Singularity tasks, 91,723 total: all-time board (+3.6% over the retest), day-one board (+34.9%), single team (21,208), opener (10,318), debut (11,322), over-5k count (9). The first eleven-team board in history, named for itself."
+  ]
+}
