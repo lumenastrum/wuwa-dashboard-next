@@ -87,7 +87,12 @@ export function ensureEndgameModes(data: DashboardData): DashboardData {
     data.towerOfAdversity = { seasons: [] };
   }
   if (!Array.isArray(data.whimperingWastes?.seasons)) {
-    data.whimperingWastes = { seasons: [] };
+    data.whimperingWastes = { seasons: [], torrents: [] };
+  }
+  // The Torrents record ledger landed after the season ledger — rows saved
+  // between the two carry seasons but no `torrents`.
+  if (!Array.isArray(data.whimperingWastes.torrents)) {
+    data.whimperingWastes.torrents = [];
   }
   return data;
 }

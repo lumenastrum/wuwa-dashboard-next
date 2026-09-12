@@ -239,8 +239,33 @@ export interface WastesSeason {
   lessons: string[];
 }
 
+// Infinite Torrents record ledger. The game keeps exactly ONE card for the
+// Wastes across rotations — the Torrents high score with its lineup — and
+// overwrites it whenever a run beats it. Stage rows vanish every 28 days;
+// this ledger is the part of the Wastes the sea actually remembers, so we
+// keep every card, not just the standing one.
+export interface TorrentsRecord {
+  id: number;
+  date: string;           // "Time Achieved" on the in-game card, YYYY-MM-DD
+  score: number;          // Highest Score — derives from pointsA + pointsB
+  grade: WastesGrade;     // Torrents ladder: B/A/S/SS/SSS
+  rounds: number | null;  // Highest Round — derives from roundsA + roundsB (null = unrecorded)
+  teamA: string[];        // Team I trio
+  teamB: string[];        // Team II trio
+  tokenA: string;         // equipped Token name ("" = unrecorded)
+  tokenB: string;
+  tokenAIcon?: number;    // public/game/wastes/tokens/<n>.webp — absent = text chip
+  tokenBIcon?: number;
+  pointsA: number;        // per-half points, as the card lists them
+  pointsB: number;
+  roundsA: number | null; // per-half rounds (null = unrecorded — pre-ledger cards)
+  roundsB: number | null;
+  notes: string;          // kicker convention applies
+}
+
 export interface WhimperingWastes {
   seasons: WastesSeason[];
+  torrents: TorrentsRecord[];
 }
 
 export interface SignatureWeapon {

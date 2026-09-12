@@ -1,0 +1,9 @@
+{
+  "date": "2026-09-28",
+  "grade": "SSS",
+  "teamA": ["Phrolova", "Cantarella", "Shorekeeper"], "tokenA": "Fabricator - Lone Light in the Long Night", "tokenAIcon": 41,
+  "teamB": ["Aemeath", "Denia", "Chisa"], "tokenB": "Silver Shuttle Faring through Dream", "tokenBIcon": 45,
+  "pointsA": 3280, "pointsB": 5500,
+  "roundsA": 9, "roundsB": 14,
+  "notes": "SAMPLE ENTRY — replace with the real card. Kicker first sentence, then the story. score and rounds derive from the halves; grade derives from the Torrents ladder if omitted."
+}

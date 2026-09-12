@@ -110,7 +110,7 @@ interface Data {
   keyFindings: string[];
   endstateMatrix: { cycles: { id: number; teams: AnyRecord[]; [k: string]: unknown }[] };
   towerOfAdversity?: { seasons: AnyRecord[] };
-  whimperingWastes?: { seasons: AnyRecord[] };
+  whimperingWastes?: { seasons: AnyRecord[]; torrents?: AnyRecord[] };
   signatureWeapons?: { name: string; [k: string]: unknown }[];
   echoBuilds?: EchoBuild[];
   [k: string]: unknown;
@@ -265,9 +265,37 @@ function ensureToa(data: Data) {
 }
 
 function ensureWastes(data: Data) {
-  const ww = (data.whimperingWastes ??= { seasons: [] }) as { seasons: AnyRecord[] };
+  const ww = (data.whimperingWastes ??= { seasons: [], torrents: [] }) as { seasons: AnyRecord[]; torrents?: AnyRecord[] };
   if (!Array.isArray(ww.seasons)) ww.seasons = [];
-  return ww as { seasons: (AnyRecord & { id: number; stages: AnyRecord[]; lessons: string[] })[] };
+  if (!Array.isArray(ww.torrents)) ww.torrents = [];
+  return ww as {
+    seasons: (AnyRecord & { id: number; stages: AnyRecord[]; lessons: string[] })[];
+    torrents: (AnyRecord & { id: number })[];
+  };
+}
+
+// Torrents grade off the 3.5 ladder (B 3,500 / A 4,000 / S 4,500 / SS 5,000 /
+// SSS 5,500) — the in-game card stamps this itself, so a stated grade wins and
+// the ladder only fills in when the file leaves it blank.
+function torrentsGradeOf(score: number): string {
+  if (score >= 5500) return "SSS";
+  if (score >= 5000) return "SS";
+  if (score >= 4500) return "S";
+  if (score >= 4000) return "A";
+  if (score >= 3500) return "B";
+  return "";
+}
+
+// Nullable integer for the per-half round counts: pre-ledger cards never
+// recorded rounds, so "", "-", null all mean unrecorded.
+function parseIntOrNull(v: unknown, label: string): number | null {
+  if (v == null || v === "" || v === "-" || v === "—") return null;
+  return parseIntOrThrow(String(v), label);
+}
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+function sortTorrents(list: AnyRecord[]) {
+  list.sort((a, b) => String(a.date).localeCompare(String(b.date)) || (a.id as number) - (b.id as number));
 }
 
 function parseIntOrThrow(v: string, label = "value") {
@@ -420,6 +448,15 @@ whimpering wastes (score ledger; stages 1-12, two trios per stage):
   wastes <id> stage <n> <score|grade|notes|name|teama|teamb|tokena|tokenb|tokenaicon|tokenbicon> <value>
   rmwastes <id>                            remove a whole Wastes season
 
+infinite torrents record ledger (the one card the game keeps — log one per rotation):
+  addtorrents --file <record.json>         append an Infinite Torrents record card (score + rounds derive from the halves)
+    JSON: { id?, date, grade?, teamA[]|"A,B,C", teamB[], tokenA?, tokenB?, tokenAIcon?, tokenBIcon?,
+            pointsA, pointsB, roundsA?, roundsB?, notes? }
+    score = pointsA + pointsB (a stated "score" is cross-checked) · rounds = roundsA + roundsB (null when unrecorded)
+    grade derives from the Torrents ladder (B 3500 / A 4000 / S 4500 / SS 5000 / SSS 5500) unless stated
+  torrents <id> <date|grade|notes|teama|teamb|tokena|tokenb|tokenaicon|tokenbicon|pointsa|pointsb|roundsa|roundsb> <value>
+  rmtorrents <id>                          remove a record card
+
 misc:
   action <idx> <task|detail|status> <value>
   finding <idx> <text>
@@ -461,6 +498,7 @@ async function main() {
     console.log(`cycles: ${data.endstateMatrix.cycles.length}`);
     console.log(`toa seasons: ${ensureToa(data).seasons.length}`);
     console.log(`wastes seasons: ${ensureWastes(data).seasons.length}`);
+    console.log(`torrents records: ${ensureWastes(data).torrents.length}`);
     console.log(`action items: ${data.actionItems.length}`);
     console.log(`key findings: ${data.keyFindings.length}`);
     console.log("\nResonators:");
@@ -1634,6 +1672,166 @@ async function main() {
         console.log(`wastes ${seasonIdStr} stage ${stageStr} ${field} → ${value}`);
       } else {
         throw new Error(`wastes stage field must be one of: score, grade, notes, name, teama, teamb, tokena, tokenb, tokenaicon, tokenbicon`);
+      }
+      break;
+    }
+    case "rmtorrents": {
+      const ww = ensureWastes(data);
+      const id = parseIntOrThrow(rest[0], "record id");
+      const idx = ww.torrents.findIndex((x) => x.id === id);
+      if (idx === -1) throw new Error(`No Torrents record with id ${id}`);
+      const [gone] = ww.torrents.splice(idx, 1);
+      console.log(`removed Torrents record ${id} (${gone.date} · ${(gone.score as number).toLocaleString()})`);
+      break;
+    }
+    case "addtorrents": {
+      const fileIdx = rest.indexOf("--file");
+      const filePath = fileIdx !== -1 ? rest[fileIdx + 1] : undefined;
+      if (!filePath) {
+        throw new Error(
+          `usage: addtorrents --file <path-to-record.json>\n` +
+            `  JSON: { id?, date, grade?, teamA, teamB, tokenA?, tokenB?, tokenAIcon?, tokenBIcon?,\n` +
+            `          pointsA, pointsB, roundsA?, roundsB?, notes? }\n` +
+            `  score derives from pointsA + pointsB; rounds from roundsA + roundsB; grade from the Torrents ladder`,
+        );
+      }
+      const raw = JSON.parse(await fs.readFile(path.resolve(filePath), "utf-8")) as AnyRecord;
+      const ww = ensureWastes(data);
+      const id =
+        raw.id != null
+          ? parseIntOrThrow(String(raw.id), "record id")
+          : ww.torrents.reduce((m, r) => Math.max(m, r.id as number), 0) + 1;
+      if (ww.torrents.some((r) => r.id === id)) {
+        throw new Error(`Torrents record id ${id} already exists — omit "id" to auto-assign`);
+      }
+      if (!raw.date || !DATE_RE.test(String(raw.date))) {
+        throw new Error(`record JSON needs a "date" (YYYY-MM-DD — the card's Time Achieved)`);
+      }
+      if (ww.torrents.some((r) => r.date === String(raw.date))) {
+        console.warn(`  ⚠ a Torrents record dated ${raw.date} already exists — the game keeps one card per run; double-check this isn't a duplicate`);
+      }
+      const team = (v: unknown) =>
+        Array.isArray(v)
+          ? (v as unknown[]).map((m) => String(m).trim()).filter(Boolean)
+          : String(v ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+      const teamA = team(raw.teamA);
+      const teamB = team(raw.teamB);
+      const overlap = teamA.filter((n) => teamB.includes(n));
+      if (overlap.length) {
+        throw new Error(`Team I and Team II share ${overlap.join(", ")} — a resonator can't sail both halves of a stage`);
+      }
+      const iconOf = (v: unknown, label: string) =>
+        v == null || v === "" ? undefined : parseIntOrThrow(String(v), label);
+      const pointsA = parseIntOrThrow(String(raw.pointsA ?? ""), "pointsA");
+      const pointsB = parseIntOrThrow(String(raw.pointsB ?? ""), "pointsB");
+      const score = pointsA + pointsB;
+      if (raw.score != null && parseIntOrThrow(String(raw.score), "score") !== score) {
+        console.warn(`  ⚠ stated score ${raw.score} ≠ pointsA + pointsB = ${score} — computed wins`);
+      }
+      const roundsA = parseIntOrNull(raw.roundsA, "roundsA");
+      const roundsB = parseIntOrNull(raw.roundsB, "roundsB");
+      const rounds = roundsA != null && roundsB != null ? roundsA + roundsB : null;
+      if (raw.rounds != null && rounds != null && parseIntOrThrow(String(raw.rounds), "rounds") !== rounds) {
+        console.warn(`  ⚠ stated rounds ${raw.rounds} ≠ roundsA + roundsB = ${rounds} — computed wins`);
+      }
+      let grade = String(raw.grade ?? "").trim();
+      if (grade === "—" || grade === "-") grade = "";
+      if (!WASTES_GRADES.includes(grade)) {
+        throw new Error(`grade "${grade}" invalid — use ${WASTES_GRADES.filter(Boolean).join(", ")} (or omit to derive)`);
+      }
+      const ladder = torrentsGradeOf(score);
+      if (!grade) grade = ladder;
+      else if (grade !== ladder) {
+        console.warn(`  ⚠ stated grade ${grade} — the 3.5 ladder puts ${score.toLocaleString()} at ${ladder || "unranked"}; keeping the card's grade`);
+      }
+      const record = {
+        id,
+        date: String(raw.date),
+        score,
+        grade,
+        rounds,
+        teamA,
+        teamB,
+        tokenA: String(raw.tokenA ?? ""),
+        tokenB: String(raw.tokenB ?? ""),
+        tokenAIcon: iconOf(raw.tokenAIcon, "tokenAIcon"),
+        tokenBIcon: iconOf(raw.tokenBIcon, "tokenBIcon"),
+        pointsA,
+        pointsB,
+        roundsA,
+        roundsB,
+        notes: String(raw.notes ?? ""),
+      };
+      const prevBest = ww.torrents.reduce((m, r) => Math.max(m, r.score as number), 0);
+      ww.torrents.push(record);
+      sortTorrents(ww.torrents);
+      const verdict = !prevBest
+        ? ""
+        : score > prevBest
+          ? ` · NEW RECORD (+${(score - prevBest).toLocaleString()} over ${prevBest.toLocaleString()})`
+          : ` · ${(prevBest - score).toLocaleString()} short of the ${prevBest.toLocaleString()} record`;
+      console.log(
+        `added Torrents record ${id} (${record.date}) — ${score.toLocaleString()} · ${grade || "—"}` +
+          `${rounds != null ? ` · round ${rounds}` : ""}${verdict}`,
+      );
+      const half = (label: string, members: string[], pts: number, rds: number | null, token: string) =>
+        `  ${label} ${members.join("/") || "—"} — ${pts.toLocaleString()} pts${rds != null ? ` · ${rds} rounds` : ""}${token ? ` · ${token}` : ""}`;
+      console.log(half("I: ", teamA, pointsA, roundsA, record.tokenA));
+      console.log(half("II:", teamB, pointsB, roundsB, record.tokenB));
+      break;
+    }
+    case "torrents": {
+      const [idStr, field, ...valueParts] = rest;
+      const ww = ensureWastes(data);
+      const r = ww.torrents.find((x) => x.id === parseIntOrThrow(idStr, "record id"));
+      if (!r) throw new Error(`No Torrents record with id ${idStr}`);
+      const value = valueParts.join(" ");
+      const rederive = () => {
+        r.score = (r.pointsA as number) + (r.pointsB as number);
+        r.rounds = r.roundsA != null && r.roundsB != null ? (r.roundsA as number) + (r.roundsB as number) : null;
+      };
+      if (field === "pointsa" || field === "pointsb") {
+        const key = field === "pointsa" ? "pointsA" : "pointsB";
+        r[key] = parseIntOrThrow(value, key);
+        rederive();
+        const ladder = torrentsGradeOf(r.score as number);
+        console.log(`torrents ${idStr} ${key} → ${r[key]} (score ${(r.score as number).toLocaleString()} · grade stays ${r.grade || "—"}${ladder !== r.grade ? `, ladder says ${ladder || "unranked"}` : ""})`);
+      } else if (field === "roundsa" || field === "roundsb") {
+        const key = field === "roundsa" ? "roundsA" : "roundsB";
+        r[key] = parseIntOrNull(value, key);
+        rederive();
+        console.log(`torrents ${idStr} ${key} → ${r[key] ?? "—"} (rounds ${r.rounds ?? "—"})`);
+      } else if (field === "grade") {
+        let grade = value.trim();
+        if (grade === "—" || grade === "-") grade = "";
+        if (!WASTES_GRADES.includes(grade)) {
+          throw new Error(`grade "${grade}" invalid — use ${WASTES_GRADES.filter(Boolean).join(", ")} (or empty)`);
+        }
+        r.grade = grade;
+        console.log(`torrents ${idStr} grade → ${grade || "—"}`);
+      } else if (field === "date") {
+        if (!DATE_RE.test(value)) throw new Error(`date must be YYYY-MM-DD`);
+        r.date = value;
+        sortTorrents(ww.torrents);
+        console.log(`torrents ${idStr} date → ${value}`);
+      } else if (field === "teama" || field === "teamb") {
+        const key = field === "teama" ? "teamA" : "teamB";
+        r[key] = value.split(",").map((x) => x.trim()).filter(Boolean);
+        console.log(`torrents ${idStr} ${key} → ${JSON.stringify(r[key])}`);
+      } else if (field === "tokenaicon" || field === "tokenbicon") {
+        const key = field === "tokenaicon" ? "tokenAIcon" : "tokenBIcon";
+        if (value === "" || value === "-") delete r[key];
+        else r[key] = parseIntOrThrow(value, key);
+        console.log(`torrents ${idStr} ${key} → ${r[key] ?? "—"}`);
+      } else if (field === "tokena" || field === "tokenb") {
+        const key = field === "tokena" ? "tokenA" : "tokenB";
+        r[key] = value === "-" ? "" : value;
+        console.log(`torrents ${idStr} ${key} → ${r[key] || "—"}`);
+      } else if (field === "notes") {
+        r.notes = value;
+        console.log(`torrents ${idStr} notes → ${value}`);
+      } else {
+        throw new Error(`torrents field must be one of: date, grade, notes, teama, teamb, tokena, tokenb, tokenaicon, tokenbicon, pointsa, pointsb, roundsa, roundsb`);
       }
       break;
     }

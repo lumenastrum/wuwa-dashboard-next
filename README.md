@@ -87,6 +87,11 @@ npm run update -- wastes 1 stage 12 score 5500               # re-derives per-Wa
 npm run update -- wastes 1 stage 12 grade SSS
 npm run update -- rmwastes 1
 
+# Infinite Torrents record cards (the one card the game keeps — see scripts/wastes/torrents/record-template.json)
+npm run update -- addtorrents --file scripts/wastes/torrents/2026-08-04.json   # score/rounds derive from the halves
+npm run update -- torrents 2 roundsb 14
+npm run update -- rmtorrents 2
+
 # Action items + key findings
 npm run update -- action 0 status green
 npm run update -- action 0 detail "DONE — finished farming session"
