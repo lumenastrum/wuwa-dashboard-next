@@ -6,6 +6,46 @@
   "torrentsTarget": 5500,
   "stages": [
     {
+      "stage": 7,
+      "teamA": [
+        "Phrolova",
+        "Cantarella",
+        "Roccia"
+      ],
+      "tokenA": "Judgement Lost Flag",
+      "tokenAIcon": 7,
+      "teamB": [
+        "Cartethyia",
+        "Ciaccona",
+        "Shorekeeper"
+      ],
+      "tokenB": "Judgement Lost Flag",
+      "tokenBIcon": 7,
+      "score": 2900,
+      "grade": "S",
+      "notes": "CARRIED FROM THE MAIDEN VOYAGE. Doomstrand auto-completes every rotation on last season's S — the 2,900 and the double Judgement flags stand as posted on 7/26, no hands on the wheel."
+    },
+    {
+      "stage": 8,
+      "teamA": [
+        "Phrolova",
+        "Cantarella",
+        "Roccia"
+      ],
+      "tokenA": "Judgement Lost Flag",
+      "tokenAIcon": 7,
+      "teamB": [
+        "Cartethyia",
+        "Ciaccona",
+        "Shorekeeper"
+      ],
+      "tokenB": "Judgement Lost Flag",
+      "tokenBIcon": 7,
+      "score": 3000,
+      "grade": "S",
+      "notes": "CARRIED FROM THE MAIDEN VOYAGE. Whirlpool's 3,000 flat auto-completes with 7 — the three auto-complete conditions (S on 7-8, 15k Respawning, S+ on Torrents) were banked in season 1 and keep paying."
+    },
+    {
       "stage": 9,
       "teamA": [
         "Phrolova",
