@@ -1,0 +1,94 @@
+{
+  "date": "2026-09-11",
+  "label": "The Second Sailing",
+  "window": "Respawning Waters September, 2026",
+  "chasmTarget": 15000,
+  "torrentsTarget": 5500,
+  "stages": [
+    {
+      "stage": 9,
+      "teamA": [
+        "Phrolova",
+        "Cantarella",
+        "Shorekeeper"
+      ],
+      "tokenA": "Fabricator - Lone Light in the Long Night",
+      "tokenAIcon": 41,
+      "teamB": [
+        "Aemeath",
+        "Denia",
+        "Chisa"
+      ],
+      "tokenB": "Reveler Captain's Seal",
+      "score": 4440,
+      "grade": "S",
+      "notes": "THE WAVES RAN OUT. 4,440 on double Aero RES — both halves 2,220, Combat 1,120 + Round 1,100 each, and the stage had nothing left to give. That number was never a curse: 2,220 is the half-ceiling on this tier, and season 1's three 'cursed' halves were three caps. Phrolova's crew rode a full Concerto bar into an instant Outro under the Fabricator; S6 Aemeath opened with Liberation up and closed the board. Beats last rotation's 3,908."
+    },
+    {
+      "stage": 10,
+      "teamA": [
+        "Qingxiao",
+        "Lynae",
+        "Mornye"
+      ],
+      "tokenA": "The Scale of Heart and Soul",
+      "tokenAIcon": 50,
+      "teamB": [
+        "Aemeath",
+        "Denia",
+        "Chisa"
+      ],
+      "tokenB": "Reveler Captain's Seal",
+      "score": 4440,
+      "grade": "S",
+      "notes": "THE DENIA PUZZLE DIES ON TEMPEST. 4,440 into double Electro RES, both halves capped at 2,220 — Qingxiao lit the Scale of Heart and Soul off her own first hit with Lynae in Denia's seat, Mornye's Outro up on the first swap, and never needed the Fusion girl. Denia stayed home with Aemeath's Fire Burst crew under the second Reveler and capped too. Beats last rotation's 4,044 and its 1,824 front half."
+    },
+    {
+      "stage": 11,
+      "teamA": [
+        "Qingxiao",
+        "Lynae",
+        "Mornye"
+      ],
+      "tokenA": "The Scale of Heart and Soul",
+      "tokenAIcon": 50,
+      "teamB": [
+        "Aemeath",
+        "Denia",
+        "Chisa"
+      ],
+      "tokenB": "Solacer - Lone Light in the Long Night",
+      "tokenBIcon": 51,
+      "score": 4440,
+      "grade": "S",
+      "notes": "THREE FOR THREE AT THE CEILING. 4,440 into double Spectro RES with Lynae, a Spectro sub-DPS, sitting inside the wall — Qingxiao's Mindlock didn't care whose hits fed it, and the second Scale of Heart and Soul closed the first half at 2,220. Aemeath's crew swapped Reveler for the Solacer lamp (15% flat + 15% on the first Negative Status) and capped again. Beats last rotation's 4,100; Chasm closes at cap on every manual stage."
+    },
+    {
+      "stage": 12,
+      "teamA": [
+        "Phrolova",
+        "Cantarella",
+        "Shorekeeper"
+      ],
+      "tokenA": "Fabricator - Lone Light in the Long Night",
+      "tokenAIcon": 41,
+      "teamB": [
+        "Aemeath",
+        "Denia",
+        "Chisa"
+      ],
+      "tokenB": "Solacer - Lone Light in the Long Night",
+      "tokenBIcon": 51,
+      "score": 9030,
+      "grade": "SSS",
+      "notes": "THE CARD FALLS ON THE RE-RUN. 9,030 in the vortex, a new standing card over 8/4's 8,780 — and it fell on Team I: Phrolova's Echo Skill engine went 3,130 → 3,850 (Combat 2,500 / Round 1,350) under the Fabricator on the second attempt, while Aemeath's Fire Burst crew dipped to 5,180 (3,380 / 1,800) under Solacer and it didn't matter. First attempt was 8,630 with Aemeath at the same 5,500 she posted on 8/4; the science run before that had Qingxiao/Lynae/Mornye with a free Scale at 2,170 up top, 960 under Phrolova — the crew that capped every Chasm ship loses the endless stage by a third."
+    }
+  ],
+  "lessons": [
+    "2,220 per half is the CEILING on stages 9-11 (Combat 1,120 + Round 1,100). Season 1's three '2,220 halves' were caps, not coincidence. Chasm stages max at 4,440; Torrents is the only ladder with headroom.",
+    "Token uses are unlimited on Infinite Torrents — but only THIS cycle's shelf (Silver Shuttle didn't carry over). The 2-use caps only bind on stages 9-11 (six half-slots); spend them to drag the weaker half to 2,220.",
+    "Qingxiao inflicts Tune Strain - Shifting on every skill's first hit HERSELF (Draw and Sunder) — the Scale of Heart and Soul is her trigger, not Denia's. Qingxiao/Lynae/Mornye + Scale caps a Chasm half; Denia belongs with Aemeath.",
+    "A support inside a RES wall is not a walled half. Lynae's own Spectro hits shrank on Seabane and the half still capped — on a Tune crew the sub-DPS's job is stacks, not damage.",
+    "Torrents is WAVES, not a dummy: Qingxiao's Mindlock ramps per target and every fresh wave resets the ramp, so the benchmark board's 1:08-vs-2:17 said nothing about this stage. Phrolova/Cantarella/Shorekeeper's Echo Skill engine (Hecate on the field) is the Torrents Team I — 3,130 vs Qingxiao's 2,170. A benchmark is scoped to its content (same lesson as Reel vs Foam)."
+  ]
+}
