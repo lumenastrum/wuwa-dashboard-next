@@ -60,6 +60,7 @@ export const SPINE_PORTRAITS: Record<string, SpinePortraitConfig> = {
   Suisui:               { bundle: "Portraits_SuiSui",   animation: "idle", viewport: { x: -556, y: 637, ...BUST_ZOOM } }, // right4 up3 (Head bone)
   "Yangyang: Xuanling": { bundle: "Portraits_XuanLing", animation: "idle", viewport: { x: -586, y: 655, ...BUST_ZOOM } }, // right2 up2 (脸 bone)
   Qingxiao:             { bundle: "Portraits_Qingxiao", animation: "idle", viewport: { x: -443, y: 611, ...BUST_ZOOM } }, // solved off her 左眼眼珠/右眼珠 bones (eye-line 1720, face x 250) — 2026-08-22
+  Hsin:                 { bundle: "Portraits_Xin",      animation: "idle", viewport: { x: -534, y: 664, ...BUST_ZOOM } }, // solved off her 眼珠 ←/→ bones (eye-line 1773, face x 159) — 2026-09-29
 
   Augusta:     { bundle: "Portraits_Aogusita",   animation: "idle", viewport: { x: -580, y: 646, width: 1317, height: 1756 } }, // up5 zoom-in5 (center-locked)
   Cantarella:  { bundle: "Portraits_Kanteleila", animation: "idle", viewport: { x: -648, y: 738, width: 1455, height: 1940 } }, // zoom-out5 down5 (center-locked)
@@ -115,6 +116,7 @@ export const SPINE_PAGES: Record<string, string[]> = {
   Portraits_SuiSui    : ["Portraits_Suisui.webp", "Portraits_Suisui_2.webp"],
   Portraits_Weilinai  : ["Portraits_Weilinai.webp"],
   Portraits_Xiakong   : ["Portraits_Xiakong.webp", "Portraits_Xiakong_2.webp"],
+  Portraits_Xin       : ["Portraits_Xin.webp", "Portraits_Xin_2.webp"],
   Portraits_XuanLing  : ["Portraits_Xuanling.webp", "Portraits_Xuanling_2.webp"],
   Portraits_Younuo    : ["Portraits_Younuo.webp", "Portraits_Younuo_2.webp"],
   Portraits_Zanni1    : ["Portraits_Zanni_Skin1.webp", "Portraits_Zanni_Skin1_2.webp", "Portraits_Zanni_Skin1_3.webp"],

@@ -80,6 +80,10 @@ const TEAM_FRAME: Record<string, PortraitFrame> = {
   // composition (head ≈ 23% of sprite height), so the zoom sits near Xuanling's, and
   // the three-quarter turn pushes `left` well under 50 to centre the face.
   Qingxiao: { top: -9.5, left: 41, height: 155 },
+  // Dialed 2026-09-29 in tall.html against Qingxiao/Lucy: same 696×960 bust
+  // composition as Qingxiao, so same zoom; eyes sit at ~27.6% of the sprite and
+  // ~55% across, so `top` lifts the eye-line to 40% and `left` re-centres the face.
+  Hsin: { top: -5, left: 42.7, height: 155 },
   Zani: { top: -1.1, left: 52.3, height: 244.6 },
   Zhezhi: { top: -14, left: 66, height: 280 },
 };
@@ -106,6 +110,7 @@ const DEFAULT_HERO: HeroFrame = { top: 14, height: "172%", right: 110 };
 
 const HERO_FRAME: Record<string, HeroFrame> = {
   Qingxiao: { top: -58, height: "105%", right: 130 }, // bust composition — dialed 2026-08-22 vs Suisui's hero
+  Hsin: { top: -58, height: "105%", right: 130 }, // same 696×960 bust pile as Qingxiao — verify in the live hero
 };
 
 export function heroPortraitFrame(name: string): HeroFrame {

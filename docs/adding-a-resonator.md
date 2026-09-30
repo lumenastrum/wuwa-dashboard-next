@@ -371,8 +371,43 @@ Everything above held. These are the places the runbook was silent and the sessi
   Xuanling's shipped x within 6 units, and landed her at `(-443, 611)` first try. Bone dump:
   `Object.entries(window.PLAYERS)` in `dial.html` → `p.skeleton.bones[].worldX/worldY` after
   `setToSetupPose()` + `updateWorldTransform()`.
-- **Bust-composition tall sprites want a Xuanling-class zoom.** Her pile art is 696×960 with the
+- **Bust-composition tall sprites want a Xuanling-class zoom.** (See the 3.7 addendum below for Hsin.) Her pile art is 696×960 with the
   head ≈ 23% of sprite height (vs ~12% on a full-body sprite), so `TEAM_FRAME` landed at
   `height: 155` with `left: 41` for the three-quarter turn. `tall.html` takes
   `?v=Label:top,left,height` for the pass; `?only=` matches on label *prefix*, so
   "Yangyang: Xuanling" must be asked for as `Yangyang`.
+
+## Addendum — 3.7 Hsin run (2026-09-29, launch night): new gotchas, all hit for real
+
+- **3.7 moved new content OUT of `Content/Paks`.** Fresh keys mounted "fine" (1,995,215 files) but
+  `IconRole_Pile_` returned **zero** matches — the base paks no longer carry the patch. 3.7 layers
+  content across `Client/Content/HD/` (43 GB of `-HD` chunks) and hot-patch `_P` paks under
+  `Client/Saved/Resources/<ver>/{Resource,Resource_HD,Lang_en}/<build>/`. `wuwa-extract/Program.cs`
+  now mounts those as `extraDirectories` (discovered per version dir, logged as `[i] extra mount:`),
+  → **2,483,338 files**. If a fresh patch mounts but can't see new characters, check for new layers
+  before blaming keys. A file-count DROP vs the last patch is the tell.
+- **Hsin = Role 1311, codename `Xin`** (pile `T_IconRole_Pile_xin_UI` lowercase in the role row,
+  `Xin` everywhere else; role folder `FemaleXL/Xinyuehu` — 心月狐, the Heart-Moon Fox mansion).
+  Head-icon 75, weapon Blooming Jadehaven 21050116 (icon id == ItemId, checked), sonata
+  Heart of Sworn Vigil = `PhantomFetter_36` → icon `T_IconElementAttri128_Xin` (named after her,
+  Qingxiao precedent). Chain medallions ship in-pak as `IconDevice/T_IconDevice_XinM1..M6_UI` —
+  no wiki `imageinfo` dance needed.
+- **Guides were wrong on day zero; the pak settled it.** Blog sites had the sig passive as "ATK after
+  Skill DMG" and CR as 28% — the pak/encore say `Hundredfold Artifice`: 12% All-Attr, Skill DMG
+  *Amplified* 36% + 10% Electro RES ignore on Flare/Unison Response, 30% Flare-taken amp; 587.5 ATK /
+  24.3% CR. Her Liberation is **Nexus Alight** (Formshift + Pillars Across Heaven finisher), not
+  "Pillars Across Heaven". Kit numbers came from encore.moe (game-data site, via `r.jina.ai`) +
+  slyraf; where they disagreed (S3 per-stack Crit DMG, S2 multipliers) the codex states no number.
+- **Fandom's CDN serves WebP for a `.png` URL.** `latest?cb=…` returned a 1.2 MB WebP for a 4.5 MB
+  PNG. Append `&format=original` to get the real file before alpha-trim + webp (don't double-encode).
+- **Dial harnesses without `next dev`:** `tall.html` loaded sprites from `:3000`, which is banned on
+  this box. It now takes `?src=/tall-portraits/` — copy the sprites into `spine_out/tall-portraits/`
+  and serve via launch.json `spine-dial` (:8777). Spine players only build their skeleton after a
+  paint, so take a screenshot before dumping bones from `window.PLAYERS`.
+- **QA the prod build, not dev:** `safe-next.ps1 -Path <repo> -- npm run build`, then
+  `py scripts/serve-out.py` (launch.json `wuwa-static`, :4375, serves under the Pages basePath).
+  RSC `__next.r.$d$name*.txt` prefetch 404s show up on EVERY route with this server — not a bug in
+  the add. The hero notes line overlaps the rating tiles at ~800px for long notes (Qingxiao too) —
+  pre-existing, desktop is clean.
+- **Echo map regen added 8 3.7 echoes** incl. her main echo `Reminiscence: Suhsin the Inevitable`
+  → `34033_2`; `db_phantom_36_backup.db` kept.

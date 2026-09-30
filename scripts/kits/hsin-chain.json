@@ -1,0 +1,26 @@
+[
+  {
+    "name": "A Boat to Cross the Rising Tide",
+    "take": "Formshift grants 2 stacks of Radiance Ward — each one eats an enemy hit for interrupt immunity plus 60% damage reduction. Unison: Manifold Unison intros gain +15% multiplier plus 10% more per Unison Boon stack (four stacks max). Electro Flare: entering combat tops Heart of Thunder up to 50 stacks, and Heartward by Moon's Flare detonation gets a bigger per-stack coefficient. A survival node wearing a damage node's clothes, in either mode."
+  },
+  {
+    "name": "To Wake Is to Wonder What I Am",
+    "take": "All four heavies get bigger multipliers — the Answering pair and the Illumining pair. On combat entry the Resolution of Wishes and Law of Heaven cooldowns reset and she gets bonus Answering Heart, so she opens every fight a step from an upgraded Realm Protector. The guides' first real spike: her heavies are Resonance Skill DMG, so every amp in her kit and weapon multiplies them."
+  },
+  {
+    "name": "A Dream of Return Among the Hills",
+    "take": "Pillars Across Heaven +70% multiplier. Unison: the finisher gains +20% Crit DMG with more per Unison Boon stack. Electro Flare: its last hit on a Flared target detonates an extra Flare instance at 15× the target's current Flare multiplier. The Liberation finisher stops being a form reset and becomes the payoff."
+  },
+  {
+    "name": "A River of Lanterns, a River of Wishes",
+    "take": "The team node. Whenever anyone inflicts Electro Flare or Electro Rage, gains Unison, or triggers Unison Response, the whole team gets 20% All-Attribute DMG Bonus for 30s. In either mode that's effectively permanent uptime."
+  },
+  {
+    "name": "Forms Turn as the Heart Wills",
+    "take": "Illumining Form takes 20% less damage, and once every 10 minutes a fatal blow restores her to full HP with a few seconds of damage and interrupt immunity instead of knocking her out. Comfort, not damage."
+  },
+  {
+    "name": "The Moon Owes Its Light to the Living",
+    "take": "Targets take 40% more Resonance Skill DMG from her and her Skill DMG ignores 20% DEF — and almost everything she does is Skill DMG. Unison: Unison Boon cap +1 again (four stacks, 12% total DMG) with a refill on every Response. Electro Flare: Flare damage around her can crit at a fixed 80% rate and 230% Crit DMG, which turns Flare from a ticking debuff into a crit engine for the whole team."
+  }
+]

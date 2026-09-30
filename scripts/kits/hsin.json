@@ -1,0 +1,50 @@
+[
+  {
+    "icon": "basic",
+    "name": "Manifold Bloom",
+    "type": "Basic Attack",
+    "take": "Two movesets on one button. Answering Form is the fox herself: a four-hit Electro string, a plunge, and Reign at Ease — hold Normal Attack in mid-air to hover on STA, release to dive and land as the Moon Fox. Illumining Form hands the work to her Xuanfang Mechanisms: stage one drops a Modular Heartlock on the target and the next stage (or a Heavy, dodge counter or skill) collapses it for a second hit. Inside Mechanism Dominion the string becomes Pillars Aligned, four hits that eat Illumining Heart. The basics are gauge feeders; the real numbers live in the Heavies."
+  },
+  {
+    "icon": "b1",
+    "name": "Heartward by Moon",
+    "type": "Resonance Skill",
+    "take": "In Answering Form it's an Electro hit that feeds Answering Heart, and if you move right after she becomes the Moon Fox — out of combat that means Dustless Tread (walk into aggro range without starting the fight) plus passive HP regen. In Flare mode this is the cash-out button: its last stage detonates Electro Flare DMG scaled by her Heart of Thunder stacks times the target's current Flare multiplier, which is why Blooming Jadehaven's 30% Flare amp and a Rover: Electro feeding Electro Rage matter so much. Illumining Form swaps it for a Colossal Xuanfang Mechanism slam that fills Illumining Heart."
+  },
+  {
+    "icon": "y",
+    "name": "Forms Turn, Heart Abides",
+    "type": "Forte Circuit",
+    "take": "Two gauges, two heavies each. Answering Heart caps at 100 and a full bar turns the Heavy into Realm Wanderer — uninterruptible, counted as Resonance Skill DMG, and it banks Resolution of Wishes so the next one upgrades to Realm Protector. Either one unlocks Formshift. Illumining Heart caps at 300; a full bar arms Pillars Aligned on the Skill button, which opens 13s of Mechanism Dominion where the enhanced basics burn the gauge down. Hit zero and the Heavy becomes Beholding All Horizons (then Stilling All Horizons with Law of Heaven), which unlocks the Liberation finisher. Resonance Mode is the fork: Unison lets her trigger Unison Response and hand out Unison Boon (3% total DMG per stack to Unison-capable teammates); Electro Flare mode converts teammates' Electro Rage into Heart of Thunder (up to 100) and stops Flare stacks being spent when they trigger."
+  },
+  {
+    "icon": "c1",
+    "name": "Nexus Alight",
+    "type": "Resonance Liberation",
+    "take": "Not a nuke — a form switch. Formshift (unlocked by either Answering heavy) unfurls the Manifold Sanctum, drops her into Illumining Form and Heart Manifest, and grants 21 Edict stacks for 45s: whenever the on-field Resonator deals damage, one Edict fires a Soaring Pillar coordinated attack, up to once per second. The actual nuke is Pillars Across Heaven, unlocked by the Illumining heavy with full energy — the Sanctum comes crashing down as Resonance Skill DMG and she drops back to Answering Form. In Flare mode Formshift also paints Electro Flare on everything nearby."
+  },
+  {
+    "icon": "intro",
+    "name": "Glance on a Whim",
+    "type": "Intro Skill",
+    "take": "The Unison hinge. Swap her in while the outgoing teammate holds Unison and she triggers Unison Response: the whole team gets a Unison Boon stack for 30s and this intro becomes Manifold Unison — a bigger hit counted as Resonance Skill DMG, plus 50% ATK for 8s from Tides of Succession. She also keeps Source Intent, so the next intro is enhanced too. In Answering Form it banks Answering Heart; in Illumining Form it drops her straight into Mechanism Dominion. In either mode the intro trips Blooming Jadehaven's Skill amp — Flare stacks on hit, or the Unison Response itself."
+  },
+  {
+    "icon": "t",
+    "name": "Herself a Thousand Lanterns",
+    "type": "Outro Skill",
+    "take": "A 100% ATK Electro tap, then the gift. She earns Nightglow on entering combat and on every Pillars Across Heaven, and the Outro spends it. Unison mode: teammates who gain Unison carry Shared Light, and with it 20% All DMG Amplification for 30s. Electro Flare mode: everyone else gets 20% Electro DMG Amplification for 20s — Electro Rover and any Flare teammate cash that directly. Swap her out right after the finisher so Nightglow is always loaded."
+  },
+  {
+    "icon": "d1",
+    "name": "Tides of Succession",
+    "type": "Inherent Skill",
+    "take": "Mode-split buffs. Unison: the Manifold Unison intro gives her 50% ATK for 8s. Electro Flare: each different teammate who inflicts Flare gives her 25% Electro DMG Bonus, up to two stacks — and if Rover: Electro is on the team, Rover's Thunderous Fury intro hands them both 20% Electro DMG for 30s. That clause is the tell: Kuro built Flare mode with Rover in the other seat."
+  },
+  {
+    "icon": "d2",
+    "name": "Gleaning Simple Joys",
+    "type": "Inherent Skill",
+    "take": "Unison: raises the team's Unison Boon cap by one — three stacks, 9% total DMG — and every Unison Response now refills everyone. Electro Flare: while she's outside Heart Manifest, every Flare stack a teammate lands becomes Thunderglow (cap 10). Inside Heart Manifest she keeps Flare on everything nearby, and at full Thunderglow she applies Fleeting Thunder, which force-fills Flare to the target's stack limit (up to 16) and re-fills it whenever the limit rises. This is the node that makes her Flare mode self-sufficient."
+  }
+]
