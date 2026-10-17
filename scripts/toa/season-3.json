@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-14",
+  "label": "Off the Record",
+  "window": "Rotation 9/14 - 10/12",
+  "crestTarget": 18,
+  "floors": [
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": "MAXED, UNWRITTEN. Andres cleared every recurring floor and the rotation rolled over before it reached the ledger — the game keeps no history of past rotations. Entered 10/17 on his word."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 1, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 2, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    }
+  ],
+  "lessons": [
+    "Log the rotation BEFORE it rolls: ToA has no in-game history view, so an unlogged rotation is gone for good. A cleared floor can be replayed with the same team at zero vigor just to capture the clock."
+  ]
+}

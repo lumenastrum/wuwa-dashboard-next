@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-17",
+  "label": "The Fox Ascends",
+  "window": "Rotation 10/12 - 11/9",
+  "crestTarget": 18,
+  "floors": [
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "Chop Chop + Dragon of Dirge: Gehinnom",
+      "members": ["Phrolova", "Cantarella", "Roccia"], "crests": 3, "time": "4:08",
+      "notes": "FIFTY-ONE SECONDS. The same Lv90 pair and the same Mono Havoc trio as July's 4:02 — but this Interference (Havoc RES -10%) stacks off Echo Skills instead of basic attacks: +6% Attribute DMG per cast up to 4 and +36% team Crit DMG at max. Phrolova's whole kit is Echo Skills. Seven seconds faster. Clock read off his 10/17 replay."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "Fleurdelys",
+      "members": ["Carlotta", "Zhezhi", "Shorekeeper"], "crests": 3, "time": "3:56",
+      "notes": "CARLOTTA'S S4 DEBUT. Bumped the same morning with the free 5-star from the Hsin spending — then walked into Glacio RES -10% plus an Intro rider that ramps to +40% Resonance Skill DMG while she stays on field. Her Tango counts as Skill DMG and her new heavies hand the team +25% more of it. Lv90 Fleurdelys down in 64 seconds."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 1, "boss": "Lampylumen Myriad: Mistfield Tunes",
+      "members": ["Aemeath", "Denia", "Chisa"], "crests": 3, "time": "4:25",
+      "notes": "THIRTY-FIVE SECONDS. F1-2 Interference: Electro and Fusion RES -10% (Spectro and Glacio +10%) and +30% Electro and Fusion DMG and +25% Crit DMG for 20s after any negative status. The Fusion Burst crew read it as an invitation. Crests at 90 / 150 / 180s left. Aemeath's liberation landed the kill inside its own cutscene."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 2, "boss": "Rocksteady Guardian + Exile Technician + Fallacy of No Return: Tethys System",
+      "members": ["Aemeath", "Denia", "Chisa"], "crests": 3, "time": "4:27",
+      "notes": "THIRTY-TWO SECONDS, THREE BOSSES. Three Lv100 Spectro bosses on a floor that RAISES Spectro RES — and the trio beat its own one-boss F1 time. Fastest floor of the season."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "Chasm Guardian + Havoc Warrior + Fractsidus Milliner + Nocturnus Knight + Impermanence Heron: Death Incarnate",
+      "members": ["Hsin", "Nyx", "Suisui"], "crests": 3, "time": "3:50",
+      "notes": "SIXTY-FOUR SECONDS FASTER. On 10/15 at S0 the fox missed the 150s crest by half a second (2:29.5) and then fought her way to 2:46. Re-run 10/17 at S3: 3:50 left. F3-4 Interference walls every element at +15% RES EXCEPT Electro and Spectro, pays +55% DMG for inflicting Electro Flare and +50% Electro DMG on Unison Response, and ramps a +5%-per-5s vulnerability after the 60s mark. One Pillars Across Heaven cast took the Heron from 40% to 25% and its final strike hit for 1148855 — S3's +70% Pillars multiplier plus Nyx no longer eating her own outro holding Overshock (fixed 10/16). Both get the credit."
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "Sentry Construct: Gargoyle + Crownless: Newborn Desires",
+      "members": ["Hsin", "Nyx", "Suisui"], "crests": 3, "time": "3:21",
+      "notes": "NINETY-NINE SECONDS FOR THE SUMMIT. Same Interference as F3 and a 60 / 120 / 150s crest ladder. The Lv100 Gargoyle first and then the same Crownless she benched at 0:37 the night before. Killing blow 859331."
+    }
+  ],
+  "lessons": [
+    "Match the crew to the Interference: F1-2 handed Fusion a +30% lane and the Fusion Burst trio posted the season's two fastest floors. F3-4 walled everything but Electro and Spectro and paid out on Electro Flare + Unison — the fox's own vocabulary.",
+    "A sequence can rewrite a rotation mid-flight: Hsin S3 (10/16) plus Nyx's Overshock fix took Hazard F3 from 2:46 to 3:50 left on the same floor with the same team.",
+    "F3's vulnerability ramp only starts at 60s, so a faster clear spends less of the fight under it — S3 still won by 64 seconds.",
+    "Replaying a cleared floor with the same team costs no vigor, so every clock this season was read frame by frame off his replay clips (last reading before the kill, timer pauses during cutscenes)."
+  ]
+}

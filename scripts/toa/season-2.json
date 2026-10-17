@@ -1,0 +1,43 @@
+{
+  "date": "2026-08-17",
+  "label": "The Chisa Thesis",
+  "window": "Rotation 8/17 - 9/14",
+  "crestTarget": 18,
+  "floors": [
+    {
+      "zone": "Hazard", "tower": "Resonant", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": "OFF THE RECORD. Maxed in-game and never logged — the game keeps no history of past rotations, so teams and clocks are gone. Entered 10/17 on Andres's word."
+    },
+    {
+      "zone": "Hazard", "tower": "Echoing", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 1, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 2, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 3, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    },
+    {
+      "zone": "Hazard", "tower": "Hazard", "floor": 4, "boss": "",
+      "members": [], "crests": 3, "time": "",
+      "notes": ""
+    }
+  ],
+  "lessons": [
+    "This is the rotation of the 8/22 Hazard study (Sigillum + Fallacy of No Return, both Lv100 Calamity, behind a +15% all-attribute RES wall) — full write-up in docs/toa-hazard-area-effect-study.md. The floor-to-team mapping wasn't recorded, so the study lives here as a lesson instead of a floor row.",
+    "The support slot decided the floor, not the carry: every Chisa team landed near a 35s floor and every non-Chisa team near 65s, across three comps and two carries. S6 Aemeath lost 32s by dropping her.",
+    "Read what a buff is ATTACHED to, not how big the number is: the +50% Tune Strain bribe sat on the lane that finished last; the +30% Havoc Bane lane won because Bane carries an instant RES strip and DEF pen."
+  ]
+}
