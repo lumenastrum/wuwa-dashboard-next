@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-16",
+  "label": "The Third Tide",
+  "window": "Respawning Waters October, 2026",
+  "chasmTarget": 15000,
+  "torrentsTarget": 5500,
+  "stages": [
+    {
+      "stage": 7,
+      "teamA": ["Phrolova", "Cantarella", "Roccia"],
+      "tokenA": "Judgement Lost Flag",
+      "tokenAIcon": 7,
+      "teamB": ["Cartethyia", "Ciaccona", "Shorekeeper"],
+      "tokenB": "Judgement Lost Flag",
+      "tokenBIcon": 7,
+      "score": 2900,
+      "grade": "S",
+      "notes": "CARRIED FROM THE MAIDEN VOYAGE. Doomstrand auto-completes on the season 1 S for a third rotation running — the 7/26 2,900 still stands."
+    },
+    {
+      "stage": 8,
+      "teamA": ["Phrolova", "Cantarella", "Roccia"],
+      "tokenA": "Judgement Lost Flag",
+      "tokenAIcon": 7,
+      "teamB": ["Cartethyia", "Ciaccona", "Shorekeeper"],
+      "tokenB": "Judgement Lost Flag",
+      "tokenBIcon": 7,
+      "score": 3000,
+      "grade": "S",
+      "notes": "CARRIED FROM THE MAIDEN VOYAGE. Whirlpool's 3,000 flat rides along with 7 — the auto-complete conditions banked in season 1 keep paying."
+    },
+    {
+      "stage": 9,
+      "teamA": ["Phrolova", "Cantarella", "Shorekeeper"],
+      "tokenA": "Fabricator - Lone Light in the Long Night",
+      "tokenAIcon": 41,
+      "teamB": ["Qingxiao", "Lynae", "Mornye"],
+      "tokenB": "The Scale of Heart and Soul",
+      "tokenBIcon": 50,
+      "score": 4440,
+      "grade": "S",
+      "notes": "CAPPED INTO DOUBLE FUSION RES. Aemeath benched on her own element; Phrolova's crew rode full Concerto into the instant Outro for 2,220, and Qingxiao/Lynae/Mornye took the first Scale off the Mistune Tune Break procs for the second 2,220 (a 35,455 closer). Lynae over Denia because Spectro walks past a Fusion wall — the sanity check Andres asked for, and it held."
+    },
+    {
+      "stage": 10,
+      "teamA": ["Phrolova", "Cantarella", "Shorekeeper"],
+      "tokenA": "Fabricator - Lone Light in the Long Night",
+      "tokenAIcon": 41,
+      "teamB": ["Aemeath", "Denia", "Chisa"],
+      "tokenB": "Reveler Captain's Seal",
+      "score": 4440,
+      "grade": "S",
+      "notes": "THE EVICTION NOTICE. 4,440 into double Glacio RES — second Fabricator up top for 2,220, and Aemeath's Fire Burst crew closed the bottom half with a nuke that whited out the whole screen. Bar was already full. Pure cardio."
+    },
+    {
+      "stage": 11,
+      "teamA": ["Qingxiao", "Lynae", "Mornye"],
+      "tokenA": "The Scale of Heart and Soul",
+      "tokenAIcon": 50,
+      "teamB": ["Aemeath", "Denia", "Chisa"],
+      "tokenB": "Reveler Captain's Seal",
+      "score": 4440,
+      "grade": "S",
+      "notes": "SIX FOR SIX. Double Havoc RES benched Phrolova; Qingxiao's crew took the second Scale into Team I and Aemeath's crew the second Reveler, both halves at 2,220. Chasm closes at cap on every manual ship for the second rotation straight. Lamp That Illuminates the Illusion never left the shelf — Aemeath's Fire Burst crew makes no shields."
+    },
+    {
+      "stage": 12,
+      "teamA": ["Aemeath", "Denia", "Chisa"],
+      "tokenA": "Solacer - Lone Light in the Long Night",
+      "tokenAIcon": 51,
+      "teamB": ["Hsin", "Nyx", "Suisui"],
+      "tokenB": "The Wish with Husk Alone",
+      "score": 8180,
+      "grade": "SSS",
+      "notes": "THE WAVES BIT BACK, THE FOX GOT HER OUTRO BACK. 8,180 — Aemeath's crew moved up to Team I and posted 5,350 (3,450 / 1,900), 660 over the identical 4,690 / 4,690 she put up twice as Team II under Reveler; Hsin/Nyx/Suisui took Team II for 2,830 (1,830 / 1,000) once Andres found out he'd been HOLDING Rover's Overshock all along (hold = −60 Concerto into Apex Resonance, outro gone). Back-to-back Hulking TDs stunlocked Phrolova to ~2,180 across three restarts; Qingxiao's crew did 2,590. The 9/11 card at 9,030 stands."
+    }
+  ],
+  "lessons": [
+    "Torrents' best Team I depends on the waves, not on what won last time. 9/11's waves made Phrolova's Echo Skill engine king (3,850); 10/16's back-to-back Hulking TDs interrupt her setup and capped her near 2,180, while Qingxiao/Lynae/Mornye did 2,590. Andres picked Qingxiao on gut over my Augusta + Husk wildcard and was right.",
+    "Same team + same token in Torrents = the same number: Aemeath posted 4,690 / 3,090 / 1,600 twice under Reveler (like the two 5,500s before it). Her half is set by the token and the waves, not the hands — so moving her to Team I (full Concerto, different waves) was worth +660, more than any token swap we tried.",
+    "Electro Rover: TAP Overshock in Hsin's team. Holding it spends 60 Concerto to enter Apex Resonance and kills the flashing outro mid-rotation. Hsin's 1:06 benchmark, her Hazard F3, and her first 2,020 here were all set with that leak; the tapped run went 2,830.",
+    "Lamp That Illuminates the Illusion keys off gaining Shield — dead token for Aemeath's Fire Burst crew. Read what a token is ATTACHED to before slotting it.",
+    "Still untested: Scale of Heart and Soul on Aemeath in Torrents (Mistune Tune Break might trigger the +30% All-Attribute for any team)."
+  ]
+}
