@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-17",
+  "label": "The Ephor's Crown",
+  "target": 58000,
+  "teamTarget": 6,
+  "dayOne": true,
+  "teams": [
+    {
+      "order": 1,
+      "members": ["Cartethyia", "Ciaccona", "Chisa"],
+      "buff": "Negative Status Enhancement",
+      "score": 11210,
+      "rating": "",
+      "notes": "THE BOLD OPENER, AGAIN — heavy hitters first while Round 1 is soft. Inferno Rider and Forbidden Bastion killed and the Crownless carved to 60.48% on Aero Erosion's wall-to-wall +25%. Chisa's ONLY vigor this phase spent at slot one. New opener record: 10318 → 11210."
+    },
+    {
+      "order": 2,
+      "members": ["Aemeath", "Denia", "Lupa"],
+      "buff": "Negative Status Enhancement",
+      "score": 17626,
+      "rating": "S",
+      "notes": "PLAN A, THE ORIGINAL DOSSIER — his pick over the Tune Break variant. Crownless finished, Calamity Effigy killed, R1 Matrix Mimic KILLED (1.1x points + 1000 bounty), and a bite of the R2 Inferno Rider (62.35%) before the clock ran out. Denia's only vigor. Best row of the cycle."
+    },
+    {
+      "order": 3,
+      "members": ["Phrolova", "Cantarella", "Roccia"],
+      "buff": "Basic DMG Enhancement",
+      "score": 9287,
+      "rating": "SSS",
+      "notes": "Echo Skill +40% on two bonus-DMG units. Sent at the R2 Rider and Bastion on purpose — Havoc is unwalled on both and she bowed out before the Crownless. R2 Inferno Rider killed, Bastion carved to 60.95%. Round 2 bosses priced at roughly 9k points each, measured here."
+    },
+    {
+      "order": 4,
+      "members": ["Qingxiao", "Lynae", "Mornye"],
+      "buff": "Tune Break Enhancement",
+      "score": 7767,
+      "rating": "CROWNED",
+      "notes": "The cost of Plan A — Denia went to Aemeath so Lynae subbed in, spending her phase-bonus vigor. R2 Bastion (+30% ATK) killed, Crownless carved to 76.14%. Under her 11322 debut, and Denia's absence is the likely reason."
+    },
+    {
+      "order": 5,
+      "members": ["Carlotta", "Zhezhi", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 8387,
+      "rating": "CROWNED",
+      "notes": "S4 MATRIX DEBUT — bumped that morning off the free five-star. First take felt clunky at 7642; his polish pass found +745. Two bonus-DMG units under General. R2 Crownless killed, Effigy carved to 84.57%, and the 8-waves Cycle Task cleared."
+    },
+    {
+      "order": 6,
+      "members": ["Hsin", "Nyx", "Suisui"],
+      "buff": "Negative Status Enhancement",
+      "score": 15737,
+      "rating": "IRIDESCENT",
+      "notes": "FOXED — the fox's first Matrix deployment, saved for the exact slot the board was built around: Electro Flare shut off the R2 Effigy's +40% ATK enrage, then the R2 Mimic gave her the 1.1x points. Effigy killed, Mimic carved to 40.62%. IRIDESCENT minted on her debut and the new debut record (11322 → 15737). Nyx is Electro Rover on this account."
+    },
+    {
+      "order": 7,
+      "members": ["Zani", "Phoebe", "Verina"],
+      "buff": "General Enhancement",
+      "score": 6601,
+      "rating": "IRIDESCENT",
+      "notes": "The Mimic closer — the strongest General row went in for the R2 Mimic kill (1.1x + 1000 bounty) with Phoebe on her phase bonus. Mimic killed, Round 3 opened on a 99.33% Inferno Rider. Up 989 on her C5 row. Energy drink on the results screen."
+    },
+    {
+      "order": 8,
+      "members": ["Yangyang: Xuanling", "Rebecca", "Suisui"],
+      "buff": "Negative Status Enhancement",
+      "score": 9564,
+      "rating": "IRIDESCENT",
+      "notes": "BRANCH B, FOR SCIENCE — his hypothesis: Rebecca's heavy buff belongs on an all-heavies carry. Lucy/Rebecca/Mornye posted 7854 here first, then he hit Restart and ran this from the SAME 99.33% R3 Rider — +1710. Clean A/B, gut confirmed. R3 Inferno Rider carved to 52.03%."
+    },
+    {
+      "order": 9,
+      "members": ["Jinhsi", "Lynae", "Shorekeeper"],
+      "buff": "General Enhancement",
+      "score": 6653,
+      "rating": "IRIDESCENT",
+      "notes": "THE MAGISTRATE BROKE THE RECORD — 92832 crossed the old 91723 with two rows still to play. Up 2773 on her C5 closer. Lynae and Shorekeeper on their second shifts. R3 Inferno Rider down to 19.13%."
+    },
+    {
+      "order": 10,
+      "members": ["Lucy", "Sanhua", "Mornye"],
+      "buff": "Tune Break Enhancement",
+      "score": 5278,
+      "rating": "IRIDESCENT",
+      "notes": "OUTSIDE THE BOX — he benched Camellya and Changli so the last two rows could be the strongest two: Lucy (freed by Branch B) with Sanhua and Mornye's second shift, Tune Break because Mornye boosts it. R3 Inferno Rider killed, Bastion carved to 93.03%. Results screen put her on the moon again."
+    },
+    {
+      "order": 11,
+      "members": ["Augusta", "Iuno", "Verina"],
+      "buff": "General Enhancement",
+      "score": 11747,
+      "rating": "IRIDESCENT",
+      "notes": "THE EPHOR KEEPS THE CROWN — needed 1890 for six digits and posted 11747 in Round 3, more than double her 5389 the last time Verina rode with her. His swap (Verina in, Changli out) and a Lv80 plant gremlin who doesn't need 90. R3 Bastion carved to 34.94%. 109857."
+    }
+  ],
+  "lessons": [
+    "Six digits, day one: 109857 — +18134 (+19.8%) over C5's 91723. Every one of the eleven rows cleared 5k — the first board where nobody fell under.",
+    "Each boss walls exactly one element and nobody walls Electro or Spectro — the queue order IS the matchup control. Draft a pool, not a script: before each row, read which boss is up and send a team it doesn't wall.",
+    "Save the flex team for the enrage it switches off: the fox's Electro Flare disables the R2 Effigy's +40% ATK, and the R2 Mimic sat right behind it. Her debut (15737) was slot design, not luck.",
+    "Restart is a free A/B on the same boss state — Carlotta's polish pass (+745) and the Branch B test (+1710) were both his calls, and Branch B also freed Lucy and a Mornye shift for later rows.",
+    "The last rows are worth redrafting: benching Camellya and Changli to build Lucy/Sanhua/Mornye and Augusta/Iuno/Verina turned two ~3-5k slots into 5278 and 11747.",
+    "Unison buffs (Basic DMG card, Crownless's Unison clause) never fire for this fox — she runs the Electro Flare lane with Nyx, not a Unison partner. She takes Negative Status."
+  ]
+}
